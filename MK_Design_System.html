@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MK — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Permanent+Marker&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ---- Color (sourced from MK's 2010 logo + resume) ---- */
+    --indigo:       #27075A;  /* brand — 2010 logo circle */
+    --indigo-deep:  #1B0540;
+    --indigo-bright:#6A3FB5;  /* AA accent for small text on light */
+    --yellow:       #FFF64D;  /* highlighter — 2010 resume */
+    --ink:          #1F1B16;  /* near-black text */
+    --paper:        #F6F3EE;  /* off-white reading surface */
+    --paper-2:      #FFFFFF;  /* raised panel */
+    --line:         #DED7CC;  /* hairline */
+    --muted:        #6E665B;  /* secondary text */
+    --logo-bg:      var(--indigo);
+    --logo-fg:      #E3E4E6;
+
+    --display: 'Archivo', system-ui, sans-serif;
+    --body:    'Inter', system-ui, sans-serif;
+    --mono:    'JetBrains Mono', ui-monospace, monospace;
+
+    --t-xs:.75rem; --t-sm:.875rem; --t-base:1rem; --t-md:1.25rem;
+    --t-lg:1.563rem; --t-xl:2.441rem; --t-2xl:3.815rem; --t-3xl:5.96rem;
+
+    --s-1:8px; --s-2:16px; --s-3:24px; --s-4:40px; --s-5:64px; --s-6:96px; --s-7:160px;
+    --radius:10px; --maxw:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:var(--t-base);line-height:1.7;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-3);}
+
+  .logo{width:72px;height:72px;display:inline-block;flex-shrink:0;}
+  .logo svg{width:100%;height:100%;display:block;}
+
+  /* highlighter mark — flat, no bubble */
+  mark, .hl{background:var(--yellow);color:var(--ink);padding:1px 7px;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
+
+  /* hero marker — hand-swiped highlighter (E2: gentle ink pooling, no grain) */
+  .marker{position:relative;display:inline-block;color:var(--indigo);}
+  .marker > span{position:relative;z-index:2;}
+  .marker .swipe{position:absolute;left:-6px;right:-6px;top:6%;bottom:4%;z-index:1;overflow:visible;width:auto;height:auto;}
+
+
+  .label{font-family:var(--mono);font-size:var(--t-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--indigo-bright);font-weight:500;}
+  .label-ink{color:var(--indigo);}
+
+  /* ===== header ===== */
+  header{border-bottom:1px solid var(--line);background:var(--paper);position:sticky;top:0;z-index:10;}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:var(--s-2) var(--s-3);max-width:var(--maxw);margin:0 auto;}
+  .mark{font-family:var(--display);font-weight:800;font-size:var(--t-md);letter-spacing:-.02em;color:var(--indigo);text-decoration:none;display:flex;align-items:center;gap:12px;min-width:0;}
+  .nav-meta{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);letter-spacing:.04em;}
+
+  /* ===== hero ===== */
+  .hero{padding:var(--s-7) 0 var(--s-6);position:relative;overflow:hidden;border-bottom:1px solid var(--line);}
+  .hero .wrap{position:relative;z-index:2;}
+  .hero .eyebrow{margin-bottom:var(--s-3);}
+  .hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,7vw,var(--t-3xl));line-height:1.02;letter-spacing:-.03em;color:var(--indigo);max-width:15ch;}
+  .hero .sub{margin-top:var(--s-3);max-width:54ch;font-size:var(--t-md);color:var(--ink);line-height:1.6;}
+  .grid-bg{position:absolute;inset:0;z-index:1;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:72px 72px;opacity:.5;mask-image:linear-gradient(to bottom,transparent,#000 40%,#000 70%,transparent);}
+  .btn-row{display:flex;gap:var(--s-2);flex-wrap:wrap;align-items:center;margin-top:var(--s-4);}
+
+  /* buttons */
+  .btn{font-family:var(--body);font-weight:600;font-size:var(--t-sm);padding:13px 26px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .08s,background .15s;display:inline-flex;align-items:center;gap:8px;text-decoration:none;}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--indigo);color:var(--paper);border-color:var(--indigo);}
+  .btn-primary:hover{background:var(--indigo-deep);}
+  .btn-yellow{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+  .btn-yellow:hover{background:#F2E83A;}
+  .btn-ghost{background:transparent;color:var(--indigo);border-color:var(--indigo);}
+  .btn-ghost:hover{background:rgba(39,7,90,.06);}
+
+  /* ===== sections ===== */
+  section{padding:var(--s-7) 0;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;align-items:baseline;gap:var(--s-2);margin-bottom:var(--s-4);}
+  .sec-num{font-family:var(--mono);font-size:var(--t-sm);color:var(--indigo-bright);font-weight:600;}
+  .sec-title{font-family:var(--display);font-weight:700;font-size:var(--t-xl);letter-spacing:-.02em;color:var(--indigo);margin:0;}
+  .sec-desc{font-size:var(--t-base);color:var(--muted);max-width:58ch;margin-top:6px;}
+
+  /* color swatches */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--s-2);}
+  .swatch{border:1px solid var(--line);background:var(--paper-2);border-radius:10px;overflow:hidden;}
+  .swatch .chip{height:96px;}
+  .swatch .meta{padding:10px 12px;}
+  .swatch .name{font-family:var(--body);font-weight:600;font-size:var(--t-sm);color:var(--ink);}
+  .swatch .hex{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);margin-top:2px;}
+  .swatch .role{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;}
+
+  /* type */
+  .type-row{display:flex;align-items:baseline;gap:var(--s-3);padding:var(--s-2) 0;border-top:1px solid var(--line);flex-wrap:wrap;}
+  .type-row:first-child{border-top:none;}
+  .type-spec{font-family:var(--mono);font-size:var(--t-xs);color:var(--muted);min-width:130px;}
+  .type-spec b{color:var(--indigo-bright);font-weight:600;}
+  .ts-3xl{font-family:var(--display);font-size:var(--t-2xl);font-weight:800;color:var(--indigo);letter-spacing:-.02em;line-height:1.05;}
+  .ts-xl{font-family:var(--display);font-size:var(--t-xl);font-weight:700;color:var(--indigo);letter-spacing:-.02em;}
+  .ts-lg{font-family:var(--display);font-size:var(--t-lg);font-weight:600;color:var(--ink);}
+  .ts-body{font-family:var(--body);font-size:var(--t-base);color:var(--ink);max-width:60ch;line-height:1.6;}
+  .ts-mono{font-family:var(--mono);font-size:var(--t-sm);color:var(--ink);}
+
+  /* components */
+  .comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);}
+  .panel{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:var(--s-4);}
+  .panel > .label{display:block;margin-bottom:var(--s-3);}
+  .pill{font-family:var(--mono);font-size:var(--t-xs);padding:5px 12px;border:1px solid var(--indigo);color:var(--indigo);border-radius:100px;display:inline-block;}
+  .pill-yellow{background:var(--yellow);border-color:var(--yellow);color:var(--ink);}
+  .pill-bright{border-color:var(--indigo-bright);color:var(--indigo-bright);}
+
+  /* metrics — Option A baseline + rules */
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:var(--s-2);background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:var(--s-4) var(--s-3);}
+  .metric{padding:0 var(--s-4);border-left:1px solid var(--line);}
+  .metric:first-child{padding-left:var(--s-3);}
+  .metric:first-child{border-left:none;}
+  .metric .big{font-family:var(--display);font-weight:800;font-size:var(--t-3xl);line-height:.95;letter-spacing:-.03em;color:var(--indigo);}
+  .metric .big .u{color:var(--indigo-bright);}
+  .metric .cap{font-family:var(--mono);font-size:var(--t-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:16px;}
+
+  /* pipeline */
+  .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2);}
+  .step{border-top:2px solid var(--indigo);padding-top:var(--s-2);}
+  .step .n{font-family:var(--mono);font-size:var(--t-xs);color:var(--indigo-bright);font-weight:600;}
+  .step h4{font-family:var(--display);font-weight:700;font-size:var(--t-md);margin:6px 0;letter-spacing:-.01em;color:var(--indigo);}
+  .step p{font-size:var(--t-sm);color:var(--muted);}
+
+  /* footer — indigo moment (the one dark band; large text only) */
+  footer{background:var(--indigo);color:var(--paper);padding:var(--s-6) 0;}
+  footer .wrap{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--s-3);}
+  footer h3{font-family:var(--display);font-weight:800;font-size:var(--t-xl);letter-spacing:-.02em;color:#fff;max-width:18ch;}
+  footer h3 mark{background:var(--yellow);color:var(--ink);}
+
+
+  /* footer highlight — CSS marker swipe, always fits the word, descenders clear */
+  footer h3 .hl-swipe{position:relative;color:var(--ink);white-space:nowrap;z-index:0;margin-right:0.28em;padding:0 0.06em;}
+  footer h3 .hl-swipe::before{
+    content:"";position:absolute;z-index:-1;
+    left:-0.16em; right:-0.16em;
+    top:0.04em; height:1.16em;
+    background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='60' viewBox='0 0 240 60' preserveAspectRatio='none'><defs><filter id='r' x='-5%25' y='-20%25' width='110%25' height='140%25'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.07' numOctaves='2' seed='6' result='n'/><feDisplacementMap in='SourceGraphic' in2='n' scale='5'/></filter><linearGradient id='g' x1='0' y1='0.3' x2='1' y2='0.7'><stop offset='0' stop-color='%23FFF64D' stop-opacity='0.5'/><stop offset='0.1' stop-color='%23FFF64D' stop-opacity='1'/><stop offset='0.42' stop-color='%23F2E61E' stop-opacity='0.95'/><stop offset='0.66' stop-color='%23FFF64D' stop-opacity='0.92'/><stop offset='1' stop-color='%23FFF64D' stop-opacity='0.42'/></linearGradient><filter id='ink'><feTurbulence type='fractalNoise' baseFrequency='0.04 0.09' numOctaves='3' seed='11' result='t'/><feColorMatrix in='t' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.4 0.85' result='a'/><feComposite in='a' in2='SourceGraphic' operator='in'/></filter></defs><g filter='url(%23r)'><rect x='4' y='8' width='232' height='44' rx='7' fill='url(%23g)'/><rect x='4' y='8' width='232' height='44' rx='7' fill='%23E0C200' opacity='0.28' filter='url(%23ink)'/></g></svg>");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+    transform:rotate(-1.3deg);
+  }
+  footer .links{display:flex;flex-direction:column;gap:8px;text-align:right;}
+  footer a{color:var(--yellow);text-decoration:none;font-family:var(--mono);font-size:var(--t-sm);padding:6px 0;display:inline-block;}
+
+  :focus-visible{outline:2.5px solid var(--indigo-bright);outline-offset:2px;}
+  @media(max-width:760px){
+    .nav-meta{display:none;}
+    .mark{font-size:var(--t-base);}
+    .logo{width:56px;height:56px;}
+    .comp-grid{grid-template-columns:1fr;}
+    .metrics{grid-template-columns:repeat(3,1fr);padding:var(--s-3) var(--s-2);}
+    .metric{padding:0 8px;}
+    .metric .big{font-size:var(--t-xl);}
+    .metric .cap{font-size:9px;margin-top:8px;}
+    .pipeline{grid-template-columns:1fr 1fr;}
+  }
+  @media(max-width:440px){
+    .metric .big{font-size:var(--t-lg);}
+    .metric .cap{font-size:8px;letter-spacing:.04em;}
+    .pipeline{grid-template-columns:1fr;}
+  }
+  @media(max-width:520px){
+    .cluster{gap:14px;}
+    .cluster .sticky{width:46%;min-height:110px;font-size:14px;padding:24px 12px 12px;}
+  }
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto;transition:none!important;}}
+
+  /* ===== facilitation toolkit ===== */
+  .marker-font{font-family:'Permanent Marker',cursive;}
+  .how-i-work{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:var(--s-6) var(--s-5);overflow:hidden;}
+  .how-i-work h3{font-family:var(--display);font-weight:800;font-size:var(--t-xl);letter-spacing:-.02em;color:var(--indigo);max-width:16ch;line-height:1.1;}
+  .how-i-work h3 em{font-style:normal;color:var(--indigo-bright);}
+  .circle-mark{position:relative;display:inline-block;color:var(--indigo);padding:2px 12px;}
+  .circle-mark svg{position:absolute;inset:-6px -2px;width:calc(100% + 4px);height:calc(100% + 14px);overflow:visible;z-index:1;}
+  .circle-mark{z-index:2;}
+  .how-i-work .lead{margin-top:18px;max-width:42ch;color:var(--ink);font-size:var(--t-md);}
+  .how-i-work .marker-tag{font-family:'Permanent Marker',cursive;color:var(--indigo-bright);font-size:22px;transform:rotate(-3deg);display:inline-block;margin-top:var(--s-3);}
+  .cluster{position:absolute;top:72px;right:48px;width:300px;height:250px;}
+  .cluster .sticky{position:absolute;width:128px;min-height:118px;background:var(--yellow);color:var(--ink);font-family:'Permanent Marker',cursive;font-size:16px;line-height:1.3;padding:28px 16px 16px;box-shadow:3px 6px 16px rgba(31,27,22,.16);}
+  .cluster .sticky .tack{position:absolute;top:9px;left:50%;width:12px;height:12px;border-radius:50%;background:var(--indigo-bright);transform:translateX(-50%);box-shadow:0 1px 3px rgba(0,0,0,.4);z-index:5;}
+  .cluster .sticky.s2 .tack{background:var(--yellow);}
+  .cluster .s1{top:10px;left:24px;transform:rotate(-4deg);}
+  .cluster .s2{top:36px;left:150px;transform:rotate(3deg);background:var(--indigo);color:#fff;}
+  .cluster .s3{top:128px;left:78px;transform:rotate(-1.5deg);background:var(--paper-2);border:1px solid var(--line);}
+  @media(max-width:860px){
+    .cluster{position:static !important;top:auto !important;right:auto !important;left:auto !important;width:100% !important;height:auto !important;display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;justify-content:space-between !important;align-items:flex-start !important;gap:8px !important;margin-top:32px !important;}
+    .cluster .sticky{position:relative !important;top:auto !important;left:auto !important;right:auto !important;flex:1 1 33% !important;width:auto !important;min-width:0 !important;max-width:33% !important;min-height:100px !important;font-size:12px !important;padding:22px 8px 10px !important;box-sizing:border-box !important;}
+    .cluster .s1{transform:rotate(-3deg) !important;}
+    .cluster .s2{transform:rotate(2deg) !important;margin-top:6px !important;}
+    .cluster .s3{transform:rotate(-1.5deg) !important;}
+    .cluster .sticky .tack{width:10px !important;height:10px !important;top:7px !important;}
+  }
+
+  .skip{position:absolute;left:-9999px;} .skip:focus{position:fixed;left:8px;top:8px;background:var(--indigo);color:#fff;padding:10px 16px;z-index:100;border-radius:6px;}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <nav class="nav">
+    <a href="#" class="mark"><span class="logo"><svg width="100%" height="100%" viewBox="0 0 288 288" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M214.667 148C214.667 189.239 181.239 222.667 140 222.667C98.7627 222.667 65.3333 189.239 65.3333 148C65.3333 106.763 98.7627 73.3333 140 73.3333C181.239 73.3333 214.667 106.763 214.667 148Z" fill="#250759"/>
+<path d="M110.684 168.78V138.411C114.009 135.284 116.882 134.051 119.386 134.051C121.162 134.051 122.215 134.456 122.857 135.262C123.525 136.101 123.848 137.49 123.848 139.712V168.78H132.048V139.041C135.044 136.054 137.522 133.889 140.909 133.889C142.518 133.889 143.537 134.271 144.182 135.073C144.851 135.905 145.212 137.299 145.212 139.551V168.78H153.495V138.352C153.495 134.583 152.47 131.626 150.578 129.608C148.684 127.586 145.979 126.569 142.751 126.569C138.662 126.569 134.552 128.571 130.639 132.535C128.486 128.476 124.741 126.569 120.986 126.569C117.345 126.569 113.48 128.422 110.153 131.595C109.997 129.744 109.48 128.098 108.774 126.895L108.586 126.574L108.224 126.662L101.342 128.342L100.783 128.479L100.996 129.013C101.549 130.396 101.894 131.438 102.107 132.826C102.321 134.227 102.402 135.995 102.402 138.832V168.78H110.684Z" fill="#E4E5E6" stroke="#E4E5E6"/>
+<path d="M181.994 168.78L181.372 167.974L163.775 145.168L177.839 128.431L178.53 127.609H168.245L168.095 127.806L154.891 145.172L154.667 145.467L154.884 145.767L171.37 168.573L171.519 168.78H181.994Z" fill="#E4E5E6" stroke="#E4E5E6"/>
+</svg></span> Marissa&nbsp;Klymkiw</a>
+    <span class="nav-meta">design system / v1.0</span>
+  </nav>
+</header>
+
+<main id="main">
+
+  <div class="hero">
+    <div class="grid-bg"></div>
+    <div class="wrap">
+      <div class="label eyebrow">Design system &amp; brand foundation</div>
+      <h1>I think in <span class="marker"><span>systems</span><svg class="swipe" viewBox="0 0 360 110" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="mkE2"><feTurbulence type="fractalNoise" baseFrequency="0.014 0.05" numOctaves="1" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="6"/></filter><linearGradient id="mkG2" x1="0" y1="0.3" x2="1" y2="0.7"><stop offset="0" stop-color="#FFF64D" stop-opacity="0.55"/><stop offset="0.1" stop-color="#FFF64D" stop-opacity="1"/><stop offset="0.45" stop-color="#F5E92A" stop-opacity="0.92"/><stop offset="0.7" stop-color="#FFF64D" stop-opacity="0.9"/><stop offset="1" stop-color="#FFF64D" stop-opacity="0.45"/></linearGradient></defs><rect x="6" y="30" width="348" height="52" rx="7" fill="url(#mkG2)" filter="url(#mkE2)" transform="rotate(-1.2 180 55)"/></svg></span> that scale past me.</h1>
+      <p class="sub">Design systems, governance, and the patterns ~20 product pods build on — none of which report to me. This is the system this site is built from, exposed on purpose.</p>
+      <div class="btn-row">
+        <a href="#components" class="btn btn-primary">View the system</a>
+        <a href="#pipeline" class="btn btn-ghost">How it's built →</a>
+      </div>
+    </div>
+  </div>
+
+  <section id="color">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">01</span><div><h2 class="sec-title">Color</h2><p class="sec-desc">Indigo and yellow, carried from a logo and resume I made in 2010. Indigo is the brand; yellow is the highlighter — it marks what matters, never wallpaper.</p></div></div>
+      <p class="sec-desc" style="margin-top:24px;"><strong style="color:var(--indigo);font-weight:600;">Surfaces:</strong> Paper (#F6F3EE) is the page. White (#FFFFFF) is reserved for raised, grouped containers — a card, panel, or frame around related content. Indigo (#27075A) is the inversion moment, used once. White is never a general background; it always means "this is a contained module."</p>
+      <div class="swatches">
+        <div class="swatch"><div class="chip" style="background:var(--indigo)"></div><div class="meta"><div class="name">Indigo</div><div class="hex">#27075A</div><div class="role">brand</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--yellow)"></div><div class="meta"><div class="name">Yellow</div><div class="hex">#FFF64D</div><div class="role">highlighter</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--indigo-bright)"></div><div class="meta"><div class="name">Violet</div><div class="hex">#6A3FB5</div><div class="role">accent / small text</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--ink)"></div><div class="meta"><div class="name">Ink</div><div class="hex">#1F1B16</div><div class="role">text</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--paper);border-bottom:1px solid var(--line)"></div><div class="meta"><div class="name">Paper</div><div class="hex">#F6F3EE</div><div class="role">surface</div></div></div>
+        <div class="swatch"><div class="chip" style="background:var(--paper-2);border-bottom:1px solid var(--line)"></div><div class="meta"><div class="name">White</div><div class="hex">#FFFFFF</div><div class="role">panel</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="type">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">02</span><div><h2 class="sec-title">Typography</h2><p class="sec-desc">Archivo for display — an engineered grotesk. Inter for body. JetBrains Mono for data and labels, the native language of systems.</p></div></div>
+      <div class="type-row"><div class="type-spec"><b>Archivo</b> 800<br>Display / 3XL</div><div class="ts-3xl">Built to last</div></div>
+      <div class="type-row"><div class="type-spec"><b>Archivo</b> 700<br>Heading / XL</div><div class="ts-xl">Systems, not screens</div></div>
+      <div class="type-row"><div class="type-spec"><b>Archivo</b> 600<br>Subhead / LG</div><div class="ts-lg">Governance that holds</div></div>
+      <div class="type-row"><div class="type-spec"><b>Inter</b> 400<br>Body / Base</div><div class="ts-body">The work I'm proudest of is invisible by design — the alignment that stays in place after I've moved on to the next thing.</div></div>
+      <div class="type-row"><div class="type-spec"><b>JetBrains Mono</b> 400<br>Data / Caption</div><div class="ts-mono">20 pods · 50+ components · 0 reporting lines</div></div>
+    </div>
+  </section>
+
+  <section id="components">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">03</span><div><h2 class="sec-title">Components</h2><p class="sec-desc">Primitives the portfolio is assembled from. Soft corners, hairline borders, and the yellow used once per moment.</p></div></div>
+      <div class="comp-grid">
+        <div class="panel">
+          <span class="label label-ink">Buttons</span>
+          <div class="btn-row" style="margin-top:0;margin-bottom:var(--s-2)">
+            <button class="btn btn-primary">View project</button>
+            <button class="btn btn-yellow">Get in touch</button>
+          </div>
+          <div class="btn-row" style="margin-top:0">
+            <button class="btn btn-ghost">Resume →</button>
+          </div>
+        </div>
+        <div class="panel">
+          <span class="label label-ink">Tokens / tags</span>
+          <div class="btn-row" style="margin-top:0;gap:10px">
+            <span class="pill">design systems</span>
+            <span class="pill pill-yellow">governance</span>
+            <span class="pill pill-bright">accessibility</span>
+            <span class="pill">tokens</span>
+            <span class="pill pill-bright">influence w/o authority</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:var(--s-4)">
+        <span class="label label-ink" style="display:block;margin-bottom:var(--s-3)">Metrics — case-study evidence pattern</span>
+        <div class="metrics">
+          <div class="metric"><div class="big">20<span class="u">+</span></div><div class="cap">product pods aligned</div></div>
+          <div class="metric"><div class="big">50<span class="u">+</span></div><div class="cap">components built</div></div>
+          <div class="metric"><div class="big">0</div><div class="cap">reporting lines required</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <section id="how-i-work">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">04</span><div><h2 class="sec-title">How I work</h2><p class="sec-desc">The systems start with people. This is the one place the facilitation shows loudly — everywhere else stays quiet.</p></div></div>
+      <div class="how-i-work">
+        <div class="label" style="margin-bottom:10px">In the room</div>
+        <h3>I don't design <em>at</em> teams. I facilitate <span class="circle-mark">with<svg viewBox="0 0 150 70" preserveAspectRatio="none" aria-hidden="true"><path d="M 18 12 C 55 2 120 4 140 22 C 150 34 122 58 72 60 C 26 62 6 48 9 31 C 11 19 28 11 52 9" fill="none" stroke="var(--indigo-bright)" stroke-width="3" stroke-linecap="round"/></svg></span> them.</h3>
+        <p class="lead">Most of my systems start on a wall — stickies, clustering, finding the structure inside the mess with the people who'll have to live in it.</p>
+        <div class="marker-tag">↑ this is the fun part</div>
+        <div class="cluster">
+          <div class="sticky s1"><span class="tack"></span>messy input</div>
+          <div class="sticky s2"><span class="tack"></span>cluster it</div>
+          <div class="sticky s3"><span class="tack"></span>find the system</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pipeline">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">05</span><div><h2 class="sec-title">How the system is built</h2><p class="sec-desc">A real sequence. Product design feeds the pattern layer, which feeds the visual layer, which feeds implementation.</p></div></div>
+      <div class="pipeline">
+        <div class="step"><div class="n">STEP 01</div><h4>Product design</h4><p>Real product work surfaces the pattern — what needs flexibility before anything is codified.</p></div>
+        <div class="step"><div class="n">STEP 02</div><h4>Pattern &amp; guidelines</h4><p>Patterns codified with the rules and the edge cases caught early.</p></div>
+        <div class="step"><div class="n">STEP 03</div><h4>Visual layer</h4><p>Tokens and components in Figma — the durable, reusable surface.</p></div>
+        <div class="step"><div class="n">STEP 04</div><h4>Implementation</h4><p>Shipped and governed in code, tracked so it stays aligned over time.</p></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <h3>The <span class="hl-swipe">thinking</span> is the system.</h3>
+    <div class="links">
+      <a href="#">linkedin →</a>
+      <a href="#">resume →</a>
+      <a href="#">email →</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

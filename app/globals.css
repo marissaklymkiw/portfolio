@@ -1,0 +1,446 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   DESIGN TOKENS  —  ported 1:1 from MK_Design_System.html :root
+   (sourced from MK's 2010 logo + resume; see DESIGN_NOTES.md — do not "modernize")
+   In Tailwind v4 these @theme vars ARE the CSS custom properties AND generate
+   utilities (bg-indigo, text-violet, font-display, text-3xl, rounded-card, ...).
+   ========================================================================= */
+@theme {
+  /* ---- Color ---- */
+  --color-indigo: #27075a; /* brand — 2010 logo circle */
+  --color-indigo-deep: #1b0540; /* primary button hover */
+  --color-violet: #6a3fb5; /* AA accent for small text on light (was --indigo-bright) */
+  --color-yellow: #fff64d; /* highlighter — 2010 resume */
+  --color-yellow-deep: #f2e83a; /* yellow button hover */
+  --color-ink: #1f1b16; /* warm near-black — body & UI text */
+  --color-paper: #f6f3ee; /* off-white reading surface (the page) */
+  --color-panel: #ffffff; /* raised panel — grouped containers ONLY */
+  --color-line: #ded7cc; /* hairline */
+  --color-bark: #6e665b; /* secondary text */
+  --color-logo-fg: #e4e5e6; /* mk monogram letterforms */
+
+  /* ---- Type families (bound to next/font vars in layout.tsx) ---- */
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-marker: var(--font-permanent-marker), cursive;
+
+  /* ---- Type scale (perfect-fourth-ish, carried from the file) ---- */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.563rem;
+  --text-xl: 2.441rem;
+  --text-2xl: 3.815rem;
+  --text-3xl: 5.96rem;
+
+  /* Display / hero headline — every page <h1> shares this one fluid size, so
+     all heroes match. Fluid down on small screens, capped at 5rem. Generates
+     the `text-hero` utility (size + paired line-height). Don't hardcode clamps
+     in components; use text-hero. */
+  --text-hero: clamp(2.8rem, 8vw, 5rem);
+  --text-hero--line-height: 1;
+
+  /* ---- Radius ---- */
+  --radius-card: 10px;
+  --radius-panel: 16px;
+}
+
+/* =========================================================================
+   SPACING  —  4–8pt scale.
+   A 4px base unit: 4pt steps at the small end (4/8/12/16), an 8pt grid through
+   the middle, modular growth at the large end. Every padding, margin, and gap
+   on the site resolves to one of these tokens, so vertical rhythm stays on grid.
+   Used via arbitrary utilities, e.g. py-[var(--space-3xl)].
+   ========================================================================= */
+:root {
+  --space-3xs: 4px; /* 0.25rem */
+  --space-2xs: 8px; /* 0.5rem  */
+  --space-xs: 12px; /* 0.75rem */
+  --space-sm: 16px; /* 1rem    */
+  --space-md: 24px; /* 1.5rem  */
+  --space-lg: 40px; /* 2.5rem  */
+  --space-xl: 64px; /* 4rem    */
+  --space-2xl: 96px; /* 6rem    */
+  --space-3xl: 160px; /* 10rem   */
+
+  --maxw: 1120px;
+}
+
+/* =========================================================================
+   BASE
+   ========================================================================= */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Anchor targets clear the sticky header */
+  section[id],
+  div[id] {
+    scroll-margin-top: var(--space-2xl);
+  }
+}
+
+/* =========================================================================
+   PRESERVED SIGNATURE CSS  —  kept verbatim (token vars swapped in).
+   These are hand-tuned and/or impossible as utilities; do not refactor.
+   ========================================================================= */
+@layer components {
+  /* centered content column */
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+  }
+
+  /* flat highlighter mark (inline <mark> / .hl) */
+  .hl {
+    background: var(--color-yellow);
+    color: var(--color-ink);
+    padding: 1px 7px;
+    border-radius: 3px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* -------------------------------------------------------------------
+     MarkerHighlight — the GOOD hand-swiped highlighter.
+     CSS background-image (inline SVG w/ feTurbulence): auto-fits any word
+     at any width and clears descenders. Generalized from footer .hl-swipe.
+     ------------------------------------------------------------------- */
+  .hl-swipe {
+    position: relative;
+    color: var(--color-indigo);
+    white-space: nowrap;
+    z-index: 0;
+    margin-right: 0.28em;
+    padding: 0 0.06em;
+  }
+  .hl-swipe::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: -0.16em;
+    right: -0.16em;
+    top: -0.08em;
+    height: 1.26em;
+    /* slightly transparent so the surface reads through the ink */
+    opacity: 0.7;
+    /* Hand-drawn highlighter stroke. Edge irregularity (wavy top/bottom,
+       thin soft LEFT taper, denser darker RIGHT pool) is baked into the path
+       geometry — NOT a displacement filter, which read as wrinkled paper.
+       Warm diagonal gradient = left trails light, bottom-right pools dark;
+       second path = faint ink settling along the bottom edge; the filter adds
+       a low-opacity paper grain clipped to the shape. */
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='80' viewBox='0 0 300 80' preserveAspectRatio='none'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='%23FFFB8A' stop-opacity='0.82'/><stop offset='0.08' stop-color='%23FFF75A'/><stop offset='0.5' stop-color='%23FFF64D'/><stop offset='0.9' stop-color='%23FCF24A'/><stop offset='1' stop-color='%23F2E63C'/></linearGradient><radialGradient id='p' cx='0.93' cy='0.6' r='0.19'><stop offset='0' stop-color='%23D4BF0C' stop-opacity='1'/><stop offset='0.55' stop-color='%23E8D41E' stop-opacity='0.78'/><stop offset='1' stop-color='%23F0E236' stop-opacity='0'/></radialGradient><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%23D6C82E' stop-opacity='0'/><stop offset='0.7' stop-color='%23D6C82E' stop-opacity='0'/><stop offset='1' stop-color='%23D6C82E' stop-opacity='0.22'/></linearGradient><filter id='ink'><feTurbulence type='fractalNoise' baseFrequency='0.7 0.9' numOctaves='2' seed='8' result='n'/><feColorMatrix in='n' type='matrix' values='0 0 0 0 0.7 0 0 0 0 0.66 0 0 0 0 0.05 0 0 0 0.5 0' result='gr'/><feComposite in='gr' in2='SourceAlpha' operator='in' result='gc'/><feMerge><feMergeNode in='SourceGraphic'/><feMergeNode in='gc'/></feMerge></filter><clipPath id='band'><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z'/></clipPath><filter id='soft' y='-150%25' height='400%25'><feGaussianBlur stdDeviation='2.4'/></filter></defs><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z' fill='url(%23g)' filter='url(%23ink)'/><g clip-path='url(%23band)'><path d='M4 25 C90 22 210 24 304 23 L304 31 C210 32 90 30 4 29 Z' fill='%23E8D828' opacity='0.26' filter='url(%23soft)'/><path d='M4 40 C90 37 210 39 304 38 L304 47 C210 48 90 46 4 45 Z' fill='%23E8D828' opacity='0.26' filter='url(%23soft)'/><path d='M4 53 C90 51 210 53 304 52 L304 61 C210 62 90 60 4 59 Z' fill='%23E8D828' opacity='0.26' filter='url(%23soft)'/><path d='M4 34 C90 32 210 34 304 33 L304 37 C210 38 90 36 4 36 Z' fill='%23FFFCB0' opacity='0.32' filter='url(%23soft)'/></g><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z' fill='url(%23s)'/><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z' fill='url(%23p)'/></svg>");
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    transform: rotate(-2.5deg);
+  }
+
+  /* Opt-in left-to-right wipe reveal (~0.45s) — reads as the stroke being
+     drawn. Use <MarkerHighlight draw>. Disabled for reduced-motion. */
+  .hl-swipe--draw::before {
+    animation: hl-draw 0.45s ease-out both;
+  }
+  @keyframes hl-draw {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  /* hero background — switchable paper patterns (graph / iso / lined / dot).
+     The base handles position + the soft top/bottom fade; a modifier class sets
+     the pattern. Toggled live by <HeroBackground>. */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.5;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 40%,
+      #000 70%,
+      transparent
+    );
+  }
+  .hero-bg--graph {
+    background-image: linear-gradient(var(--color-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+  .hero-bg--lined {
+    background-image: linear-gradient(var(--color-line) 1px, transparent 1px);
+    background-size: 100% 36px;
+  }
+  .hero-bg--dot {
+    background-image: radial-gradient(var(--color-line) 1.5px, transparent 1.7px);
+    background-size: 28px 28px;
+  }
+  .hero-bg--iso {
+    background-image: repeating-linear-gradient(
+        30deg,
+        var(--color-line) 0 1px,
+        transparent 1px 42px
+      ),
+      repeating-linear-gradient(
+        150deg,
+        var(--color-line) 0 1px,
+        transparent 1px 42px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        var(--color-line) 0 1px,
+        transparent 1px 42px
+      );
+  }
+
+  /* -------------------------------------------------------------------
+     Facilitation: circled-text annotation (hand-drawn ellipse)
+     ------------------------------------------------------------------- */
+  .circle-mark {
+    position: relative;
+    display: inline-block;
+    color: var(--color-indigo);
+    padding: 2px 6px;
+    z-index: 2;
+  }
+  .circle-mark svg {
+    position: absolute;
+    inset: -6px -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 14px);
+    overflow: visible;
+    z-index: 1;
+  }
+
+  /* marker circle drawn around a highlighted word (hero) — hand-drawn ellipse
+     on a wide viewBox so the stretched stroke stays even. Sits above the swipe. */
+  .marker-circle-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .marker-circle {
+    position: absolute;
+    /* extra room on the left so the ellipse clears the first letter */
+    left: -20px;
+    top: -10px;
+    width: calc(100% + 32px);
+    height: calc(100% + 20px);
+    overflow: visible;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  /* -------------------------------------------------------------------
+     Facilitation: sticky-note cluster.
+     Absolute-positioned on desktop; reflows to a non-overlapping row at
+     860px. .note stays position:relative so each tack anchors to it.
+     ------------------------------------------------------------------- */
+  .cluster {
+    position: absolute;
+    top: 56px;
+    right: 40px;
+    width: 320px;
+    height: 260px;
+  }
+  /* Colour + tack come from the StickyNote component (props); the CSS owns
+     only the geometry, shadow, type, and the reflow below. */
+  .cluster .note {
+    position: absolute;
+    width: 128px;
+    min-height: 118px;
+    font-family: var(--font-marker);
+    font-size: 16px;
+    line-height: 1.3;
+    padding: 28px 16px 16px;
+    box-shadow: 3px 6px 16px color-mix(in srgb, var(--color-ink) 16%, transparent);
+  }
+  .cluster .note .tack {
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--color-ink) 40%, transparent);
+    z-index: 5;
+  }
+  .cluster .s1 {
+    top: 0;
+    left: 24px;
+    transform: rotate(-5deg);
+  }
+  .cluster .s2 {
+    top: 74px;
+    left: 152px;
+    transform: rotate(5deg);
+  }
+  .cluster .s3 {
+    top: 150px;
+    left: 52px;
+    transform: rotate(-2.5deg);
+  }
+
+  /* skip link */
+  .skip {
+    position: absolute;
+    left: -9999px;
+  }
+  .skip:focus {
+    position: fixed;
+    left: 8px;
+    top: 8px;
+    background: var(--color-indigo);
+    color: var(--color-paper);
+    padding: 10px 16px;
+    z-index: 100;
+    border-radius: 6px;
+  }
+
+  /* -------------------------------------------------------------------
+     Cycling headline (CyclingHero): a typewriter reveal. The whole line —
+     including "I" — types in, holds, then erases before the next types, with a
+     blinking caret at the end. A hidden sizer reserves the longest line's
+     width + baseline so nothing reflows as characters change.
+     ------------------------------------------------------------------- */
+  .cyc {
+    position: relative;
+    display: inline-block;
+    vertical-align: baseline;
+  }
+  /* the leading verb of each phrase picks up the violet accent */
+  .cyc-verb {
+    color: var(--color-violet);
+  }
+  .cyc-sizer {
+    visibility: hidden;
+    white-space: nowrap;
+  }
+  .cyc-line {
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+  }
+  /* blinking text cursor at the end of the typed text */
+  .cyc-caret {
+    display: inline-block;
+    width: 0.06em;
+    height: 0.82em;
+    margin-left: 0.04em;
+    transform: translateY(0.08em);
+    background: var(--color-violet);
+    animation: cyc-caret 1.05s steps(1, end) infinite;
+  }
+}
+
+@keyframes cyc-caret {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* reduced motion: the JS shows whole lines (no typing); keep the caret steady */
+@media (prefers-reduced-motion: reduce) {
+  .cyc-caret {
+    animation: none;
+  }
+}
+
+/* focus ring */
+:focus-visible {
+  outline: 2.5px solid var(--color-violet);
+  outline-offset: 2px;
+}
+
+/* sticky cluster reflow — verbatim breakpoint from the file (860px) */
+@media (max-width: 860px) {
+  .cluster {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    margin-top: 32px !important;
+  }
+  .cluster .note {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    flex: 1 1 33% !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 33% !important;
+    min-height: 100px !important;
+    font-size: 12px !important;
+    padding: 22px 8px 10px !important;
+    box-sizing: border-box !important;
+  }
+  .cluster .s1 {
+    transform: rotate(-3deg) !important;
+  }
+  .cluster .s2 {
+    transform: rotate(2deg) !important;
+    margin-top: 6px !important;
+  }
+  .cluster .s3 {
+    transform: rotate(-1.5deg) !important;
+  }
+  .cluster .note .tack {
+    width: 10px !important;
+    height: 10px !important;
+    top: 7px !important;
+  }
+}
+
+/* secondary sticky tuning from the file (520px) */
+@media (max-width: 520px) {
+  .cluster {
+    gap: 14px;
+  }
+  .cluster .note {
+    width: 46%;
+    min-height: 110px;
+    font-size: 14px;
+    padding: 24px 12px 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+  .hl-swipe--draw::before {
+    animation: none !important;
+  }
+}

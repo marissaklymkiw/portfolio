@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Placeholder for books photo">
+  <rect width="800" height="600" fill="#ECE6DC"/>
+  <g fill="none" stroke="#D8CFBF" stroke-width="2">
+    <rect x="320" y="190" width="36" height="190" rx="3"/>
+    <rect x="362" y="160" width="36" height="220" rx="3"/>
+    <rect x="404" y="205" width="36" height="175" rx="3"/>
+    <rect x="446" y="175" width="36" height="205" rx="3"/>
+  </g>
+  <text x="400" y="452" text-anchor="middle" font-family="ui-monospace, monospace" font-size="26" letter-spacing="2" fill="#6E665B">BOOKS</text>
+  <text x="400" y="486" text-anchor="middle" font-family="ui-monospace, monospace" font-size="18" letter-spacing="2" fill="#9A9082">photo placeholder · 4:3</text>
+</svg>

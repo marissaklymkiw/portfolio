@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Placeholder for Hobonichi planner photo">
+  <rect width="800" height="600" fill="#ECE6DC"/>
+  <g fill="none" stroke="#D8CFBF" stroke-width="2">
+    <rect x="320" y="170" width="160" height="210" rx="6"/>
+    <line x1="400" y1="170" x2="400" y2="380"/>
+    <line x1="338" y1="206" x2="382" y2="206"/>
+    <line x1="338" y1="236" x2="382" y2="236"/>
+    <line x1="338" y1="266" x2="382" y2="266"/>
+    <line x1="418" y1="206" x2="462" y2="206"/>
+    <line x1="418" y1="236" x2="462" y2="236"/>
+    <line x1="418" y1="266" x2="462" y2="266"/>
+  </g>
+  <text x="400" y="452" text-anchor="middle" font-family="ui-monospace, monospace" font-size="26" letter-spacing="2" fill="#6E665B">HOBONICHI</text>
+  <text x="400" y="486" text-anchor="middle" font-family="ui-monospace, monospace" font-size="18" letter-spacing="2" fill="#9A9082">photo placeholder · 4:3</text>
+</svg>
