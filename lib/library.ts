@@ -11,6 +11,15 @@
 export type BookCategory = "Design" | "Systems" | "Craft & career" | "Adjacent";
 
 /** Section order on the page. "Design" leads; everything after is secondary. */
+export function bookSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
 export const categoryOrder: BookCategory[] = [
   "Design",
   "Systems",
@@ -24,10 +33,20 @@ export type Book = {
   category: BookCategory;
   /** one-line why it matters / what it changed */
   note?: string;
-  /** year read, or first read */
-  year?: string;
+  /** publish year */
+  published?: string;
   /** optional reading state, shown as a small mono tag */
-  status?: "Now reading" | "Re-reading";
+  status?: "Reading" | "Re-reading" | "Read" | "Wishlist";
+  /** ISBN-13 for Open Library cover lookup */
+  isbn?: string;
+  /** Direct cover image URL — overrides Open Library when set */
+  coverUrl?: string;
+  publisher?: string;
+  format?: "Hardcover" | "Paperback" | "Digital" | "Box Set";
+  pages?: number;
+  /** 1–5 rating */
+  rating?: number;
+  signed?: boolean;
 };
 
 export const books: Book[] = [
@@ -36,22 +55,24 @@ export const books: Book[] = [
     author: "Don Norman",
     category: "Design",
     note: "Affordances and signifiers — the vocabulary I still use to explain why something feels broken.",
-    year: "2014",
+    published: "2014",
+    isbn: "9780465050659",
   },
   {
     title: "Articulating Design Decisions",
     author: "Tom Greever",
     category: "Design",
     note: "Influence without authority, in book form. The closest thing to my actual job.",
-    year: "2021",
-    status: "Now reading",
+    published: "2021",
+    status: "Reading",
+    isbn: "9781098136604",
   },
   {
     title: "Refactoring UI",
     author: "Adam Wathan & Steve Schoger",
     category: "Design",
     note: "The fastest gap-closer between a systems brain and a surface that actually looks finished.",
-    year: "2019",
+    published: "2019",
     status: "Re-reading",
   },
   {
@@ -59,41 +80,47 @@ export const books: Book[] = [
     author: "Brad Frost",
     category: "Design",
     note: "The mental model under every component library I've built since.",
-    year: "2016",
+    published: "2016",
+    isbn: "9780998296609",
   },
   {
     title: "Thinking with Type",
     author: "Ellen Lupton",
     category: "Design",
     note: "Type as a system with rules, not decoration applied at the end.",
-    year: "2018",
+    published: "2018",
+    isbn: "9781568989693",
   },
   {
     title: "Thinking in Systems",
     author: "Donella Meadows",
     category: "Systems",
     note: "Stocks, flows, and leverage points — the literal source of how I frame a problem.",
-    year: "2017",
+    published: "2017",
+    isbn: "9781603580557",
   },
   {
     title: "Team Topologies",
     author: "Matthew Skelton & Manuel Pais",
     category: "Systems",
     note: "Why org structure ends up encoded in the product, whether you meant it to or not.",
-    year: "2021",
+    published: "2021",
+    isbn: "9781942788812",
   },
   {
     title: "Inspired",
     author: "Marty Cagan",
     category: "Craft & career",
     note: "The product-team operating model I argue from when I push past the spec.",
-    year: "2019",
+    published: "2019",
+    isbn: "9781119387503",
   },
   {
     title: "Range",
     author: "David Epstein",
     category: "Adjacent",
     note: "Why generalists compound — permission to keep working across every layer.",
-    year: "2020",
+    published: "2020",
+    isbn: "9780735214484",
   },
 ];

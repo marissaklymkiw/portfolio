@@ -1,9 +1,9 @@
-import Section from "@/components/ui/Section";
-import SectionHeader from "@/components/ui/SectionHeader";
 import Label from "@/components/ui/Label";
-import BookList from "@/components/ui/BookList";
-import { books, categoryOrder } from "@/lib/library";
+import LibraryGrid from "@/components/ui/LibraryGrid";
+import { getLibraryBooks } from "@/lib/notion";
 import type { Metadata } from "next";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Library | Marissa Klymkiw",
@@ -11,21 +11,11 @@ export const metadata: Metadata = {
     "The books I read and return to — design first, then the systems thinking, craft, and adjacent fields that feed the work.",
 };
 
-const designBooks = books.filter((b) => b.category === "Design");
+export default async function LibraryPage() {
+  const books = await getLibraryBooks();
 
-const otherGroups = categoryOrder
-  .filter((c) => c !== "Design")
-  .map((category) => ({
-    category,
-    items: books.filter((b) => b.category === category),
-  }))
-  .filter((g) => g.items.length > 0);
-
-export default function LibraryPage() {
   return (
     <>
-      {/* page header — plainer than the home hero on purpose: no grid
-          background and no marker highlight (those belong to the homepage). */}
       <div className="border-b border-line pt-[var(--space-3xl)] pb-[var(--space-2xl)]">
         <div className="wrap">
           <Label className="block mb-[var(--space-md)]">
@@ -41,36 +31,11 @@ export default function LibraryPage() {
         </div>
       </div>
 
-      {/* 01 — Design (the prominent shelf) */}
-      <Section id="design">
-        <SectionHeader
-          num="01"
-          title="Design"
-          desc="The core of the shelf — books that shaped how I think about interfaces, systems, and the craft of making them usable."
-        />
-        <BookList books={designBooks} variant="feature" />
-      </Section>
-
-      {/* 02 — Beyond design (secondary, grouped) */}
-      {otherGroups.length > 0 && (
-        <Section id="beyond">
-          <SectionHeader
-            num="02"
-            title="Beyond design"
-            desc="The systems thinking, product craft, and adjacent fields that feed the design work."
-          />
-          <div className="flex flex-col gap-[var(--space-xl)]">
-            {otherGroups.map((g) => (
-              <div key={g.category}>
-                <Label variant="ink" className="block mb-[var(--space-sm)]">
-                  {g.category}
-                </Label>
-                <BookList books={g.items} variant="compact" />
-              </div>
-            ))}
-          </div>
-        </Section>
-      )}
+      <section className="py-[var(--space-2xl)]">
+        <div className="wrap">
+          <LibraryGrid books={books} />
+        </div>
+      </section>
     </>
   );
 }

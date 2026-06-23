@@ -1,19 +1,25 @@
+import Image from "next/image";
 import type { Book } from "@/lib/library";
 
 /**
  * BookList — a ruled vertical list of books, the same ledger pattern used by
  * "How I work" (hairline rules at ink/low-opacity, a mono meta column, no boxed
- * cards). Mono column carries the year + reading status; the right column the
- * title (Archivo), author, and one-line note.
+ * cards). Mono column carries the cover (if available), year + reading status;
+ * the right column the title (Archivo), author, and one-line note.
  *
  * `variant="feature"` (default) is for the prominent Design shelf — larger
- * titles. `variant="compact"` is the quieter treatment for everything below it.
+ * titles with cover art. `variant="compact"` is the quieter treatment for
+ * everything below it (text only).
  * Responsive: two columns on desktop, stacking to one (meta above title) under
  * 880px — matching HowIWorkLayers so the page reads as one system.
  */
 
 const hairline =
   "border-[color-mix(in_srgb,var(--color-ink)_14%,transparent)]";
+
+function coverUrl(isbn: string) {
+  return `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
+}
 
 export default function BookList({
   books,
@@ -35,11 +41,23 @@ export default function BookList({
           key={b.title}
           className={`grid grid-cols-1 gap-x-[var(--space-lg)] gap-y-[var(--space-2xs)] border-t ${hairline} py-[var(--space-md)] min-[880px]:grid-cols-[140px_1fr]`}
         >
-          {/* mono meta column — year + optional reading status */}
+          {/* meta column — cover (feature only) + year + status */}
           <div className="font-mono text-violet">
-            {b.year && (
+            {variant === "feature" && b.isbn && (
+              <div className="mb-[var(--space-sm)]">
+                <Image
+                  src={coverUrl(b.isbn)}
+                  alt={`Cover of ${b.title}`}
+                  width={80}
+                  height={112}
+                  className="rounded-sm shadow-sm object-cover"
+                  unoptimized
+                />
+              </div>
+            )}
+            {b.published && (
               <span className="block text-sm font-semibold tracking-[.04em]">
-                {b.year}
+                {b.published}
               </span>
             )}
             {b.status && (
