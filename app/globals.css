@@ -1,71 +1,141 @@
 @import "tailwindcss";
 
+/* Tailwind v4 is CSS-first and does not auto-load a JS config. This line is what
+   makes tailwind.config.js real — without it, that file has no effect. It is the
+   v4 replacement for the v3 `@tailwind base/components/utilities` directives,
+   which v4 does not understand. */
+@config "../tailwind.config.js";
+
 /* =========================================================================
-   DESIGN TOKENS  —  ported 1:1 from MK_Design_System.html :root
-   (sourced from MK's 2010 logo + resume; see DESIGN_NOTES.md — do not "modernize")
-   In Tailwind v4 these @theme vars ARE the CSS custom properties AND generate
-   utilities (bg-indigo, text-violet, font-display, text-3xl, rounded-card, ...).
+   DESIGN TOKENS — Marissa Klymkiw 2026 Portfolio
+   Swiss / International Typographic, display-led.
+
+   SOURCE OF TRUTH: design.md. Values copied exactly — no rounding.
+   Mirrored in tailwind.config.js (utilities) and lib/tokens.ts (JS).
+
+   These :root declarations are what make every design value available as a CSS
+   variable across the whole app. They are declared explicitly rather than
+   inferred, because a legacy JS config loaded via @config does NOT emit theme
+   values as custom properties the way @theme does — and the hand-written CSS
+   further down references var(--color-*) directly.
+
+   SINGLE LIGHT THEME. No dark mode, ever: light reading surfaces are a medical
+   requirement (astigmatism), not a preference. Do not author a
+   prefers-color-scheme: dark block, and do not "helpfully" add one later.
    ========================================================================= */
-@theme {
-  /* ---- Color ---- */
-  --color-indigo: #27075a; /* brand — 2010 logo circle */
-  --color-indigo-deep: #1b0540; /* primary button hover */
-  --color-violet: #6a3fb5; /* AA accent for small text on light (was --indigo-bright) */
-  --color-yellow: #fff64d; /* highlighter — 2010 resume */
-  --color-yellow-deep: #f2e83a; /* yellow button hover */
-  --color-ink: #1f1b16; /* warm near-black — body & UI text */
-  --color-paper: #f6f3ee; /* off-white reading surface (the page) */
-  --color-panel: #ffffff; /* raised panel — grouped containers ONLY */
-  --color-line: #ded7cc; /* hairline */
-  --color-bark: #6e665b; /* secondary text */
-  --color-logo-fg: #e4e5e6; /* mk monogram letterforms */
+:root {
+  color-scheme: light;
+
+  /* ---- Color — monochrome; black + white carry everything ---- */
+  --color-paper: #ffffff; /* background + surface. True white */
+  --color-ink: #14121a; /* body text + the big hero name — 18.56:1 AAA */
+  --color-muted: #6f6b77; /* secondary text, captions, mono labels — 5.19:1 AA */
+  --color-rich: #121118; /* THE accent: links, labels, rules, arrows — 18.77:1 AAA */
+  --color-rich-hover: #000000; /* the only place #000 is permitted */
+  --color-line: #e6e4ea; /* hairline — 1.26:1 — SEPARATOR ONLY */
+  --color-line-strong: #cfcbd6; /* hover borders — 1.59:1 — BORDERS ONLY, never text */
+  --color-display-mute: #8e8a99; /* de-emphasized LARGE display text only — 3.36:1 */
+  --color-error: #a4232f; /* form validation ONLY — 7.34:1 AAA */
 
   /* ---- Type families (bound to next/font vars in layout.tsx) ---- */
-  --font-display: var(--font-archivo), system-ui, sans-serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  --font-marker: var(--font-permanent-marker), cursive;
+  --font-display: var(--font-hanken), var(--font-inter), sans-serif; /* headings + logo */
+  --font-body: var(--font-inter), "Helvetica Neue", Arial, sans-serif; /* body + hero name */
+  --font-mono: var(--font-space-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* ---- Type scale (perfect-fourth-ish, carried from the file) ---- */
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-md: 1.25rem;
-  --text-lg: 1.563rem;
-  --text-xl: 2.441rem;
-  --text-2xl: 3.815rem;
-  --text-3xl: 5.96rem;
+  /* ---- Type scale — display sizes are fluid clamps, not steps ---- */
+  --text-wordmark: clamp(2rem, 10.5vw, 8.5rem);
+  --text-bignum: clamp(4rem, 13vw, 12rem);
+  --text-marker: clamp(1.8rem, 5.4vw, 4.6rem);
+  --text-lede: clamp(1.3rem, 2.4vw, 2.1rem); /* case-study lede: below marker, above intro */
+  --text-section: clamp(1.6rem, 3vw, 2.4rem);
+  --text-h2: clamp(1.2rem, 2.2vw, 1.75rem);
+  --text-h3: clamp(1.05rem, 1.8vw, 1.5rem);
+  --text-intro: clamp(1.05rem, 1.35vw, 1.35rem);
+  --text-body: 1rem;
+  --text-prose: 1.125rem; /* long-form reading size — case-study prose */
+  --text-small: 0.95rem;
+  --text-label: 0.72rem;
+  --text-eyebrow: clamp(0.72rem, 0.95vw, 1rem);
 
-  /* Display / hero headline — every page <h1> shares this one fluid size, so
-     all heroes match. Fluid down on small screens, capped at 5rem. Generates
-     the `text-hero` utility (size + paired line-height). Don't hardcode clamps
-     in components; use text-hero. */
-  --text-hero: clamp(2.8rem, 8vw, 5rem);
-  --text-hero--line-height: 1;
+  --leading-display: 0.82;
+  --leading-tight: 1.1;
+  --leading-normal: 1.42;
+  --leading-body: 1.5;
 
-  /* ---- Radius ---- */
-  --radius-card: 10px;
-  --radius-panel: 16px;
+  --tracking-display: -0.04em;
+  --tracking-bignum: -0.05em;
+  --tracking-tight: -0.02em;
+  --tracking-label: 0.08em;
+  --tracking-eyebrow: 0.14em;
+
+  /* ---- Spacing — 4/8/16/24/32/48/64 ONLY ----
+     Named --spacing-* to match Tailwind's key (and design.md §7). The retired
+     scale below still owns --space-* at DIFFERENT values, so the two coexist
+     rather than collide. Do not merge them. */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* ---- Radius — binary: fully round, or sharp ---- */
+  --radius-none: 0;
+  --radius-full: 999px;
+
+  /* ---- Rules — the structural device: 2 weights, 1 ink ---- */
+  --rule: 1px;
+  --rule-strong: 2px;
+
+  /* ---- Layout ---- */
+  --canvas: 1440px;
+  --pad: clamp(20px, 4.5vw, 64px);
+  --hh: 52px; /* sticky header height — drives where the hero name pins */
+  --gutter: 24px;
+
+  /* ---- Elevation: intentionally none. This system has no shadows. ---- */
 }
 
 /* =========================================================================
-   SPACING  —  4–8pt scale.
-   A 4px base unit: 4pt steps at the small end (4/8/12/16), an 8pt grid through
-   the middle, modular growth at the large end. Every padding, margin, and gap
-   on the site resolves to one of these tokens, so vertical rhythm stays on grid.
-   Used via arbitrary utilities, e.g. py-[var(--space-3xl)].
+   DEPRECATED — transition only. DO NOT USE IN NEW WORK.
+
+   Retired by the Swiss direction (design.md §1 "Retired — do not reintroduce").
+   These exist solely so the not-yet-migrated routes keep rendering: /about,
+   /ethos, /resume, /library, /writing, /work/[slug]. Delete this whole block
+   once those are migrated.
+
+   Note --color-paper is NOT aliased back to the warm #f6f3ee: true white is the
+   spec, and warm paper is retired. Un-migrated pages therefore render on white.
+   Their bg-panel (also white) loses its surface distinction until migrated —
+   that is the one visible transition artifact, and it is intentional.
    ========================================================================= */
 :root {
-  --space-3xs: 4px; /* 0.25rem */
-  --space-2xs: 8px; /* 0.5rem  */
-  --space-xs: 12px; /* 0.75rem */
-  --space-sm: 16px; /* 1rem    */
-  --space-md: 24px; /* 1.5rem  */
-  --space-lg: 40px; /* 2.5rem  */
-  --space-xl: 64px; /* 4rem    */
-  --space-2xl: 96px; /* 6rem    */
-  --space-3xl: 160px; /* 10rem   */
+  --color-indigo: #27075a;
+  --color-indigo-deep: #1b0540;
+  --color-violet: #6a3fb5;
+  --color-yellow: #fff64d;
+  --color-yellow-deep: #f2e83a;
+  --color-panel: #ffffff;
+  --color-bark: #6e665b;
+  --color-logo-fg: #e4e5e6;
+  --color-paper-warm: #f6f3ee;
+  --font-marker: var(--font-permanent-marker), cursive;
 
+  --radius-card: 10px;
+  --radius-panel: 16px;
+
+  /* the retired 4–8pt scale. SAME NAMES, DIFFERENT VALUES to --spacing-* above.
+     Referenced by un-migrated pages as var(--space-3xl). Do not "unify" these. */
+  --space-3xs: 4px;
+  --space-2xs: 8px;
+  --space-xs: 12px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 40px;
+  --space-xl: 64px;
+  --space-2xl: 96px;
+  --space-3xl: 160px;
   --maxw: 1120px;
 }
 
@@ -80,30 +150,251 @@
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-body);
-    font-size: var(--text-base);
-    line-height: 1.7;
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
   /* Anchor targets clear the sticky header */
   section[id],
   div[id] {
-    scroll-margin-top: var(--space-2xl);
+    scroll-margin-top: var(--spacing-3xl);
+  }
+}
+
+/* Focus is always visible — principle 07, WCAG 2.4.7. Rich, not violet. */
+:focus-visible {
+  outline: 2px solid var(--color-rich);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   SWISS COMPONENTS — the new system
+   ========================================================================= */
+@layer components {
+  /* the Swiss content canvas: 1440px, fluid pad. Distinct from the retired
+     .wrap (1120px) below, which un-migrated pages still use. */
+  .canvas {
+    max-width: var(--canvas);
+    margin: 0 auto;
+    padding-left: var(--pad);
+    padding-right: var(--pad);
+  }
+
+  /* -------------------------------------------------------------------
+     The scroll-cover (the Pizzolato effect).
+
+     The name PINS under the sticky header while everything below it — an
+     opaque white layer — rises over it and covers it. Three things make it
+     work, and all three are load-bearing:
+       1. .stage is sticky at top:var(--hh), so it parks under the header.
+       2. .cover is opaque (background: paper) and z-index:2 vs the stage's 1,
+          so it paints OVER the pinned name rather than under it.
+       3. .hero-wrap bounds the stickiness — the name releases when the wrap
+          scrolls past, instead of following you down the page.
+     Do NOT put overflow (auto/hidden/scroll) on .hero-wrap or any ancestor:
+     it silently kills position:sticky. Use overflow-x:clip if you must clip.
+     ------------------------------------------------------------------- */
+  .hero-wrap {
+    position: relative;
+  }
+  .stage {
+    position: sticky;
+    top: var(--hh);
+    z-index: 1;
+    padding-top: clamp(24px, 4.5vw, 56px);
+    padding-bottom: clamp(20px, 3vw, 40px);
+  }
+  .stage-inner {
+    position: relative;
+  }
+  .cover {
+    position: relative;
+    z-index: 2;
+    background: var(--color-paper);
+  }
+  .hero-body {
+    padding-top: clamp(24px, 4vw, 56px);
+    padding-bottom: clamp(40px, 7vw, 96px);
+  }
+
+  /* mono label — the structural scaffolding */
+  .lab {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .lab--ink {
+    color: var(--color-rich);
+  }
+
+  /* the hero name. Inter, NOT Hanken — Hanken names headings; the wordmark is a
+     display object with its own tracking. Two switchable treatments, toggled by
+     data-hero on the stage: "masthead" and "zigzag" (design.md §9). */
+  .wordmark {
+    margin: 0;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: var(--text-wordmark);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    color: var(--color-ink);
+    display: flex;
+    flex-direction: column;
+  }
+  .wordmark .w1,
+  .wordmark .w2 {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .wm-eyebrow,
+  .wm-arrow {
+    display: none; /* off unless a treatment turns them on */
+  }
+  .wm-eyebrow {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--text-eyebrow);
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+    color: var(--color-rich);
+    line-height: 1.2;
+  }
+  .wm-arrow {
+    color: var(--color-rich);
+    line-height: 1;
+  }
+
+  /* the masthead's rule + discipline line */
+  .mast-bar {
+    display: none;
+  }
+  .mast-rule {
+    flex: 1 1 auto;
+    height: var(--rule-strong);
+    background: var(--color-ink);
+  }
+  .mast-disc {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: clamp(0.78rem, 1vw, 1.05rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    white-space: nowrap;
+  }
+
+  /* treatment A — masthead: the interlock staircase */
+  [data-hero="masthead"] .wordmark .w1 {
+    align-self: flex-start;
+  }
+  [data-hero="masthead"] .wordmark .w2 {
+    align-self: flex-start;
+    margin-left: 3.4em; /* the loosened corner kiss */
+    margin-top: -0.02em;
+  }
+  [data-hero="masthead"] .mast-bar {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2vw, 28px);
+    margin-top: clamp(20px, 2.6vw, 40px);
+  }
+
+  /* treatment B — editorial zigzag: words thrown to opposite corners */
+  [data-hero="zigzag"] .wm-eyebrow--1 {
+    display: block;
+    align-self: flex-start;
+    margin-bottom: 0.9em;
+  }
+  [data-hero="zigzag"] .wordmark .w1 {
+    align-self: flex-start;
+  }
+  [data-hero="zigzag"] .wm-arrow {
+    display: block;
+    align-self: flex-start;
+    width: clamp(54px, 7vw, 108px);
+    margin: clamp(0.2rem, 1.4vh, 0.9rem) 0 clamp(0.2rem, 1.4vh, 0.9rem) 44%;
+  }
+  [data-hero="zigzag"] .wm-arrow svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  [data-hero="zigzag"] .wm-eyebrow--2 {
+    display: block;
+    align-self: flex-end;
+    margin-top: clamp(0.2rem, 1.4vh, 0.85rem);
+    margin-bottom: 0.9em;
+  }
+  [data-hero="zigzag"] .wordmark .w2 {
+    align-self: flex-end;
+  }
+
+  /* the logo — Hanken. Collapses marissa—klymkiw → m—k on scroll.
+     The mark differentiates by FORM (this construction), not by exclusive face. */
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-size: 1.05rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .brand .bword {
+    display: inline-flex;
+    align-items: baseline;
+  }
+  .brand .brest {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 7em;
+    opacity: 1;
+    transition:
+      max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.3s ease;
+  }
+  .brand.shrunk .brest {
+    max-width: 0;
+    opacity: 0;
+  }
+  /* the brand rule: the only rule with a fixed width — it's a glyph, not a
+     divider. Same 2px as the masthead, which is what ties the mark to the hero. */
+  .brand .brule {
+    flex: 0 0 auto;
+    width: clamp(15px, 1.6vw, 24px);
+    height: var(--rule-strong);
+    background: var(--color-ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .brand .brest {
+      transition: none;
+    }
   }
 }
 
 /* =========================================================================
-   PRESERVED SIGNATURE CSS  —  kept verbatim (token vars swapped in).
-   These are hand-tuned and/or impossible as utilities; do not refactor.
+   PRESERVED SIGNATURE CSS — DEPRECATED.
+
+   Hand-tuned CSS for the retired facilitation layer (marker highlight, sticky
+   cluster, hero paper patterns, cycling headline). The Swiss direction retires
+   all of it — see design.md §8. Kept verbatim ONLY so un-migrated routes keep
+   rendering. Do not use in new work; delete with the block above.
    ========================================================================= */
 @layer components {
-  /* centered content column */
+  /* centered content column — the retired 1120px wrap */
   .wrap {
     max-width: var(--maxw);
     margin: 0 auto;
     padding: 0 var(--space-md);
   }
 
-  /* flat highlighter mark (inline <mark> / .hl) */
   .hl {
     background: var(--color-yellow);
     color: var(--color-ink);
@@ -113,11 +404,6 @@
     -webkit-box-decoration-break: clone;
   }
 
-  /* -------------------------------------------------------------------
-     MarkerHighlight — the GOOD hand-swiped highlighter.
-     CSS background-image (inline SVG w/ feTurbulence): auto-fits any word
-     at any width and clears descenders. Generalized from footer .hl-swipe.
-     ------------------------------------------------------------------- */
   .hl-swipe {
     position: relative;
     color: var(--color-indigo);
@@ -134,22 +420,12 @@
     right: -0.16em;
     top: -0.08em;
     height: 1.26em;
-    /* slightly transparent so the surface reads through the ink */
     opacity: 0.7;
-    /* Hand-drawn highlighter stroke. Edge irregularity (wavy top/bottom,
-       thin soft LEFT taper, denser darker RIGHT pool) is baked into the path
-       geometry — NOT a displacement filter, which read as wrinkled paper.
-       Warm diagonal gradient = left trails light, bottom-right pools dark;
-       second path = faint ink settling along the bottom edge; the filter adds
-       a low-opacity paper grain clipped to the shape. */
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='80' viewBox='0 0 300 80' preserveAspectRatio='none'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='%23FFFB8A' stop-opacity='0.82'/><stop offset='0.08' stop-color='%23FFF75A'/><stop offset='0.5' stop-color='%23FFF64D'/><stop offset='0.9' stop-color='%23FCF24A'/><stop offset='1' stop-color='%23F2E63C'/></linearGradient><radialGradient id='p' cx='0.93' cy='0.6' r='0.19'><stop offset='0' stop-color='%23D4BF0C' stop-opacity='1'/><stop offset='0.55' stop-color='%23E8D41E' stop-opacity='0.78'/><stop offset='1' stop-color='%23F0E236' stop-opacity='0'/></radialGradient><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='%23D6C82E' stop-opacity='0'/><stop offset='0.7' stop-color='%23D6C82E' stop-opacity='0'/><stop offset='1' stop-color='%23D6C82E' stop-opacity='0.22'/></linearGradient><filter id='ink'><feTurbulence type='fractalNoise' baseFrequency='0.7 0.9' numOctaves='2' seed='8' result='n'/><feColorMatrix in='n' type='matrix' values='0 0 0 0 0.7 0 0 0 0 0.66 0 0 0 0 0.05 0 0 0 0.5 0' result='gr'/><feComposite in='gr' in2='SourceAlpha' operator='in' result='gc'/><feMerge><feMergeNode in='SourceGraphic'/><feMergeNode in='gc'/></feMerge></filter><clipPath id='band'><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z'/></clipPath><filter id='soft' y='-150%25' height='400%25'><feGaussianBlur stdDeviation='2.4'/></filter></defs><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z' fill='url(%23g)' filter='url(%23ink)'/><g clip-path='url(%23band)'><path d='M4 25 C90 22 210 24 304 23 L304 31 C210 32 90 30 4 29 Z' fill='%23E8D828' opacity='0.26' filter='url(%23soft)'/><path d='M4 40 C90 37 210 39 304 38 L304 47 C210 48 90 46 4 45 Z' fill='%23E8D828' opacity='0.26' filter='url(%23soft)'/><path d='M4 53 C90 51 210 53 304 52 L304 61 C210 62 90 60 4 59 Z' fill='%23E8D828' opacity='0.26' filter='url(%23soft)'/><path d='M4 34 C90 32 210 34 304 33 L304 37 C210 38 90 36 4 36 Z' fill='%23FFFCB0' opacity='0.32' filter='url(%23soft)'/></g><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z' fill='url(%23s)'/><path d='M12 18 C44 13 84 15 122 14 C160 13 200 12 240 14 C270 15 288 13 296 20 C302 27 301 40 295 49 C292 57 287 61 278 61 C248 65 232 67 204 62 C176 58 160 60 136 63 C108 66 88 66 64 61 C42 58 24 58 14 53 C5 49 3 39 3 29 C3 22 6 16 12 18 Z' fill='url(%23p)'/></svg>");
     background-size: 100% 100%;
     background-repeat: no-repeat;
     transform: rotate(-2.5deg);
   }
-
-  /* Opt-in left-to-right wipe reveal (~0.45s) — reads as the stroke being
-     drawn. Use <MarkerHighlight draw>. Disabled for reduced-motion. */
   .hl-swipe--draw::before {
     animation: hl-draw 0.45s ease-out both;
   }
@@ -162,9 +438,6 @@
     }
   }
 
-  /* hero background — switchable paper patterns (graph / iso / lined / dot).
-     The base handles position + the soft top/bottom fade; a modifier class sets
-     the pattern. Toggled live by <HeroBackground>. */
   .hero-bg {
     position: absolute;
     inset: 0;
@@ -209,9 +482,6 @@
       );
   }
 
-  /* -------------------------------------------------------------------
-     Facilitation: circled-text annotation (hand-drawn ellipse)
-     ------------------------------------------------------------------- */
   .circle-mark {
     position: relative;
     display: inline-block;
@@ -227,16 +497,12 @@
     overflow: visible;
     z-index: 1;
   }
-
-  /* marker circle drawn around a highlighted word (hero) — hand-drawn ellipse
-     on a wide viewBox so the stretched stroke stays even. Sits above the swipe. */
   .marker-circle-wrap {
     position: relative;
     display: inline-block;
   }
   .marker-circle {
     position: absolute;
-    /* extra room on the left so the ellipse clears the first letter */
     left: -20px;
     top: -10px;
     width: calc(100% + 32px);
@@ -246,11 +512,6 @@
     pointer-events: none;
   }
 
-  /* -------------------------------------------------------------------
-     Facilitation: sticky-note cluster.
-     Absolute-positioned on desktop; reflows to a non-overlapping row at
-     860px. .note stays position:relative so each tack anchors to it.
-     ------------------------------------------------------------------- */
   .cluster {
     position: absolute;
     top: 56px;
@@ -258,8 +519,6 @@
     width: 320px;
     height: 260px;
   }
-  /* Colour + tack come from the StickyNote component (props); the CSS owns
-     only the geometry, shadow, type, and the reflow below. */
   .cluster .note {
     position: absolute;
     width: 128px;
@@ -297,7 +556,6 @@
     transform: rotate(-2.5deg);
   }
 
-  /* skip link */
   .skip {
     position: absolute;
     left: -9999px;
@@ -306,25 +564,18 @@
     position: fixed;
     left: 8px;
     top: 8px;
-    background: var(--color-indigo);
+    background: var(--color-rich);
     color: var(--color-paper);
     padding: 10px 16px;
     z-index: 100;
-    border-radius: 6px;
+    border-radius: var(--radius-none);
   }
 
-  /* -------------------------------------------------------------------
-     Cycling headline (CyclingHero): a typewriter reveal. The whole line —
-     including "I" — types in, holds, then erases before the next types, with a
-     blinking caret at the end. A hidden sizer reserves the longest line's
-     width + baseline so nothing reflows as characters change.
-     ------------------------------------------------------------------- */
   .cyc {
     position: relative;
     display: inline-block;
     vertical-align: baseline;
   }
-  /* the leading verb of each phrase picks up the violet accent */
   .cyc-verb {
     color: var(--color-violet);
   }
@@ -338,7 +589,6 @@
     top: 0;
     white-space: nowrap;
   }
-  /* blinking text cursor at the end of the typed text */
   .cyc-caret {
     display: inline-block;
     width: 0.06em;
@@ -361,20 +611,13 @@
   }
 }
 
-/* reduced motion: the JS shows whole lines (no typing); keep the caret steady */
 @media (prefers-reduced-motion: reduce) {
   .cyc-caret {
     animation: none;
   }
 }
 
-/* focus ring */
-:focus-visible {
-  outline: 2.5px solid var(--color-violet);
-  outline-offset: 2px;
-}
-
-/* sticky cluster reflow — verbatim breakpoint from the file (860px) */
+/* sticky cluster reflow — verbatim breakpoint from the retired system (860px) */
 @media (max-width: 860px) {
   .cluster {
     position: static !important;
@@ -422,7 +665,6 @@
   }
 }
 
-/* secondary sticky tuning from the file (520px) */
 @media (max-width: 520px) {
   .cluster {
     gap: 14px;

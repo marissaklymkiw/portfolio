@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la ~/Downloads/file.zip && echo \"---DEST---\" && ls -la ~/Documents/Projects/2026-portfolio)",
+      "Bash(unzip -l ~/Downloads/files.zip)",
+      "Bash(unzip -o ~/Downloads/files.zip -d ~/Documents/Projects/2026-portfolio)",
+      "Bash(mkdir -p ~/Documents/Projects/2026-portfolio/app/work/\\\\[slug\\\\])",
+      "Bash(touch ~/Documents/Projects/2026-portfolio/app/work/\\\\[slug\\\\]/.gitkeep)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(grep -rnoE '#[0-9a-fA-F]{3,8}|rgba?\\\\\\([^\\)]*\\\\\\)|\\\\b\\(white|black\\)\\\\b|text-white|bg-white|fill-white' components app/page.tsx app/layout.tsx)",
+      "Bash(grep -noE '#[0-9a-fA-F]{3,8}|rgba?\\\\\\([^\\)]*\\\\\\)|: ?#fff|: ?#000|color: ?white|color: ?black' app/globals.css)",
+      "Bash(mkdir -p app/library app/work app/writing app/ethos app/about app/resume)",
+      "Bash(mv app/page.tsx app/library/page.tsx)",
+      "Bash(npm run *)",
+      "Bash(cp ~/Documents/Work/USC/\"USC Central Communications\"/Coronavirus/05-Outgoing/usc-logo-sm.png public/logos/usc.png)",
+      "Bash(cp /tmp/ucla-logos/logo_UCLA_all/logo_UCLA_blue/logo_UCLA_blue.svg public/logos/ucla.svg)",
+      "Bash(cp /tmp/indeed.svg public/logos/indeed.svg)",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -sL \"https://upload.wikimedia.org/wikipedia/commons/f/fc/Indeed_logo.svg\" -o /tmp/indeed_wiki.svg)",
+      "WebFetch(domain:openlibrary.org)",
+      "WebFetch(domain:www.googleapis.com)",
+      "mcp__5ebb3643-d777-4c16-b33b-7ea80031f290__notion-update-page",
+      "Bash(curl -s \"https://openlibrary.org/search.json?title=About+Face&author=Cooper&fields=title,author_name,publisher,isbn,publish_date,first_publish_year,edition_count&limit=10\")",
+      "Bash(file *)",
+      "Bash(mv cover_badass cover_badass.jpg && ls)",
+      "Read(//private/tmp/**)",
+      "Bash(curl -sL \"https://rosenfeldmedia.com/books/interviewing-users/\" -o rm.html)",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "mcp__Claude_in_Chrome__javascript_tool",
+      "Bash(/usr/bin/grep -iE 'good')",
+      "Bash(git checkout *)",
+      "Bash(/usr/bin/grep -iE '\\\\.env')",
+      "Bash(/usr/bin/grep -iE 'env' .gitignore)"
+    ]
+  }
+}

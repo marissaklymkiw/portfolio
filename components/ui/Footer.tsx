@@ -1,27 +1,24 @@
 /**
- * Footer — the single inversion moment: the one dark indigo band on the page.
+ * Footer — closes the page on a section rule, like every other band.
+ *
+ * The retired system made this the one inversion moment: a dark indigo band with
+ * yellow links. The Swiss direction has no inversion moment — black and white
+ * carry everything, and the rule does the separating. See design.md §8.
  */
-const links = [
-  { label: "linkedin →", href: "#" },
-  { label: "resume →", href: "#" },
-  { label: "email →", href: "#" },
-];
-
 export default function Footer() {
   return (
-    <footer className="bg-indigo text-paper py-[var(--space-2xl)]">
-      <div className="wrap flex flex-wrap justify-end items-end gap-[var(--space-md)]">
-        <div className="flex flex-col gap-2 text-right">
-          {links.map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              className="text-yellow no-underline font-mono text-sm py-1.5 inline-block"
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
+    <footer id="contact" className="canvas">
+      <div className="flex flex-wrap items-baseline justify-between gap-lg border-t border-ink pt-[18px] pb-2xl">
+        <a
+          href="mailto:marissa.klymkiw@gmail.com"
+          className="font-display text-h2 text-ink hover:text-rich transition-colors"
+        >
+          marissa.klymkiw@gmail.com
+        </a>
+        <span className="lab">Still building &mdash; &copy; 2026</span>
+        <a href="#wordmark" className="lab lab--ink">
+          Back to top &uarr;
+        </a>
       </div>
     </footer>
   );

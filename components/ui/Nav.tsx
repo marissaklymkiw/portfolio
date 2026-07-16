@@ -2,52 +2,77 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import Logo from "@/components/svg/Logo";
+import { useEffect, useState } from "react";
 
 /**
- * Nav — sticky portfolio header: logo + name (home link) on the left, the
- * section links + a Resume pill on the right. Collapses to a hamburger menu
- * below 860px. The current section is highlighted via the pathname.
+ * Nav — the Swiss topbar. Sticky, true white, NO bottom rule (the sections own
+ * the rules; a bar rule would compete with them).
+ *
+ * A 1fr auto 1fr grid so the nav stays optically centred and the meta stays put
+ * while the brand collapses marissa—klymkiw → m—k on scroll (design.md §4).
+ *
+ * The logo is the one place the mark speaks. It differentiates by FORM — the
+ * m—k construction, the 2px rule, the collapse — not by an exclusive typeface,
+ * since Hanken now sets headings too. See design.md §2.
  */
+/* Writing and Library are hidden from the nav for now — the ROUTES still exist
+   and still build (/writing, /library, /library/[slug]); they are simply not
+   linked. Re-add the entries here to bring them back; nothing else is needed. */
 const LINKS = [
   { href: "/", label: "Home" },
   { href: "/work", label: "Work" },
   { href: "/ethos", label: "Ethos" },
-  { href: "/library", label: "Library" },
   { href: "/about", label: "About" },
+  { href: "/resume", label: "Resume" },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [shrunk, setShrunk] = useState(false);
+
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
 
+  /* collapse the wordmark once the hero name has scrolled under the bar */
+  useEffect(() => {
+    const onScroll = () => setShrunk(window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-20 bg-paper border-b border-line">
-      <nav className="flex items-center justify-between max-w-[var(--maxw)] mx-auto px-[var(--space-md)] py-[var(--space-sm)]">
+    <header className="sticky top-0 z-50 bg-paper">
+      <div className="canvas grid grid-cols-[1fr_auto_1fr] items-baseline gap-lg py-[14px]">
+        {/* brand */}
         <Link
           href="/"
+          aria-label="Marissa Klymkiw — home"
           onClick={() => setOpen(false)}
-          className="flex items-center gap-3 min-w-0 no-underline font-display font-extrabold text-md tracking-[-.02em] text-indigo max-[760px]:text-base"
+          className={`brand justify-self-start ${shrunk ? "shrunk" : ""}`}
         >
-          <Logo className="block shrink-0 w-[80px] h-[80px]" />
-          {"Marissa Klymkiw"}
+          <span className="bword">
+            <span>m</span>
+            <span className="brest">arissa</span>
+          </span>
+          <span className="brule" aria-hidden="true" />
+          <span className="bword">
+            <span>k</span>
+            <span className="brest">lymkiw</span>
+          </span>
         </Link>
 
-        {/* desktop links */}
-        <div className="flex items-center gap-[var(--space-md)] max-[860px]:hidden">
-          <ul className="flex items-center gap-[var(--space-md)]">
+        {/* desktop nav */}
+        <nav aria-label="Sections" className="justify-self-center max-[860px]:hidden">
+          <ul className="flex gap-[22px] list-none p-0 m-0">
             {LINKS.map((l) => (
               <li key={l.href}>
                 <Link
                   href={l.href}
                   aria-current={isActive(l.href) ? "page" : undefined}
-                  className={`font-body text-md no-underline transition-colors ${
-                    isActive(l.href)
-                      ? "text-indigo font-semibold"
-                      : "text-bark hover:text-indigo"
+                  className={`font-mono text-label uppercase tracking-[0.06em] transition-colors hover:text-rich ${
+                    isActive(l.href) ? "text-rich font-bold" : "text-ink"
                   }`}
                 >
                   {l.label}
@@ -55,57 +80,51 @@ export default function Nav() {
               </li>
             ))}
           </ul>
-          <Link
-            href="/resume"
-            aria-current={isActive("/resume") ? "page" : undefined}
-            className={`font-body font-semibold text-md no-underline rounded-full border px-4 py-1.5 transition-colors ${
-              isActive("/resume")
-                ? "bg-indigo text-paper border-indigo"
-                : "border-indigo text-indigo hover:bg-indigo/6"
-            }`}
-          >
-            Resume
-          </Link>
+        </nav>
+
+        {/* meta */}
+        <div className="justify-self-end font-mono text-label tracking-[0.04em] text-muted max-[860px]:hidden">
+          Staff Product Design
         </div>
 
-        {/* mobile hamburger */}
+        {/* mobile toggle */}
         <button
           type="button"
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
-          className="hidden max-[860px]:flex flex-col gap-[5px] p-2 -mr-2"
+          className="hidden max-[860px]:flex flex-col gap-[5px] p-2 -mr-2 justify-self-end"
         >
           <span
-            className={`block w-6 h-[2px] bg-indigo transition-transform ${
+            className={`block w-6 h-[2px] bg-ink transition-transform ${
               open ? "translate-y-[7px] rotate-45" : ""
             }`}
           />
           <span
-            className={`block w-6 h-[2px] bg-indigo transition-opacity ${
+            className={`block w-6 h-[2px] bg-ink transition-opacity ${
               open ? "opacity-0" : ""
             }`}
           />
           <span
-            className={`block w-6 h-[2px] bg-indigo transition-transform ${
+            className={`block w-6 h-[2px] bg-ink transition-transform ${
               open ? "-translate-y-[7px] -rotate-45" : ""
             }`}
           />
         </button>
-      </nav>
+      </div>
 
-      {/* mobile menu panel */}
+      {/* mobile panel */}
       {open && (
         <div className="hidden max-[860px]:block border-t border-line bg-paper">
-          <ul className="flex flex-col px-[var(--space-md)] py-[var(--space-xs)]">
-            {[...LINKS, { href: "/resume", label: "Resume" }].map((l) => (
+          <ul className="canvas flex flex-col list-none py-sm">
+            {LINKS.map((l) => (
               <li key={l.href}>
                 <Link
                   href={l.href}
                   onClick={() => setOpen(false)}
                   aria-current={isActive(l.href) ? "page" : undefined}
-                  className={`block py-[var(--space-sm)] font-body text-base no-underline ${
-                    isActive(l.href) ? "text-indigo font-semibold" : "text-bark"
+                  className={`block py-md font-mono text-label uppercase tracking-label ${
+                    isActive(l.href) ? "text-rich font-bold" : "text-ink"
                   }`}
                 >
                   {l.label}

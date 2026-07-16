@@ -1,0 +1,871 @@
+/* =========================================================================
+   DRP case study — styles ported 1:1 from MK_DRP_CaseStudy_6_2.html.
+   SCOPED under `.cs` so the template's bare-element selectors (body, h1, p, *)
+   and its `.wrap` don't collide with globals.css. Font families are mapped to
+   the app's next/font CSS vars (--font-display / --font-body / --font-mono)
+   so no Google Fonts CDN link is needed. The template's own color/size/space
+   tokens are kept verbatim (scoped to .cs) for exact fidelity — iterate here.
+   The template's .topnav and .foot are intentionally omitted: the app's global
+   Nav and Footer (see app/layout.tsx) frame every page.
+   ========================================================================= */
+
+.cs {
+  /* ---- template :root tokens, scoped ---- */
+  --indigo: #27075a;
+  --yellow: #fff64d;
+  --violet: #6a3fb5;
+  --ink: #1f1b16;
+  --ink-soft: #55504a;
+  --line: #ded8ce;
+  --paper: #f6f3ee;
+  --white: #ffffff;
+  --f-xs: 0.75rem;
+  --f-sm: 0.875rem;
+  --f-base: 1.0625rem;
+  --f-lg: 1.33rem;
+  --f-xl: 1.66rem;
+  --f-2xl: 2.4rem;
+  --f-3xl: 3.4rem;
+  --f-4xl: 4.4rem;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 40px;
+  --s-6: 64px;
+  --s-7: 96px;
+  --measure: 78ch;
+  --wide: 1074px;
+  --rail: 230px;
+  --radius: 14px;
+
+  /* ---- template body styles, scoped ---- */
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  font-size: var(--f-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.cs * {
+  box-sizing: border-box;
+}
+
+.cs .wrap {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--s-4);
+}
+
+/* ===== hero — teal band + centred pill + gradient headline + product shot
+   that bleeds up into the band (structure after the Framer reference) ===== */
+.cs .cs-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  /* no bottom padding — the clipped screenshot forms the bottom of the band,
+     and the beige page section begins exactly at its cropped edge */
+  padding: var(--s-6) var(--s-4) 0;
+}
+.cs .cs-hero-bg {
+  object-fit: cover;
+  object-position: center top;
+  z-index: -1;
+  /* scale the teal up so the film grain reads larger — no editing of the file */
+  transform: scale(1.45);
+  transform-origin: center top;
+}
+.cs .cs-hero-inner {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: var(--s-4) 0 0;
+  text-align: center;
+}
+.cs .cs-hero .pill {
+  display: inline-block;
+  margin-bottom: var(--s-5);
+  padding: 6px 16px;
+  border: 1px solid rgba(246, 243, 238, 0.3);
+  border-radius: 999px;
+  background: rgba(246, 243, 238, 0.12);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.cs .cs-hero h1 {
+  max-width: 24ch;
+  margin: 0 auto;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3.1vw, 2.7rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, var(--paper) 46%, rgba(246, 243, 238, 0.72) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.cs .cs-hero-shot {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  /* contained card: only its top overlaps the band, the teal shows on both
+     sides, and it scales down with side gutters on narrow viewports */
+  margin: calc(var(--s-7) - 32px) auto 0;
+  padding: 0 var(--s-5);
+  display: flex;
+  justify-content: center;
+}
+.cs .cs-hero-shot .mock {
+  width: 100%;
+  max-width: 1280px;
+  /* crop window inside the band: the top of the screenshot shows on the teal;
+     the beige section begins at this cropped edge (image is fully rendered).
+     Tall enough to show the cards with room below; the crop cuts through the
+     pending-approvals rows so they bleed off the edge (no gray gap). */
+  aspect-ratio: 1180 / 566;
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 0;
+  line-height: 0;
+}
+.cs .cs-hero-shot .mock img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cs .kicker {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--violet);
+  font-weight: 500;
+  display: block;
+  margin-bottom: var(--s-4);
+}
+.cs h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+  margin: 0;
+  font-size: var(--f-4xl);
+  max-width: 24ch;
+  color: var(--indigo);
+}
+.cs .lede {
+  font-size: var(--f-xl);
+  line-height: 1.3;
+  max-width: 60ch;
+  color: var(--ink-soft);
+  margin-top: var(--s-5);
+}
+
+.cs .meta {
+  margin: 0;
+  padding: var(--s-5) 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--s-4);
+  border-top: 1px solid var(--line);
+}
+.cs .meta .lab {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: var(--s-2);
+}
+.cs .meta .val {
+  font-size: var(--f-sm);
+  line-height: 1.45;
+}
+
+.cs .overview {
+  margin: var(--s-6) 0 0;
+}
+.cs .overview p {
+  font-size: var(--f-xl);
+  line-height: 1.4;
+  max-width: var(--measure);
+  color: var(--ink);
+}
+.cs .overview strong {
+  color: var(--indigo);
+  font-weight: 600;
+}
+
+/* tools row: AI-as-method, first-class. Named like Diana's, labeled honestly as build method. */
+.cs .tools {
+  margin: var(--s-6) 0 0;
+  padding: var(--s-4) 0 0;
+  border-top: 1px solid var(--line);
+}
+.cs .tools .lab {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: var(--s-3);
+}
+.cs .tools .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+.cs .tools .chip {
+  font-family: var(--font-mono);
+  font-size: var(--f-sm);
+  color: var(--indigo);
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: var(--s-2) var(--s-3);
+  line-height: 1;
+}
+.cs .tools .note {
+  font-size: var(--f-xs);
+  color: var(--ink-soft);
+  margin-top: var(--s-3);
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+.cs .body-grid {
+  max-width: calc(var(--wide) + var(--rail) + var(--s-7));
+  margin: var(--s-6) auto 0;
+  padding: 0 var(--s-4);
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, var(--wide));
+  gap: var(--s-7);
+  align-items: start;
+  justify-content: center;
+}
+
+.cs .rail {
+  position: sticky;
+  top: 88px;
+  align-self: start;
+}
+.cs .rail .backlink {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-5);
+}
+.cs .rail ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+.cs .rail a {
+  font-size: var(--f-lg);
+  color: var(--ink-soft);
+  text-decoration: none;
+  line-height: 1.2;
+  transition: color 0.15s ease;
+  border: 0;
+}
+.cs .rail a:hover {
+  color: var(--indigo);
+}
+.cs .rail a.active {
+  color: var(--violet);
+  font-weight: 600;
+}
+
+.cs .content {
+  min-width: 0;
+}
+
+.cs .stage {
+  scroll-margin-top: 96px;
+  padding-bottom: var(--s-7);
+}
+.cs .stage .tag {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--violet);
+  display: block;
+  margin-bottom: var(--s-3);
+}
+.cs .stage h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--f-2xl);
+  color: var(--indigo);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  margin: 0 0 var(--s-5);
+  max-width: 34ch;
+}
+.cs .stage p {
+  max-width: var(--measure);
+}
+.cs .stage p strong {
+  color: var(--indigo);
+  font-weight: 600;
+}
+.cs .mark {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  background: #fbf0dd;
+  color: #8a5a00;
+  padding: 1px 8px;
+  border-radius: 4px;
+}
+
+.cs .shot {
+  margin: var(--s-5) 0;
+  width: 100%;
+  height: 38vh;
+  min-height: 260px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: repeating-linear-gradient(135deg, rgba(39, 7, 90, 0.04) 0 14px, rgba(39, 7, 90, 0.07) 14px 28px), var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+.cs .shot .mono {
+  font-family: var(--font-mono);
+  color: var(--violet);
+  font-size: var(--f-sm);
+}
+.cs .shot .hint {
+  color: var(--ink-soft);
+  font-size: var(--f-xs);
+  max-width: 54ch;
+  text-align: center;
+  padding: 0 var(--s-4);
+}
+
+/* real photo: no border, natural aspect, sits open on the page */
+.cs .photo {
+  margin: var(--s-5) 0;
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  height: auto;
+  min-height: 0;
+  background: none;
+  display: block;
+  padding: 0;
+}
+.cs .photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+.cs figcaption {
+  font-size: var(--f-sm);
+  color: var(--ink-soft);
+  margin-top: calc(-1 * var(--s-4));
+  max-width: var(--measure);
+}
+.cs .photo + figcaption {
+  margin-top: calc(-1 * var(--s-3));
+}
+
+.cs .phase {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  color: var(--indigo);
+  letter-spacing: 0.06em;
+  margin: var(--s-4) 0 var(--s-2);
+  font-weight: 500;
+}
+
+/* signature tension line: the one plain-language contrast that names the problem */
+.cs .tension-line {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--f-xl);
+  line-height: 1.3;
+  color: var(--indigo);
+  max-width: 38ch;
+  margin: var(--s-5) 0;
+}
+.cs .tension-line .hl {
+  background: var(--yellow);
+  color: var(--indigo);
+  padding: 0 0.1em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* three-part challenge: structured + scannable, one idea per item */
+.cs .challenge {
+  list-style: none;
+  counter-reset: ch;
+  margin: var(--s-4) 0 var(--s-5);
+  padding: 0;
+  max-width: var(--measure);
+}
+.cs .challenge li {
+  counter-increment: ch;
+  position: relative;
+  padding-left: var(--s-5);
+  margin-bottom: var(--s-4);
+}
+.cs .challenge li::before {
+  content: counter(ch);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: var(--f-sm);
+  font-weight: 500;
+  color: var(--violet);
+  line-height: 1.5;
+}
+.cs .challenge .ch-lab {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--f-lg);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--s-2);
+}
+.cs .challenge p {
+  margin: 0;
+  max-width: none;
+  color: var(--ink);
+}
+
+/* grafted: leadership beat sub-headers */
+.cs .beat {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--f-lg);
+  color: var(--ink);
+  margin: var(--s-6) 0 var(--s-3);
+  letter-spacing: -0.01em;
+}
+
+/* grafted: problem-framing stat band, bounded white box per metric pattern */
+.cs .statband {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin: var(--s-5) 0 var(--s-3);
+  padding: var(--s-5) var(--s-4);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.cs .statband .s {
+  padding: 0 var(--s-4);
+  position: relative;
+}
+.cs .statband .s + .s::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6%;
+  height: 88%;
+  width: 1px;
+  background: var(--line);
+}
+.cs .statband .sbig {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--f-xl);
+  color: var(--indigo);
+  line-height: 1;
+}
+.cs .statband .slbl {
+  display: block;
+  font-size: var(--f-sm);
+  color: var(--ink-soft);
+  margin-top: var(--s-3);
+  line-height: 1.4;
+}
+.cs .statnote {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  max-width: var(--measure);
+  margin-top: 0;
+}
+
+.cs .quote-slot {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: var(--s-6) var(--s-5);
+  margin: var(--s-5) 0;
+}
+.cs .quote-slot.empty {
+  outline: 1px dashed var(--violet);
+  outline-offset: -1px;
+}
+.cs .quote-slot .q {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--f-xl);
+  line-height: 1.35;
+  color: var(--indigo);
+  max-width: 40ch;
+}
+.cs .quote-slot cite {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  font-style: normal;
+  color: var(--violet);
+  margin-top: var(--s-4);
+  letter-spacing: 0.02em;
+}
+.cs .quote-slot .guide {
+  font-family: var(--font-mono);
+  font-size: var(--f-sm);
+  color: var(--violet);
+  line-height: 1.6;
+}
+.cs .quote-slot .guide b {
+  color: var(--indigo);
+}
+.cs .quote-slot .guide .good {
+  color: var(--ink);
+  display: block;
+  margin-top: var(--s-3);
+  padding-left: var(--s-3);
+  border-left: 2px solid var(--yellow);
+}
+.cs .quote-slot .guide .weak {
+  color: var(--ink-soft);
+  display: block;
+  margin-top: var(--s-2);
+  padding-left: var(--s-3);
+  border-left: 2px solid var(--line);
+}
+
+.cs .metrics {
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin: var(--s-5) 0;
+  padding: var(--s-6) var(--s-4);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  text-align: center;
+}
+.cs .metrics .m {
+  padding: 0 var(--s-4);
+  position: relative;
+}
+.cs .metrics .m + .m::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8%;
+  height: 84%;
+  width: 1px;
+  background: var(--line);
+}
+.cs .metrics .big {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--f-2xl);
+  color: var(--indigo);
+  line-height: 1;
+}
+.cs .metrics .big.slot {
+  color: var(--violet);
+}
+.cs .metrics .lbl {
+  display: block;
+  font-size: var(--f-sm);
+  color: var(--ink-soft);
+  margin-top: var(--s-3);
+  line-height: 1.4;
+}
+.cs .metrics .todo {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--violet);
+  margin-top: var(--s-2);
+}
+
+/* role stepper: four permission tiers, always-visible rail + swapping detail panel, CSS-only */
+.cs .roles {
+  margin: var(--s-5) 0;
+  max-width: var(--measure);
+}
+.cs .roles input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.cs .roles .rolegrid {
+  display: grid;
+  grid-template-columns: var(--rail) 1fr;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--white);
+}
+.cs .roles .roletabs {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border-right: 1px solid var(--line);
+}
+.cs .roles .roletab {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  cursor: pointer;
+  padding: var(--s-4);
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: var(--f-base);
+  color: var(--ink-soft);
+  line-height: 1.2;
+}
+.cs .roles .roletab:last-of-type {
+  border-bottom: none;
+}
+.cs .roles .roletab .tier {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  color: var(--violet);
+  font-weight: 400;
+}
+.cs .roles .roletab:hover {
+  color: var(--ink);
+}
+.cs .roles .rolepanel {
+  padding: var(--s-5);
+  display: none;
+}
+.cs .roles .rolepanel .rlab {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--f-xl);
+  color: var(--indigo);
+  line-height: 1.1;
+  margin-bottom: var(--s-2);
+}
+.cs .roles .rolepanel .phead {
+  margin-bottom: var(--s-2);
+}
+.cs .roles .rolepanel .phead .rlab {
+  margin-bottom: 0;
+}
+.cs .roles .rportrait {
+  margin: var(--s-3) 0 var(--s-4);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  width: 40%;
+}
+.cs .roles .rportrait svg,
+.cs .roles .rportrait img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.cs .roles .rolepanel .scope {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet);
+  margin-bottom: var(--s-4);
+}
+.cs .roles .rolepanel p {
+  margin: 0 0 var(--s-4);
+  max-width: none;
+  color: var(--ink);
+}
+.cs .roles .rolepanel .adds {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+  display: block;
+  margin-bottom: var(--s-2);
+}
+.cs .roles .rolepanel .need {
+  font-size: var(--f-base);
+  color: var(--ink);
+  margin: 0 0 var(--s-3);
+  max-width: none;
+}
+.cs .roles .rolepanel .friction {
+  font-size: var(--f-base);
+  color: var(--ink);
+  margin: 0 0 var(--s-4);
+  max-width: none;
+  padding-left: var(--s-3);
+  border-left: 2px solid var(--violet);
+}
+.cs .roles .rolepanel .friction strong {
+  color: var(--indigo);
+  font-weight: 600;
+}
+.cs .roles .rolepanel ul {
+  margin: 0;
+  padding-left: 1.1em;
+}
+.cs .roles .rolepanel li {
+  margin-bottom: var(--s-2);
+  color: var(--ink);
+}
+.cs .roles .rolepanel li:last-child {
+  margin-bottom: 0;
+}
+/* active states via :checked */
+.cs #role-1:checked ~ .rolegrid label[for="role-1"],
+.cs #role-2:checked ~ .rolegrid label[for="role-2"],
+.cs #role-3:checked ~ .rolegrid label[for="role-3"],
+.cs #role-4:checked ~ .rolegrid label[for="role-4"] {
+  background: var(--white);
+  color: var(--indigo);
+}
+.cs #role-1:checked ~ .rolegrid label[for="role-1"]::before,
+.cs #role-2:checked ~ .rolegrid label[for="role-2"]::before,
+.cs #role-3:checked ~ .rolegrid label[for="role-3"]::before,
+.cs #role-4:checked ~ .rolegrid label[for="role-4"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--yellow);
+}
+.cs #role-1:checked ~ .rolegrid #panel-1,
+.cs #role-2:checked ~ .rolegrid #panel-2,
+.cs #role-3:checked ~ .rolegrid #panel-3,
+.cs #role-4:checked ~ .rolegrid #panel-4 {
+  display: block;
+}
+.cs .roles .rolecap {
+  font-family: var(--font-mono);
+  font-size: var(--f-xs);
+  color: var(--violet);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: var(--s-4) 0 var(--s-2);
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .cs .body-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .cs .rail {
+    position: sticky;
+    top: 57px;
+    z-index: 15;
+    background: var(--paper);
+    margin: 0 calc(-1 * var(--s-4));
+    padding: var(--s-3) var(--s-4);
+    border-bottom: 1px solid var(--line);
+  }
+  .cs .rail .backlink {
+    display: none;
+  }
+  .cs .rail ul {
+    flex-direction: row;
+    gap: var(--s-4);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cs .rail a {
+    font-size: var(--f-sm);
+    white-space: nowrap;
+  }
+}
+@media (max-width: 720px) {
+  .cs {
+    --f-4xl: 2.5rem;
+  }
+  .cs .cs-hero-shot {
+    margin-top: var(--s-5);
+    padding: 0 var(--s-4);
+  }
+  .cs .meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cs .overview p {
+    font-size: var(--f-lg);
+  }
+  .cs .metrics {
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+  }
+  .cs .metrics .m + .m::before {
+    display: none;
+  }
+  .cs .statband {
+    grid-template-columns: 1fr;
+    gap: var(--s-5);
+  }
+  .cs .statband .s + .s::before {
+    display: none;
+  }
+  .cs .roles .rolegrid {
+    grid-template-columns: 1fr;
+  }
+  .cs .roles .roletabs {
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .cs .roles .roletab {
+    border-bottom: none;
+    border-right: 1px solid var(--line);
+    white-space: nowrap;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .cs #role-1:checked ~ .rolegrid label[for="role-1"]::before,
+  .cs #role-2:checked ~ .rolegrid label[for="role-2"]::before,
+  .cs #role-3:checked ~ .rolegrid label[for="role-3"]::before,
+  .cs #role-4:checked ~ .rolegrid label[for="role-4"]::before {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 4px;
+  }
+}

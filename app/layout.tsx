@@ -1,34 +1,42 @@
 import type { Metadata } from "next";
 import {
-  Archivo,
+  Hanken_Grotesk,
   Inter,
-  JetBrains_Mono,
   Permanent_Marker,
+  Space_Mono,
 } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/ui/Nav";
 import Footer from "@/components/ui/Footer";
 
 /* Fonts self-hosted via next/font (no layout shift, clean on Vercel).
-   Each exposes a CSS variable consumed by the @theme font tokens in globals.css. */
-const archivo = Archivo({
+   Each exposes a CSS variable consumed by the font tokens in globals.css.
+
+   Three faces, three jobs (design.md §2):
+   Hanken NAMES things (headings + logo). Inter SAYS things (body) and carries
+   the big hero name — a display object, not a heading. Space Mono is the
+   scaffolding. Archivo and JetBrains Mono are retired: --font-display and
+   --font-mono now resolve to Hanken and Space Mono, so nothing referenced them. */
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-archivo",
+  weight: ["800"],
+  variable: "--font-hanken",
   display: "swap",
 });
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "600", "700"],
   variable: "--font-inter",
   display: "swap",
 });
-const jetbrains = JetBrains_Mono({
+const spaceMono = Space_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-jetbrains",
+  weight: ["400", "700"],
+  variable: "--font-space-mono",
   display: "swap",
 });
+/* DEPRECATED — the retired facilitation layer (sticky notes / marker script) on
+   un-migrated routes still resolves --font-marker. Delete with those pages. */
 const permanentMarker = Permanent_Marker({
   subsets: ["latin"],
   weight: "400",
@@ -50,7 +58,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${archivo.variable} ${inter.variable} ${jetbrains.variable} ${permanentMarker.variable}`}
+      className={`${hanken.variable} ${inter.variable} ${spaceMono.variable} ${permanentMarker.variable}`}
     >
       <body>
         <a className="skip" href="#main">
