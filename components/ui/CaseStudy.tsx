@@ -1,6 +1,11 @@
 import Image from "next/image";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import CaseStudyRail, { type RailStage } from "@/components/ui/CaseStudyRail";
+import {
+  GalleryDialog,
+  LightboxImage,
+  WindowImage,
+} from "@/components/ui/Lightbox";
 
 export type { RailStage };
 
@@ -27,8 +32,16 @@ export type { RailStage };
  * read as cramped. If you change it, MEASURE the rendered line rather than
  * trusting the number.
  *
- * NO ROUNDED CORNERS anywhere. Images, figures, and containers are square
- * (radius 0); only pills are round (999px). The system is binary — design.md §3.
+ * RADIUS — a deliberate exception to design.md §3, which says the system is
+ * binary (fully round, or sharp). CONTENT IMAGERY is rounded at `rounded-2xl`
+ * (16px): the hero, figures, lightbox thumbnails, FigureTabs panels, and the
+ * carousel slides. Everything else stays square — containers, the FigureTabs
+ * frame, stat bands, rules. Pills stay fully round.
+ *
+ * The reasoning: screenshots arrive as hard-edged rectangles of someone else's
+ * UI, and a 16px radius is what makes them read as artefacts placed ON the page
+ * rather than as panels OF it. If you change this, change it in ALL of the
+ * places listed above at once — a half-rounded set looks like a bug.
  *
  * Photographs render in FULL COLOUR. The monochrome rule governs the system —
  * type, rules, labels, chrome — not the work. Never add a grayscale filter to
@@ -38,7 +51,14 @@ export type { RailStage };
 /* ---- Root ------------------------------------------------------------- */
 
 export function CaseStudyRoot({ children }: { children: ReactNode }) {
-  return <article className="canvas pb-3xl">{children}</article>;
+  return (
+    <>
+      <article className="canvas pb-3xl">{children}</article>
+      {/* one dialog per page; every LightboxImage on the page feeds it, in DOM
+          order, so the arrows step through the study as it reads */}
+      <GalleryDialog />
+    </>
+  );
 }
 
 /* ---- Badge ------------------------------------------------------------ */
@@ -51,6 +71,11 @@ export function CaseStudyRoot({ children }: { children: ReactNode }) {
  * on-blue with sentence case, this is ink-on-white with the same uppercase mono
  * scaffolding as every other label on the site. Consistency with the system
  * beats fidelity to the reference — the shape is the idea worth taking.
+ *
+ * KEEP THE FILLED MARK. Flattening it to plain ink text was tried and reverted:
+ * the fill is what makes the mark read as the institution and the label as the
+ * discipline. CaseStudyTools matches this pill's border, radius, padding and
+ * label size, but NOT the fill — chips are a set, not a two-part badge.
  *
  * Both halves clear AA comfortably: paper-on-ink and ink-on-paper are both
  * 18.56:1. The pill is the one round thing in a square system (design.md §3),
@@ -73,14 +98,52 @@ export function Badge({ mark, label }: { mark: string; label: string }) {
 
 export type MetaItem = { label: string; value: ReactNode };
 
+/**
+ * The label/value metadata columns. Broken out of the header so a study can
+ * place the facts wherever the layout wants them — under the title (the default
+ * header position) OR in the body's right column, beside the rail, so the rail
+ * (Go back + index) starts at the metadata row rather than below the title
+ * block. `className` carries the spacing/rule for the chosen position; the
+ * default matches the classic under-title placement.
+ */
+export function CaseStudyMeta({
+  meta,
+  className = "mt-2xl border-t border-line pt-lg",
+}: {
+  meta: MetaItem[];
+  className?: string;
+}) {
+  return (
+    <dl
+      className={`grid grid-cols-2 md:grid-cols-4 gap-lg gap-y-xl ${className}`}
+    >
+      {meta.map((m) => (
+        <div key={m.label}>
+          <dt className="lab">{m.label}</dt>
+          <dd className="mt-sm text-small text-ink leading-[1.5]">{m.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 export function CaseStudyHeader({
   badge,
   title,
   meta,
+  hero,
 }: {
   badge?: { mark: string; label: string };
   title: string;
-  meta: MetaItem[];
+  /* optional here: a study can instead render <CaseStudyMeta> inside the body's
+     right column (see CaseStudyBody `lead`) so the rail lines up with the facts.
+     Omit meta and the header is just badge + title (+ hero). */
+  meta?: MetaItem[];
+  /* optional visual (still or VideoFigure) placed BETWEEN the title and the
+     metadata — an alternate layout where the hero lands before the facts rather
+     than after the lede. Opt-in per study; omit it and the header reads as
+     before. */
+  hero?: ReactNode;
 }) {
   return (
     /* no back link here — it lives at the top of the rail (CaseStudyRail), so
@@ -97,22 +160,15 @@ export function CaseStudyHeader({
       {/* max-w governs how the headline breaks. 20ch forced this title into
           three cramped lines; 30ch lets it fall in two. text-balance then evens
           the lines out rather than leaving a runt on the last one. */}
-      <h1 className="mt-md font-display text-[clamp(2rem,5.5vw,4.5rem)] font-extrabold leading-[0.95] tracking-display text-ink text-balance max-w-[30ch]">
+      <h1 className="mt-md font-display text-title text-ink text-balance max-w-[30ch]">
         {title}
       </h1>
 
+      {hero && <div className="mt-xl">{hero}</div>}
+
       {/* metadata sits directly under the title as label/value columns — the
-          reference's move. Mono label above, Inter value below. */}
-      <dl className="mt-2xl grid grid-cols-2 md:grid-cols-4 gap-lg gap-y-xl border-t border-line pt-lg">
-        {meta.map((m) => (
-          <div key={m.label}>
-            <dt className="lab">{m.label}</dt>
-            <dd className="mt-sm text-small text-ink leading-[1.5]">
-              {m.value}
-            </dd>
-          </div>
-        ))}
-      </dl>
+          reference's move. Omitted when a study renders it in the body instead. */}
+      {meta && <CaseStudyMeta meta={meta} />}
     </header>
   );
 }
@@ -132,9 +188,11 @@ export function CaseStudyTools({
       <ul className="mt-md flex flex-wrap gap-md list-none p-0">
         {chips.map((c) => (
           <li key={c}>
-            {/* one pill style: ink on ink. 13/26 is the spec's literal pill
-                geometry, deliberately off the 4–64 spacing scale. */}
-            <span className="inline-block font-mono text-tag text-ink border-[1.5px] border-ink rounded-full px-[26px] py-[13px]">
+            {/* the SAME pill as Badge above the title — matching border, radius,
+                padding, and uppercase mono label size. It used to run at
+                text-tag (up to 1.3rem) with 26/13 padding, which made the tools
+                row heavier than the badge it sits under. One pill treatment. */}
+            <span className="inline-block font-mono text-label uppercase tracking-label text-ink border-[1.5px] border-ink rounded-full px-md py-sm">
               {c}
             </span>
           </li>
@@ -163,15 +221,15 @@ export function CaseStudyHero({
 }) {
   return (
     <figure className="mt-3xl m-0">
-      {/* square corners, hairline border, full colour */}
-      <Image
+      {/* square corners, hairline border, full colour. Like every figure in a
+          study, it joins the gallery — there is no opt-out, because an image the
+          arrows skip would be the one thing a reader can't get back to. */}
+      <LightboxImage
         src={src}
         alt={alt}
         width={width}
         height={height}
         priority={priority}
-        sizes="(max-width: 1440px) 100vw, 1440px"
-        className="block w-full h-auto border border-line"
       />
       {caption && <Caption>{caption}</Caption>}
     </figure>
@@ -204,26 +262,46 @@ export function CaseStudyLede({ children }: { children: ReactNode }) {
  * right. Everything above this (header, tools, lede, hero) stays full-width —
  * the rail only accompanies the argument, not the title block.
  *
- * The grid is what sets the reading measure now. The content column is
- * ~1080px of the 1312px canvas, and Prose fills it rather than being capped by
- * an arbitrary `ch` value. That's the better architecture: the layout decides
- * the measure, not a magic number that has to be kept in sync with it.
+ * The grid is what sets the reading measure now. The content column is capped
+ * at 1000px (minmax(0,1000px)) so it runs slightly narrower than the ~1312px
+ * canvas, and Prose fills it rather than being capped by an arbitrary `ch`
+ * value. That's the better architecture: the layout decides the measure, not a
+ * magic number that has to be kept in sync with it.
  */
 export function CaseStudyBody({
   stages,
   children,
+  lead,
 }: {
   stages: RailStage[];
   children: ReactNode;
+  /* optional content placed at the TOP of the right column, above the stages —
+     metadata, tools, lede. Using it pulls the rail up so "Go back" and the index
+     start at the metadata row rather than below the whole title block. Omit it
+     and the body reads as before (rail begins at the first stage). */
+  lead?: ReactNode;
 }) {
   return (
-    <div className="mt-3xl grid grid-cols-1 md:grid-cols-[180px_1fr] gap-2xl">
+    // The measure is set by the GRID, not a max-w on the content div. The
+    // content column is capped with minmax(0, 1000px) so it runs slightly
+    // narrower than the ~1312px canvas, and the free space lands as a right
+    // gutter.
+    //
+    // Rail/content separation is ~124px, and it is built from TWO parts on
+    // purpose: gap-3xl (64px) plus the slack in a 240px rail track, whose labels
+    // ("Problem", "Working Code") only need ~110px. The spacing scale stops at
+    // 64px and design.md calls an off-scale value a bug, so widening the track
+    // is how this gets more air without inventing a gap size.
+    <div className="mt-3xl grid grid-cols-1 md:grid-cols-[240px_minmax(0,1000px)] gap-3xl">
       {/* the rail is hidden on narrow screens: a sticky index that eats a third
           of a phone viewport is worse than no index at all */}
       <div className="hidden md:block">
         <CaseStudyRail stages={stages} />
       </div>
-      <div className="min-w-0">{children}</div>
+      <div className="min-w-0">
+        {lead}
+        {children}
+      </div>
     </div>
   );
 }
@@ -234,26 +312,40 @@ export function CaseStudyBody({
  * A stage of the spine.
  *
  * HIERARCHY — exactly ONE large heading per stage:
- *   "02 · Approach"  h2, Hanken, text-section   ← the section's name; what the
- *                                                 rail indexes and what you scan
+ *   selling phrase   mono eyebrow                ← tees the section up
+ *   "01 Approach"    h2, Hanken, text-section    ← the section's name + index;
+ *                                       what the rail indexes and what you scan
  *   the title        deck, text-lede, muted     ← the claim, subordinate to it
  *   Beat             h3, Hanken, text-h3        ← a move in the argument
  *   Phase            mono label                 ← a structural marker, not a heading
  *
- * The number is set in mono inside the heading so it reads as an index rather
- * than as part of the sentence, while the h2 stays one element for a11y.
+ * Two levels of heading, and no third. See the note where Subhead used to live.
+ *
+ * THE EYEBROW LIVES HERE AND NOWHERE ELSE. Beat does not take one and should
+ * not be given one later: the pattern works because it marks the six section
+ * breaks and nothing smaller. Debo Biswas's case studies, the reference for it,
+ * carry five across a whole study, one per top-level heading — a phrase that
+ * sets the scene, over a heading that names the section.
  */
 export function Stage({
   id,
   num,
   name,
+  eyebrow,
   title,
   children,
 }: {
   id: string;
   num: string;
   name: string;
-  title: string;
+  /** a short phrase that sells the section, set as a mono eyebrow ABOVE the
+      heading — the register of Debo Biswas's section eyebrows ("MONDAY MORNING
+      BEFORE CLINIC"). NOT the number: the number sits inline next to the name.
+      Optional, but every stage in a finished study should carry one. */
+  eyebrow?: string;
+  /** optional deck under the heading. Omit to let the section run on one
+      heading — the numbered name — when a subtitle would just add heading noise. */
+  title?: string;
   children: ReactNode;
 }) {
   return (
@@ -264,20 +356,39 @@ export function Stage({
       id={id}
       className="mt-3xl first:mt-0 border-t border-ink pt-md scroll-mt-3xl"
     >
-      {/* the number stays in Hanken, not Space Mono. Mono is the system's index
-          idiom, but three faces inside one two-line block (mono number + Hanken
-          name + Inter deck) reads as noise. The heading is ONE face; the rail
-          already carries the mono index two columns to the left. */}
-      <h2 className="mt-lg font-display text-section text-ink flex items-baseline gap-md">
-        <span className="tabular-nums text-muted">{num}</span>
+      {/* the selling phrase — mono, uppercase, muted, set SOLID (tracking-normal,
+          not the letterspaced .lab). It's a separate <p>, not part of the h2:
+          it tees the section up but shouldn't be in the heading's accessible
+          name, which stays "01 Problem" to match the rail link (WCAG 2.5.3). */}
+      {eyebrow && (
+        <p className="mt-lg font-mono text-small uppercase tracking-normal text-muted">
+          {eyebrow}
+        </p>
+      )}
+      {/* the number stays inline next to the name — one Hanken block, mono index
+          two columns left in the rail. It inherits the h2's ink rather than
+          taking text-muted: the eyebrow above is the muted element, and a third
+          value between them made the heading read as two pieces. mt-sm when an
+          eyebrow sits above it (the 8px eyebrow-to-heading gap), mt-lg when it
+          leads the section alone. */}
+      <h2
+        className={`font-display text-section text-ink flex items-baseline gap-md ${
+          eyebrow ? "mt-sm" : "mt-lg"
+        }`}
+      >
+        <span className="tabular-nums">{num}</span>
         {name}
       </h2>
       {/* text-intro (~21px), NOT text-lede (~34px): a deck at 34px sits too
           close to the 38px h2 above it and the two read as competing headings
-          rather than as a heading and its subtitle. The gap has to be obvious. */}
-      <p className="mt-md text-intro text-muted text-balance max-w-[46ch]">
-        {title}
-      </p>
+          rather than as a heading and its subtitle. The gap has to be obvious.
+          Rendered only when a stage supplies a deck — most don't, to keep the
+          section on a single heading. */}
+      {title && (
+        <p className="mt-md text-intro text-muted text-balance max-w-[80ch]">
+          {title}
+        </p>
+      )}
       {/* children run FULL WIDTH. Each block sets its own measure — Prose caps
           itself at `reading`, figures and stat bands span the canvas. That
           contrast (measured prose against wide image) is the reference's
@@ -338,44 +449,147 @@ export function Kicker({ children }: { children: ReactNode }) {
  * what created the competing-headings problem.
  */
 export function Phase({ children }: { children: ReactNode }) {
-  return (
-    <span className="block font-mono text-tag text-ink">{children}</span>
-  );
+  return <span className="block font-mono text-tag text-ink">{children}</span>;
 }
+
+/* There is deliberately NO tier below Beat.
+ *
+ * A third heading level existed here briefly and was removed: a study only ever
+ * needs section → move → prose. Debo Biswas's case studies, the reference for
+ * this layout, run two levels deep in the reading flow — an eyebrowed section
+ * heading and body — and everything that looks like a sub-heading there turns
+ * out to be a figure caption inside a grid, not a heading in the flow.
+ *
+ * If a Beat feels too heavy for what it introduces, that is a signal the block
+ * doesn't need a heading at all, not that it needs a smaller one. Cut it and
+ * let the list or the stat band speak.
+ */
 
 /* ---- Figures ---------------------------------------------------------- */
 
 export function Caption({ children }: { children: ReactNode }) {
   return (
-    <figcaption className="mt-md text-small text-muted">
-      {children}
-    </figcaption>
+    <figcaption className="mt-md text-small text-muted">{children}</figcaption>
   );
 }
 
-/** A full-width image inside a stage. Square, hairline, full colour. */
+/**
+ * A full-width image inside a stage. Square, hairline, full colour.
+ *
+ * Joins the lightbox gallery by default. Pass `zoomable={false}` for images
+ * there is nothing to zoom INTO — an illustration, a diagram drawn at the size
+ * it's meant to be read. The gallery is for dense artifacts that reward
+ * magnification: boards, roadmaps, screenshots. Making a drawing clickable
+ * promises a detail that isn't there.
+ */
 export function Figure({
   src,
   alt,
   width,
   height,
   caption,
+  zoomable = true,
 }: {
   src: string;
   alt: string;
   width: number;
   height: number;
   caption?: string;
+  zoomable?: boolean;
 }) {
   return (
     <figure className="my-xl m-0">
-      <Image
+      {zoomable ? (
+        <LightboxImage src={src} alt={alt} width={width} height={height} />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          sizes="(max-width: 1440px) 100vw, 1440px"
+          className="block w-full h-auto rounded-2xl border border-line"
+        />
+      )}
+      {caption && <Caption>{caption}</Caption>}
+    </figure>
+  );
+}
+
+/**
+ * VideoFigure — a moving figure, framed exactly like Figure: one hairline, flat,
+ * no shadow; rounded to match the other content imagery. Autoplays muted, so it reads as
+ * motion, not a player — no controls, no chrome. By default it plays once and
+ * holds on its last frame (a clip that resolves onto a title/brand card wants to
+ * land there, not rewind); pass `loop` for an ambient loop instead. `playsInline`
+ * keeps it inline on iOS instead of going fullscreen; `poster` holds the first
+ * frame until it can play. Native aspect ratio (h-auto), same as a still, so it
+ * slots wherever a Figure would.
+ */
+export function VideoFigure({
+  src,
+  poster,
+  caption,
+  loop = false,
+}: {
+  src: string;
+  poster?: string;
+  caption?: string;
+  loop?: boolean;
+}) {
+  return (
+    <figure className="my-xl m-0">
+      <video
+        src={src}
+        poster={poster}
+        autoPlay
+        muted
+        loop={loop}
+        playsInline
+        preload="metadata"
+        aria-label={caption}
+        className="block w-full h-auto rounded-2xl border border-line"
+      />
+      {caption && <Caption>{caption}</Caption>}
+    </figure>
+  );
+}
+
+/**
+ * WindowFigure — a very tall artifact shown as a fixed-height "window" onto its
+ * top, so a full-length page (a whole dashboard) reads as a hero without eating
+ * the scroll. Flat and square to match the system: one hairline frame, no
+ * shadow. The full image is one click away — the window
+ * opens the complete page in the lightbox.
+ *
+ * The crop is top-anchored: the load-bearing part of a summary page is the
+ * plain-language answer at the top, so that is what stays visible. `ratio` (a
+ * CSS aspect-ratio, width / height) tunes how tall the window is — a larger
+ * first number is shorter. The default shows roughly one screenful.
+ */
+export function WindowFigure({
+  src,
+  alt,
+  width,
+  height,
+  ratio = "16 / 9",
+  caption,
+}: {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  ratio?: string;
+  caption?: string;
+}) {
+  return (
+    <figure className="my-xl m-0">
+      <WindowImage
         src={src}
         alt={alt}
         width={width}
         height={height}
-        sizes="(max-width: 1440px) 100vw, 1440px"
-        className="block w-full h-auto border border-line"
+        ratio={ratio}
       />
       {caption && <Caption>{caption}</Caption>}
     </figure>
@@ -389,6 +603,13 @@ export type ComparePanel = {
   label: string;
   /** one shot, or two to stack them as an overlapping pair */
   shots: [Shot] | [Shot, Shot];
+  /**
+   * A single pre-composed transparent PNG that already bakes in its own overlap
+   * and backdrop. Rendered borderless with no box behind it, so the notched
+   * corners float on the page instead of sitting in a hairline-ruled card.
+   * Only meaningful with a single shot.
+   */
+  bare?: boolean;
 };
 
 /**
@@ -416,24 +637,25 @@ function Panel({ panel }: { panel: ComparePanel }) {
     <div>
       <span className="lab lab--ink block mb-md">{panel.label}</span>
       <span className="relative block">
-        <Image
-          src={first.src}
-          alt={first.alt}
-          width={first.width}
-          height={first.height}
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className={`block h-auto border border-line ${second ? "w-[86%]" : "w-full"}`}
-        />
+        <span className={`block ${second ? "w-[86%]" : "w-full"}`}>
+          <LightboxImage
+            src={first.src}
+            alt={first.alt}
+            width={first.width}
+            height={first.height}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className={panel.bare ? "!border-0" : ""}
+          />
+        </span>
         {second && (
           /* the paper gutter is the separator — no shadow in this system */
           <span className="absolute bottom-0 right-0 w-[62%] bg-paper p-xs">
-            <Image
+            <LightboxImage
               src={second.src}
               alt={second.alt}
               width={second.width}
               height={second.height}
               sizes="(max-width: 768px) 62vw, 32vw"
-              className="block w-full h-auto border border-line"
             />
           </span>
         )}
@@ -477,7 +699,13 @@ export function FigureRow({
   figures,
   caption,
 }: {
-  figures: { src: string; alt: string; width: number; height: number; label?: string }[];
+  figures: {
+    src: string;
+    alt: string;
+    width: number;
+    height: number;
+    label?: string;
+  }[];
   caption?: string;
 }) {
   return (
@@ -489,16 +717,83 @@ export function FigureRow({
             className="w-full md:w-auto"
             style={{ flex: `${(f.width / f.height).toFixed(4)} 1 0%` }}
           >
-            {f.label && <span className="lab lab--ink block mb-md">{f.label}</span>}
-            <Image
+            {f.label && (
+              <span className="lab lab--ink block mb-md">{f.label}</span>
+            )}
+            <LightboxImage
               src={f.src}
               alt={f.alt}
               width={f.width}
               height={f.height}
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="block w-full h-auto border border-line"
             />
           </div>
+        ))}
+      </div>
+      {caption && <Caption>{caption}</Caption>}
+    </figure>
+  );
+}
+
+/**
+ * EvolutionRail — one idea maturing across stages, left to right.
+ *
+ * Unlike FigureRow (peers sitting side by side), the rail is DIRECTED: each step
+ * is a later, sharper version of the one before it, so a mono connector sits
+ * between them (→ on a row, ↓ once stacked on mobile). Each step carries a stage
+ * kicker above its thumbnail and, below it, the one question that stage was
+ * asking — the throughline that proves the sequence is one thought, not three.
+ *
+ * The thumbnails keep their natural aspect (the artifacts are shown full-size
+ * elsewhere; here they are reference), so columns top-align and bottoms may
+ * differ — honest, not a manufactured uniform strip.
+ */
+export type EvolutionStep = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** mono kicker above the thumbnail, e.g. "03 · Workshop" */
+  stage: string;
+  /** the question this stage was asking, hung beneath the thumbnail */
+  question: string;
+};
+
+export function EvolutionRail({
+  steps,
+  caption,
+}: {
+  steps: EvolutionStep[];
+  caption?: string;
+}) {
+  return (
+    <figure className="my-xl m-0">
+      <div className="flex flex-col md:flex-row md:items-start gap-md">
+        {steps.map((s, i) => (
+          <Fragment key={s.src}>
+            <div className="flex-1 w-full md:w-auto flex flex-col">
+              <span className="lab lab--ink block mb-md">{s.stage}</span>
+              <LightboxImage
+                src={s.src}
+                alt={s.alt}
+                width={s.width}
+                height={s.height}
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <p className="mt-md m-0 text-intro text-rich max-w-[34ch]">
+                &ldquo;{s.question}&rdquo;
+              </p>
+            </div>
+            {i < steps.length - 1 && (
+              <div
+                aria-hidden="true"
+                className="flex md:flex-col items-center justify-center self-center md:self-start md:pt-[2.25rem] font-mono text-h3 text-muted select-none"
+              >
+                <span className="hidden md:inline">&rarr;</span>
+                <span className="md:hidden">&darr;</span>
+              </div>
+            )}
+          </Fragment>
         ))}
       </div>
       {caption && <Caption>{caption}</Caption>}
@@ -541,6 +836,53 @@ export function FigureSlot({
   );
 }
 
+/**
+ * A competitive-landscape card: full-color competitor logos on a light surface,
+ * each paired with a one-line "does this well, but here's the gap" read, and an
+ * optional punchline set on a rule beneath.
+ *
+ * DEPARTS, on purpose, from this system's "no panels, no shadows" rule (see the
+ * note on Pullquote) and from its monochrome discipline: the filled card and the
+ * brand-color logos are a deliberate, contained exception for the landscape
+ * beat. Everything OUTSIDE the card stays monochrome and ruled.
+ */
+export function CompetitorLandscape({
+  items,
+  punchline,
+}: {
+  items: { logo: string; name: string; note: ReactNode }[];
+  punchline?: ReactNode;
+}) {
+  return (
+    <div className="my-xl">
+      <div className="bg-surface px-lg py-2xl md:px-2xl">
+        <ul className="m-0 grid list-none grid-cols-1 gap-xl p-0 sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((it) => (
+            <li key={it.name} className="flex flex-col items-start gap-md">
+              {/* brand wordmarks of varying aspect ratio; a plain img at a fixed
+                  height keeps them optically aligned on the left axis. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={it.logo}
+                alt={it.name}
+                className="h-9 w-auto max-w-[80%] object-contain object-left"
+              />
+              <p className="m-0 max-w-[30ch] text-small text-muted">
+                {it.note}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {punchline && (
+        <p className="mt-lg max-w-reading border-l-2 border-ink pl-lg text-intro text-ink text-balance">
+          {punchline}
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* ---- Data blocks ------------------------------------------------------ */
 
 export type Stat = { value: string; label: string };
@@ -557,9 +899,7 @@ export function StatBand({ stats, note }: { stats: Stat[]; note?: string }) {
           >
             <dt className="sr-only">{s.label}</dt>
             <dd className="m-0">
-              <span className="block text-[clamp(1.8rem,4vw,3.2rem)] font-bold leading-[0.9] tracking-bignum text-ink">
-                {s.value}
-              </span>
+              <span className="block text-stat text-ink">{s.value}</span>
               <span className="mt-md block text-small text-muted">
                 {s.label}
               </span>
@@ -567,16 +907,23 @@ export function StatBand({ stats, note }: { stats: Stat[]; note?: string }) {
           </div>
         ))}
       </dl>
-      {note && (
-        <p className="mt-lg font-mono text-label text-muted">
-          {note}
-        </p>
-      )}
+      {/* the note is a SENTENCE, so it's Inter at the caption size, matching
+          Caption above — not the mono label treatment. Space Mono is for labels
+          and indices; a full sentence set in it reads as console output and,
+          at text-label, carries 0.08em tracking that fights the reading. */}
+      {note && <p className="mt-lg text-small text-muted">{note}</p>}
     </div>
   );
 }
 
-/** A numbered challenge list — the mono index carrying the structure. */
+/**
+ * A numbered challenge list.
+ *
+ * The index is set in the SAME face, size, AND colour as the label beside it
+ * (Hanken, text-h3, ink) rather than as a mono label, so the number and the
+ * heading sit on one optical line instead of reading as a caption bolted to a
+ * heading. `tabular-nums` keeps the labels left-aligned across items.
+ */
 export function NumberedList({
   items,
 }: {
@@ -589,7 +936,7 @@ export function NumberedList({
           key={it.label}
           className="grid grid-cols-[auto_1fr] gap-lg border-t border-line pt-lg"
         >
-          <span className="font-mono text-label text-muted pt-[3px]">
+          <span className="font-display text-h3 text-ink tabular-nums">
             {String(i + 1).padStart(2, "0")}
           </span>
           <div>
@@ -607,10 +954,14 @@ export function NumberedList({
 }
 
 export type Persona = {
-  /** e.g. "01 · Basic User" */
-  tier: string;
+  /** the tier index, "01"–"04" — sits before the name on the heading line */
+  num: string;
+  /** the role, e.g. "Basic User" — the eyebrow, rendered uppercase */
+  role: string;
+  /** the persona's name, e.g. "Priya" — the heading */
   name: string;
-  /** e.g. "Department scope" — omit for the base tier */
+  /** e.g. "Portal-wide" — appended to the eyebrow after a middot; omit for the
+      base tier, whose eyebrow is just the role */
   scope?: string;
   portrait: string;
   portraitAlt: string;
@@ -626,9 +977,10 @@ export type Persona = {
  * pass at the end. The browser gives all of that away for free; a div-with-
  * onClick would have to earn it back and usually doesn't.
  *
- * The summary is text only (tier, name, scope) so the collapsed list reads as a
- * tight index of the four roles. The HEADSHOT LIVES IN THE PANEL, next to the
- * body it belongs to, and appears when you open the row.
+ * The summary is text only — a mono eyebrow (role · scope) over the numbered
+ * name — so the collapsed list reads as a tight index of the four roles. The
+ * HEADSHOT LIVES IN THE PANEL, next to the body it belongs to, and appears when
+ * you open the row.
  *
  * All rows start CLOSED, so the four roles read as a tight index and the reader
  * chooses what to open.
@@ -655,15 +1007,20 @@ export function PersonaList({ personas }: { personas: Persona[] }) {
                 the +/− below replaces it. */}
             <summary className="grid grid-cols-[1fr_auto] items-center gap-lg py-lg cursor-pointer list-none [&::-webkit-details-marker]:hidden focus-visible:outline-2 focus-visible:outline-rich focus-visible:outline-offset-2">
               <span className="block">
-                <span className="lab block">{p.tier}</span>
-                <span className="mt-xs block font-display text-h3 text-ink transition-colors group-hover:text-rich">
-                  {p.name}
+                {/* the eyebrow — role, plus scope after a middot for the tiers
+                    that add one. Same mono treatment as the section eyebrows:
+                    uppercase, set solid, muted. */}
+                <span className="block font-mono text-small uppercase tracking-normal text-muted">
+                  {p.role}
+                  {p.scope ? ` · ${p.scope}` : ""}
                 </span>
-                {p.scope && (
-                  <span className="mt-xs inline-block font-mono text-status uppercase text-rich">
-                    {p.scope}
-                  </span>
-                )}
+                {/* the heading — index then name, both in the display face and
+                    the same ink so they read as one line; tabular-nums keeps the
+                    four names left-aligned. The eyebrow above is the only muted
+                    element in the row. */}
+                <span className="mt-xs block font-display text-h3 text-ink transition-colors group-hover:text-rich">
+                  <span className="tabular-nums">{p.num}</span> {p.name}
+                </span>
               </span>
 
               {/* the disclosure mark. aria-hidden: <summary> already announces
@@ -671,6 +1028,10 @@ export function PersonaList({ personas }: { personas: Persona[] }) {
                   a screen reader say it twice. */}
               <span
                 aria-hidden="true"
+                /* OFF-SCALE, deliberate: 1.5rem sizes the +/- GLYPH, not
+                   type. The type scale steps are for reading sizes; a
+                   disclosure mark is icon geometry and is tuned to sit
+                   optically level with the persona name beside it. */
                 className="select-none font-mono text-[1.5rem] leading-none text-ink"
               >
                 <span className="group-open:hidden">+</span>

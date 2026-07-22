@@ -39,12 +39,22 @@ module.exports = {
           DEFAULT: "#121118", // THE accent: links, labels, rules, arrows, focus — 18.77:1 (AAA)
           hover: "#000000", // the only place #000 is permitted
         },
+        // the one tinted FILL. Same value as `line` today, different ROLE:
+        // this one backs a card, `line` draws a hairline. They may diverge.
+        // ink on surface is 14.72:1; muted is 4.12:1 and FAILS AA — check
+        // before putting anything other than ink on it.
+        surface: "#e6e4ea",
         line: {
           DEFAULT: "#e6e4ea", // hairline separators — 1.26:1, SEPARATOR ONLY
           strong: "#cfcbd6", // hover borders — 1.59:1, BORDERS ONLY, never text
         },
         "display-mute": "#8e8a99", // de-emphasized LARGE display text only — 3.36:1 (AA large)
         error: "#a4232f", // form validation ONLY. Never decorative, never status — 7.34:1 (AAA)
+        // THE INTERACTION ACCENT — the one documented break from monochrome
+        // (design.md §1). Interaction only: cursor follower + interactive hover
+        // (nav links). Never resting text/status/structure. Named `signal`, not
+        // `accent` — §1 calls the rich-black the "accent".
+        signal: "#e5322d",
 
         // ---- DEPRECATED — transition only. Do not use in new work. --------
         // Retired by the Swiss direction (design.md §1). These exist solely so
@@ -100,8 +110,19 @@ module.exports = {
           "clamp(1.3rem, 2.4vw, 2.1rem)",
           { lineHeight: "1.25", letterSpacing: "-0.02em", fontWeight: "700" },
         ],
+        // the case-study h1 and the StatBand figures. Both values are lifted
+        // verbatim from the arbitrary `text-[...]` classes they replace, so
+        // adopting them is a token-ising change with no visual delta.
+        title: [
+          "clamp(2.5rem, 5.5vw, 4.5rem)",
+          { lineHeight: "0.95", letterSpacing: "-0.04em", fontWeight: "800" },
+        ],
+        stat: [
+          "clamp(1.8rem, 4vw, 3.2rem)",
+          { lineHeight: "0.9", letterSpacing: "-0.05em", fontWeight: "700" },
+        ],
         section: [
-          "clamp(1.6rem, 3vw, 2.4rem)",
+          "clamp(2rem, 3vw, 2.4rem)",
           { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" },
         ],
         h2: [
@@ -109,7 +130,7 @@ module.exports = {
           { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "800" },
         ],
         h3: [
-          "clamp(1.05rem, 1.8vw, 1.5rem)",
+          "1.5rem",
           { lineHeight: "1.25", letterSpacing: "-0.02em", fontWeight: "800" },
         ],
         intro: [

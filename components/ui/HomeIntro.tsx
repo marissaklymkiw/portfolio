@@ -15,7 +15,10 @@ export default function HomeIntro() {
   return (
     <section className="hero-body" aria-label="Introduction">
       <div className="grid grid-cols-12 gap-lg items-start">
-        <div className="col-span-12 md:col-start-4 md:col-span-9 flex flex-col gap-[1em] max-w-measure text-intro text-ink">
+        {/* one step up from the shared text-intro token (a ~1–2pt bump on this
+            paragraph only — the token stays put for case studies / the About
+            band). Kept fluid so it still scales with the viewport. */}
+        <div className="col-span-12 md:col-start-4 md:col-span-9 flex flex-col gap-[1em] max-w-measure text-[clamp(1.15rem,1.5vw,1.5rem)] leading-[1.42] tracking-[-0.005em] text-ink">
           <p>
             I think in <em className="italic">systems</em> &mdash; the models,
             patterns, and governance that decide what every screen downstream can

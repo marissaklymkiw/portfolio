@@ -13,7 +13,12 @@
  */
 
 const TAGS = [
-  "Design Systems",
+  "AI Design Systems",
+  "Interaction Design",
+  "Product Enablement",
+  "Agentic AI",
+  "AI Strategy",
+  "AI-assisted development",
   "Human-in-the-Loop",
   "Governance",
   "Research → Architecture",
@@ -28,7 +33,7 @@ export default function MarkerBlock() {
         <div className="col-span-12 md:col-span-5 flex flex-col items-start">
           <span className="text-bignum text-ink">15+</span>
           <span className="mt-[0.5em] font-mono text-unit uppercase text-muted">
-            years
+            Years of experience
           </span>
         </div>
 

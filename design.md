@@ -34,6 +34,8 @@ Monochrome. Black and white carry the entire system. This is the constraint that
 
 **Why there's no functional palette.** Status in this system reads through mono type, weight, and rich-vs-muted — not color coding. The single exception is `Error`, reserved strictly for genuine form validation on the contact form, where failing to signal an error is a usability failure, not a stylistic one. If you are about to use `Error` for anything other than a field that a user got wrong, don't.
 
+**The interaction accent — `Signal` `#e5322d`.** A deliberate, single break from monochrome that marks **interaction, and only interaction**: the red cursor-follower, and the hover state of interactive text (nav links). It is not a system color for anything at rest — it must never touch resting text, status, borders/structure, or hierarchy (those stay mono; reach for weight/size/space). Named `signal`, not `accent`, because §1 already calls the rich-black the "accent." The cursor half is decorative and motion-based, so it self-disables on touch pointers and under `prefers-reduced-motion`. The rule of thumb: if red appears anywhere a user is **not** hovering or moving the pointer, it's a bug.
+
 ### Contrast check (WCAG 2.2)
 
 Computed, not estimated:
@@ -83,9 +85,9 @@ Type scale (base 16px, ratio ~1.25 — but display sizes are fluid `clamp()`, no
 | Wordmark | Inter | `clamp(2rem, 10.5vw, 8.5rem)` | 0.82 | 700 | The hero name |
 | Big number | Inter | `clamp(4rem, 13vw, 12rem)` | 0.82 | 700 | Stat block (`15+`) |
 | Marker | Inter | `clamp(1.8rem, 5.4vw, 4.6rem)` | 0.95 | 700 | The de-emphasized display phrase |
-| Section title | **Hanken** | `clamp(1.6rem, 3vw, 2.4rem)` | 1.1 | 800 | Band headings |
+| Section title | **Hanken** | `clamp(2rem, 3vw, 2.4rem)` | 1.1 | 800 | Band headings |
 | H2 | **Hanken** | `clamp(1.2rem, 2.2vw, 1.75rem)` | 1.1 | 800 | "View all projects →", email |
-| H3 | **Hanken** | `clamp(1.05rem, 1.8vw, 1.5rem)` | 1.25 | 800 | Work-card title |
+| H3 | **Hanken** | `1.5rem` | 1.25 | 800 | Work-card title |
 | Intro | Inter | `clamp(1.05rem, 1.35vw, 1.35rem)` | 1.42 | 400 | Hero intro, statement |
 | Body | Inter | 16px / 1rem | 1.5 | 400 | Paragraphs |
 | Small | Inter | 0.95rem | 1.4 | 400 | Card captions |
@@ -179,6 +181,7 @@ A hairline dividing two paragraphs at 1.26:1 is correct. The same hairline as th
   --color-text-muted: #6f6b77;
   --color-accent: #121118;
   --color-accent-hover: #000000;
+  --color-surface: #e6e4ea;
   --color-line: #e6e4ea;
   --color-line-strong: #cfcbd6;   /* borders only — never text */
   --color-display-mute: #8e8a99;  /* large display text only (3.36:1) */
@@ -189,12 +192,14 @@ A hairline dividing two paragraphs at 1.26:1 is correct. The same hairline as th
   --font-display: "Hanken Grotesk", "Inter", sans-serif;  /* headings + logo */
   --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --text-section: clamp(1.6rem, 3vw, 2.4rem);
+  --text-title: clamp(2.5rem, 5.5vw, 4.5rem);
+  --text-stat: clamp(1.8rem, 4vw, 3.2rem);
+  --text-section: clamp(2rem, 3vw, 2.4rem);
   --text-wordmark: clamp(2rem, 10.5vw, 8.5rem);
   --text-bignum: clamp(4rem, 13vw, 12rem);
   --text-marker: clamp(1.8rem, 5.4vw, 4.6rem);
   --text-h2: clamp(1.2rem, 2.2vw, 1.75rem);
-  --text-h3: clamp(1.05rem, 1.8vw, 1.5rem);
+  --text-h3: 1.5rem;
   --text-intro: clamp(1.05rem, 1.35vw, 1.35rem);
   --text-body: 1rem;
   --text-small: 0.95rem;
@@ -253,6 +258,7 @@ This project runs **Tailwind v4**, which is CSS-first: there is no `tailwind.con
   --color-muted: #6f6b77;
   --color-rich: #121118;
   --color-rich-hover: #000000;
+  --color-surface: #e6e4ea;
   --color-line: #e6e4ea;
   --color-line-strong: #cfcbd6;
   --color-display-mute: #8e8a99;
@@ -263,7 +269,9 @@ This project runs **Tailwind v4**, which is CSS-first: there is no `tailwind.con
   --font-display: "Hanken Grotesk", "Inter", sans-serif;  /* headings + logo */
   --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  --text-section: clamp(1.6rem, 3vw, 2.4rem);
+  --text-title: clamp(2.5rem, 5.5vw, 4.5rem);
+  --text-stat: clamp(1.8rem, 4vw, 3.2rem);
+  --text-section: clamp(2rem, 3vw, 2.4rem);
   --text-section--line-height: 1.1;
   --text-section--letter-spacing: -0.02em;
   --text-wordmark: clamp(2rem, 10.5vw, 8.5rem);
@@ -275,7 +283,7 @@ This project runs **Tailwind v4**, which is CSS-first: there is no `tailwind.con
   --text-marker: clamp(1.8rem, 5.4vw, 4.6rem);
   --text-marker--line-height: 0.95;
   --text-h2: clamp(1.2rem, 2.2vw, 1.75rem);
-  --text-h3: clamp(1.05rem, 1.8vw, 1.5rem);
+  --text-h3: 1.5rem;
   --text-intro: clamp(1.05rem, 1.35vw, 1.35rem);
   --text-intro--line-height: 1.42;
   --text-label: 0.72rem;

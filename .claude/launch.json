@@ -5,13 +5,8 @@
       "name": "dev",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "port": 3000
-    },
-    {
-      "name": "casestudy-review",
-      "runtimeExecutable": "bash",
-      "runtimeArgs": ["-c", "cd /private/tmp/claude-501/-Users-marissaklymkiw-Documents-Projects-2026-portfolio/9493db68-5dff-45f8-9bc2-9971191d82c2/scratchpad/review-site && exec python3 -m http.server 4599"],
-      "port": 4599
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

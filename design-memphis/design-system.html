@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUNDAE — a Memphis design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..800&family=Poppins:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17161B; --paper:#FFFFFF; --bone:#FBF9F4;
+  --yellow:#FFD400; --cyan:#12C2D6; --mint:#3FD9A4; --tomato:#FF5233; --pink:#F5257F; --grape:#6B3FD4;
+  --grape-deep:#5B2FC2; --yellow-deep:#7A5A00; --pink-deep:#C2185B; --mint-deep:#0F7A55; --tomato-deep:#C43A18; --cyan-deep:#0E7A87;
+  --yellow-tint:#FFF2C2; --mint-tint:#DBF8EC; --cyan-tint:#DAF6FA; --pink-tint:#FFE4EF; --grape-tint:#ECE4FF;
+  --muted:#56535E; --error:#C4123A; --disabled-text:#6B6873; --disabled-border:#B9B6C0;
+  --font-display:'Bricolage Grotesque',system-ui,sans-serif; --font-body:'Poppins',system-ui,sans-serif; --font-mono:'Space Mono',ui-monospace,monospace;
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:20px; --s-5:32px; --s-6:52px; --s-7:84px; --s-8:136px;
+  --r-chip:6px; --r-full:999px; --r-blob:62% 38% 55% 45% / 48% 55% 45% 52%;
+  --line:2px solid var(--ink); --line-thick:3px solid var(--ink);
+  --pop:4px 4px 0 var(--ink); --pop-lg:8px 8px 0 var(--ink); --pop-press:1px 1px 0 var(--ink);
+  --ease-bounce:cubic-bezier(.34,1.56,.64,1); --dur:240ms;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:1.0625rem;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--s-5)}
+h1,h2,h3{font-family:var(--font-display);font-optical-sizing:auto;margin:0}
+h2{font-size:clamp(2rem,4vw,3.1rem);font-weight:800;line-height:1;letter-spacing:-.02em}
+h3{font-size:1.75rem;font-weight:800;line-height:1.1;letter-spacing:-.01em;margin:0 0 var(--s-3)}
+p{margin:0 0 var(--s-4);max-width:66ch}
+a{color:var(--grape-deep);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px;font-weight:500}
+a:hover{color:var(--tomato-deep);text-decoration-thickness:4px}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+code{font-family:var(--font-mono);font-size:.85em;background:var(--bone);border:1px solid var(--disabled-border);padding:1px 5px}
+.label{font-family:var(--font-mono);font-weight:700;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;line-height:1.2}
+.muted{color:var(--muted)}
+section{padding:var(--s-7) 0;border-top:var(--line-thick)}
+.sechead{display:flex;flex-direction:column;gap:var(--s-3);margin-bottom:var(--s-6)}
+.zig{display:block;width:200px;height:14px}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:4px solid var(--ink);background:var(--yellow-tint);padding:var(--s-7) 0 var(--s-6)}
+.hero .wrap{position:relative;z-index:2}
+.hero h1{font-optical-sizing:auto;font-size:clamp(3.5rem,11vw,9rem);font-weight:800;line-height:.86;letter-spacing:-.04em;text-transform:lowercase}
+.hero h1 em{font-style:normal;display:inline-block;background:var(--pink);color:var(--ink);border:3px solid var(--ink);padding:0 .12em;transform:rotate(-3deg);box-shadow:var(--pop-lg)}
+.hero .lede{font-size:clamp(1.25rem,2.2vw,1.6rem);font-weight:500;line-height:1.45;max-width:34ch;margin-top:var(--s-5)}
+.deco{position:absolute;pointer-events:none}
+.d1{top:-30px;right:6%;width:190px;height:190px}
+.d2{bottom:-40px;left:-30px;width:220px;height:220px}
+.d3{top:40%;right:-40px;width:150px;height:150px}
+.chiprow{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-5)}
+
+/* ---------- primitives ---------- */
+.chip{display:inline-block;border:var(--line);border-radius:var(--r-chip);padding:6px var(--s-3);font-family:var(--font-mono);font-weight:700;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;box-shadow:var(--pop)}
+.chiprow .chip:nth-child(odd){transform:rotate(-3deg)}
+.chiprow .chip:nth-child(even){transform:rotate(2deg)}
+.grid{display:grid;gap:var(--s-4)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(165px,1fr))}
+.card{border:var(--line-thick);box-shadow:var(--pop-lg);background:var(--paper);padding:var(--s-4)}
+.card .slab{height:20px;margin:calc(var(--s-4)*-1) calc(var(--s-4)*-1) var(--s-4);border-bottom:var(--line)}
+
+/* swatches */
+.sw{border:var(--line-thick);box-shadow:var(--pop);display:flex;flex-direction:column;justify-content:flex-end;min-height:132px;padding:var(--s-3)}
+.sw .n{font-family:var(--font-mono);font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em}
+.sw .v{font-family:var(--font-mono);font-size:.72rem;opacity:.8}
+.sw .r{font-family:var(--font-mono);font-size:.72rem;margin-top:2px}
+.voice{border:var(--line);box-shadow:var(--pop);background:var(--paper);padding:var(--s-3)}
+.voice .n{font-family:var(--font-display);font-weight:800;font-size:1.25rem}
+
+table{border-collapse:collapse;width:100%;font-size:.9375rem;margin-bottom:var(--s-4)}
+th,td{border:2px solid var(--ink);padding:var(--s-2) var(--s-3);text-align:left}
+th{background:var(--ink);color:var(--paper);font-family:var(--font-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+tbody tr:nth-child(even){background:var(--bone)}
+
+.rule-box{border:var(--line-thick);border-left:14px solid var(--tomato);background:var(--paper);padding:var(--s-4);box-shadow:var(--pop-lg);margin:var(--s-5) 0}
+.rule-box p:last-child{margin-bottom:0}
+.rule-box .label{color:var(--tomato-deep);margin-bottom:var(--s-2)}
+
+/* buttons */
+.btn{font-family:var(--font-body);font-weight:600;font-size:1rem;padding:var(--s-3) var(--s-4);border:var(--line);border-radius:var(--r-full);cursor:pointer;box-shadow:var(--pop);transition:transform var(--dur) var(--ease-bounce),box-shadow var(--dur) var(--ease-bounce),background-color var(--dur)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:var(--pop-press)}
+.btn-primary{background:var(--grape);color:#fff}
+.btn-secondary{background:var(--paper);color:var(--ink)}
+.btn-secondary:hover{background:var(--yellow)}
+.btn[disabled]{background:var(--paper);color:var(--disabled-text);border:2px solid var(--disabled-border);box-shadow:none;cursor:not-allowed;transform:none}
+.field{display:flex;flex-direction:column;gap:var(--s-2);max-width:340px}
+input{font-family:var(--font-body);font-size:1rem;padding:var(--s-3) var(--s-4);border:var(--line);background:var(--paper);border-radius:0}
+input:focus{outline:3px solid var(--cyan);outline-offset:3px;border-width:3px}
+input.err{border-color:var(--error);border-width:3px}
+.errmsg{color:var(--error);font-size:.9375rem;font-weight:500;display:flex;gap:6px;align-items:center}
+
+/* patterns */
+.pat{height:110px;border:var(--line-thick);box-shadow:var(--pop)}
+.p-terr{background:var(--cyan-tint)}
+.p-stripe{background:repeating-linear-gradient(45deg,var(--tomato) 0 12px,var(--yellow) 12px 24px)}
+.p-check{background:repeating-conic-gradient(var(--ink) 0 25%,var(--paper) 0 50%) 0 0/32px 32px}
+.p-dot{background:radial-gradient(var(--ink) 2px,transparent 2px) 0 0/20px 20px,var(--paper)}
+.p-half{background:radial-gradient(circle at 50% 100%,var(--grape) 0 30px,transparent 30px) 0 0/60px 60px,var(--mint-tint)}
+.patname{font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:var(--s-2)}
+
+/* space + radius */
+.bar{background:var(--grape);border:var(--line);height:26px;box-shadow:var(--pop)}
+.spacerow{display:flex;align-items:center;gap:var(--s-3);margin-bottom:var(--s-2)}
+.spacerow .label{width:74px;flex:none}
+.rad{height:104px;background:var(--cyan);border:var(--line-thick);box-shadow:var(--pop);display:grid;place-items:center;font-family:var(--font-mono);font-size:.72rem;font-weight:700}
+
+/* type specimens */
+.spec{border-bottom:2px solid var(--ink);padding:var(--s-4) 0;display:grid;grid-template-columns:118px 1fr;gap:var(--s-4);align-items:baseline}
+.spec .meta{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.5}
+.sd{font-family:var(--font-display);font-optical-sizing:auto}
+
+.wiggle{animation:wig 3.6s var(--ease-bounce) infinite}
+@keyframes wig{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.float{animation:flo 5s ease-in-out infinite}
+@keyframes flo{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+footer{border-top:4px solid var(--ink);background:repeating-linear-gradient(45deg,var(--grape) 0 12px,var(--pink) 12px 24px);padding:var(--s-6) 0}
+footer .inner{background:var(--paper);border:var(--line-thick);box-shadow:var(--pop-lg);padding:var(--s-5)}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition-property:opacity,color,background-color,border-color !important;transition-duration:120ms !important}
+  .btn:hover{transform:none;box-shadow:var(--pop)}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="deco d1 float" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="none" stroke="#17161B" stroke-width="4"/><circle cx="50" cy="50" r="24" fill="#12C2D6" stroke="#17161B" stroke-width="4"/></svg>
+  <svg class="deco d2" viewBox="0 0 120 120" aria-hidden="true"><path d="M0 90 Q30 40 60 90 T120 90" fill="none" stroke="#FF5233" stroke-width="9" stroke-linecap="round"/><path d="M0 112 Q30 62 60 112 T120 112" fill="none" stroke="#17161B" stroke-width="5" stroke-linecap="round"/></svg>
+  <svg class="deco d3 wiggle" viewBox="0 0 100 60" aria-hidden="true"><path d="M4 46 L20 14 L36 46 L52 14 L68 46 L84 14" fill="none" stroke="#6B3FD4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+  <div class="wrap">
+    <p class="label" style="margin-bottom:var(--s-4)">Design System · Alternate Direction · v1</p>
+    <h1>sun<em>dae</em></h1>
+    <p class="lede">A Memphis Group direction for the portfolio. Loud on purpose, deadpan in the copy, and it still passes AA.</p>
+    <div class="chiprow">
+      <span class="chip" style="background:var(--yellow)">Ettore Sottsass</span>
+      <span class="chip" style="background:var(--cyan)">Milan 1981</span>
+      <span class="chip" style="background:var(--mint)">Flat &amp; keylined</span>
+      <span class="chip" style="background:var(--grape);color:#fff">WCAG 2.2 AA</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<section class="wrap" style="border-top:0">
+  <div class="sechead">
+    <span class="label" style="color:var(--tomato-deep)">00 — The premise</span>
+    <h2>The Swiss system asks what it can remove. This one asks what it can get away with.</h2>
+    <svg class="zig" viewBox="0 0 200 14" aria-hidden="true"><path d="M3 11 L28 3 L53 11 L78 3 L103 11 L128 3 L153 11 L178 3 L197 9" fill="none" stroke="#FFD400" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <p>Sottsass's argument was against the Modernist claim that ornament is dishonest. A laminate covered in confetti isn't lying about being laminate — it's just enjoying itself. Memphis is decoration promoted to structure.</p>
+  <p><strong>So these two systems aren't a spectrum with a tasteful middle. Don't blend them.</strong> A Memphis page with Swiss restraint is a colorful page that failed. A Swiss page with a squiggle is a rigorous page that got vandalized.</p>
+  <div class="grid g3" style="margin-top:var(--s-5)">
+    <div class="card" style="background:var(--yellow-tint)"><div class="slab" style="background:var(--yellow)"></div><span class="label muted">Move 01</span><h3>Flat blocks</h3><p style="margin:0">No gradients, no blur, no depth-realism. Color arrives in slabs.</p></div>
+    <div class="card" style="background:var(--cyan-tint)"><div class="slab" style="background:var(--cyan)"></div><span class="label muted">Move 02</span><h3>Black keyline</h3><p style="margin:0">An ink outline on everything filled. It's the grout — and it's the accessibility fix.</p></div>
+    <div class="card" style="background:var(--pink-tint)"><div class="slab" style="background:var(--pink)"></div><span class="label muted">Move 03</span><h3>A shape that does nothing</h3><p style="margin:0">Not an icon. Doesn't indicate. There because it's fun. The load-bearing idea.</p></div>
+    <div class="card" style="background:var(--mint-tint)"><div class="slab" style="background:var(--mint)"></div><span class="label muted">Move 04</span><h3>Pattern as material</h3><p style="margin:0">Terrazzo, stripes, dots, checkers — used where another system uses a surface color.</p></div>
+    <div class="card" style="background:var(--grape-tint)"><div class="slab" style="background:var(--grape)"></div><span class="label muted">Move 05</span><h3>Deliberate wrongness</h3><p style="margin:0">A 3° tilt, a stray circle off the grid. Once or twice a screen. Never everywhere.</p></div>
+    <div class="card" style="background:var(--bone)"><div class="slab" style="background:var(--ink)"></div><span class="label muted">The budget</span><h3>Three per viewport</h3><p style="margin:0">Maximal, not infinite. Sottsass put loud objects on a <em>plain floor</em>.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sechead">
+    <span class="label" style="color:var(--grape-deep)">01 — Color</span>
+    <h2>Play hues are surfaces. Voice hues are text.</h2>
+    <svg class="zig" viewBox="0 0 200 14" aria-hidden="true"><path d="M3 11 L28 3 L53 11 L78 3 L103 11 L128 3 L153 11 L178 3 L197 9" fill="none" stroke="#12C2D6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <div class="rule-box">
+    <p class="label">The governing rule</p>
+    <p>Every bright hue here <strong>fails as text on white</strong> — cyan is 2.16:1, yellow is 1.43:1. Those same hues carry ink type at 4.67–12.57:1. So bright color goes <em>behind</em> type, never <em>is</em> type. When a hue has to be text, use its deepened Voice sibling. No exception for "just a small label."</p>
+  </div>
+
+  <h3 style="margin-top:var(--s-6)">Play hues — fills, blocks, shapes. Never text.</h3>
+  <div class="grid g3">
+    <div class="sw" style="background:var(--yellow)"><span class="n">Yellow</span><span class="v">#FFD400</span><span class="r">ink 12.57:1 · AAA</span></div>
+    <div class="sw" style="background:var(--cyan)"><span class="n">Cyan</span><span class="v">#12C2D6</span><span class="r">ink 8.32:1 · AAA</span></div>
+    <div class="sw" style="background:var(--mint)"><span class="n">Mint</span><span class="v">#3FD9A4</span><span class="r">ink 10.00:1 · AAA</span></div>
+    <div class="sw" style="background:var(--tomato)"><span class="n">Tomato</span><span class="v">#FF5233</span><span class="r">ink 5.58:1 · AA</span></div>
+    <div class="sw" style="background:var(--pink)"><span class="n">Pink</span><span class="v">#F5257F</span><span class="r">ink 4.67:1 · AA, tight</span></div>
+    <div class="sw" style="background:var(--grape);color:#fff"><span class="n">Grape</span><span class="v">#6B3FD4</span><span class="r">white 6.39:1 · ink FAILS</span></div>
+  </div>
+
+  <div class="rule-box" style="border-left-color:var(--grape)">
+    <p class="label" style="color:var(--grape-deep)">Two easy mistakes</p>
+    <p><strong>Pink clears AA body by 0.17.</strong> Legal, and tight. Headings, chips, short labels only — a paragraph on pink moves to Pink tint. Never lighten the ink to "soften" it.</p>
+    <p><strong>Grape is inverted.</strong> The only hue that takes white type and the only one that must never take ink. Getting this backwards is the likeliest bug in the system.</p>
+  </div>
+
+  <h3 style="margin-top:var(--s-6)">Voice hues — the only hues allowed as text</h3>
+  <div class="grid g3">
+    <div class="voice"><span class="n" style="color:var(--grape-deep)">Grape deep</span><div class="label muted">#5B2FC2 · 7.98:1 · links</div></div>
+    <div class="voice"><span class="n" style="color:var(--yellow-deep)">Yellow deep</span><div class="label muted">#7A5A00 · 6.38:1 · text-yellow</div></div>
+    <div class="voice"><span class="n" style="color:var(--pink-deep)">Pink deep</span><div class="label muted">#C2185B · 5.87:1 · emphasis</div></div>
+    <div class="voice"><span class="n" style="color:var(--mint-deep)">Mint deep</span><div class="label muted">#0F7A55 · 5.34:1 · success</div></div>
+    <div class="voice"><span class="n" style="color:var(--tomato-deep)">Tomato deep</span><div class="label muted">#C43A18 · 5.30:1 · warning</div></div>
+    <div class="voice"><span class="n" style="color:var(--cyan-deep)">Cyan deep</span><div class="label muted">#0E7A87 · 5.06:1 · info</div></div>
+  </div>
+
+  <h3 style="margin-top:var(--s-6)">Tints — brights at 12%, for surfaces under body copy</h3>
+  <div class="grid g4">
+    <div class="sw" style="background:var(--yellow-tint)"><span class="n">Yellow tint</span><span class="v">#FFF2C2</span><span class="r">16.05:1</span></div>
+    <div class="sw" style="background:var(--mint-tint)"><span class="n">Mint tint</span><span class="v">#DBF8EC</span><span class="r">15.98:1</span></div>
+    <div class="sw" style="background:var(--cyan-tint)"><span class="n">Cyan tint</span><span class="v">#DAF6FA</span><span class="r">15.89:1</span></div>
+    <div class="sw" style="background:var(--pink-tint)"><span class="n">Pink tint</span><span class="v">#FFE4EF</span><span class="r">15.08:1</span></div>
+    <div class="sw" style="background:var(--grape-tint)"><span class="n">Grape tint</span><span class="v">#ECE4FF</span><span class="r">14.66:1</span></div>
+    <div class="sw" style="background:var(--bone)"><span class="n">Bone</span><span class="v">#FBF9F4</span><span class="r">17.10:1</span></div>
+    <div class="sw" style="background:var(--paper)"><span class="n">Paper</span><span class="v">#FFFFFF</span><span class="r">17.99:1</span></div>
+    <div class="sw" style="background:var(--ink);color:#fff"><span class="n">Ink</span><span class="v">#17161B</span><span class="r">never #000</span></div>
+  </div>
+
+  <h3 style="margin-top:var(--s-6)">Why the keyline isn't decoration</h3>
+  <p>WCAG 1.4.11 wants 3:1 for a boundary that identifies a component. Against white: pink <strong>3.85</strong> ✓, grape <strong>6.39</strong> ✓, tomato <strong>3.23</strong> ✓ — but cyan <strong>2.16</strong> ✗, mint <strong>1.80</strong> ✗, yellow <strong>1.43</strong> ✗.</p>
+  <p>A yellow card floating on white has, in accessibility terms, <strong>no edge at all</strong>. The fix is already the aesthetic: a 2–3px ink keyline on every filled shape, chip, card, button and input. That coincidence is why this direction can be this loud and still pass — and why the outlines never get "cleaned up."</p>
+  <div class="grid g2" style="margin-top:var(--s-4)">
+    <div style="border:3px solid var(--ink);padding:var(--s-4);background:var(--yellow);box-shadow:var(--pop)"><span class="label">Correct</span><p style="margin:var(--s-2) 0 0">Yellow fill, ink keyline. The component has a boundary.</p></div>
+    <div style="padding:calc(var(--s-4) + 3px);background:var(--yellow)"><span class="label">Wrong</span><p style="margin:var(--s-2) 0 0">Yellow fill, no keyline. 1.43:1 against white — the edge doesn't exist.</p></div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sechead">
+    <span class="label" style="color:var(--pink-deep)">02 — Typography</span>
+    <h2>Bricolage shouts. Poppins explains. Space Mono files it.</h2>
+    <svg class="zig" viewBox="0 0 200 14" aria-hidden="true"><path d="M3 11 L28 3 L53 11 L78 3 L103 11 L128 3 L153 11 L178 3 L197 9" fill="none" stroke="#F5257F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <p>Scale is a <strong>1.333 perfect fourth</strong> — the Swiss system uses 1.25. The bigger interval is why this hierarchy reads as shouting rather than as organizing.</p>
+
+  <div class="spec"><div class="meta">Display<br>Bricolage 800<br>clamp(3.5–9rem)<br>lh .86 / -.04em</div><div class="sd" style="font-size:clamp(2.6rem,7vw,5rem);font-weight:800;line-height:.86;letter-spacing:-.04em">marissa</div></div>
+  <div class="spec"><div class="meta">H1<br>Bricolage 800<br>clamp(2.6–4.2rem)<br>lh .95</div><div class="sd" style="font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;line-height:.95;letter-spacing:-.03em">Designing the loud parts</div></div>
+  <div class="spec"><div class="meta">H2<br>Bricolage 800<br>clamp(2–3.1rem)</div><div class="sd" style="font-size:2.2rem;font-weight:800;line-height:1;letter-spacing:-.02em">Selected work, 2011—2026</div></div>
+  <div class="spec"><div class="meta">H3<br>Bricolage 800<br>1.75rem</div><div class="sd" style="font-size:1.75rem;font-weight:800">Governance is a design problem</div></div>
+  <div class="spec"><div class="meta">Lede<br>Poppins 500<br>clamp(1.25–1.6rem)</div><div style="font-size:1.4rem;font-weight:500;line-height:1.45">Fifteen years. Mostly design systems, lately the AI-native workflows around them.</div></div>
+  <div class="spec"><div class="meta">Body<br>Poppins 400<br>1.0625rem / lh 1.65<br>62–70ch</div><div>The page is loud; the copy is deadpan. That contrast is the joke, and it's also what keeps a portfolio credible — confetti plus exclamation marks reads as a children's app.</div></div>
+  <div class="spec"><div class="meta">Small<br>Poppins 400<br>.9375rem</div><div style="font-size:.9375rem">Captions, meta, secondary detail. Still full ink — no gray-on-white.</div></div>
+  <div class="spec" style="border-bottom:0"><div class="meta">Label<br>Space Mono 700<br>.75rem / .14em<br>uppercase</div><div class="label">Case study — 04 — Currently at UCLA</div></div>
+
+  <div class="rule-box" style="border-left-color:var(--cyan)">
+    <p class="label" style="color:var(--cyan-deep)">Non-negotiable</p>
+    <p>Body copy stays on a straight baseline at a sane measure. Tilt slabs, chips and images — <strong>never a paragraph</strong>. Rotated running text is a legibility failure wearing a costume, and it's especially punishing with astigmatism.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sechead">
+    <span class="label" style="color:var(--mint-deep)">03 — Space, radius, shadow</span>
+    <h2>Swiss doubles. Memphis adds.</h2>
+    <svg class="zig" viewBox="0 0 200 14" aria-hidden="true"><path d="M3 11 L28 3 L53 11 L78 3 L103 11 L128 3 L153 11 L178 3 L197 9" fill="none" stroke="#3FD9A4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <p>The spacing scale is Fibonacci — <code>4 · 8 · 12 · 20 · 32 · 52 · 84 · 136</code>. Same discipline as a doubling scale, wonkier rhythm, and the steps get irregular exactly where the page gets loud.</p>
+  <div style="margin:var(--s-5) 0">
+    <div class="spacerow"><span class="label">s-1 · 4</span><div class="bar" style="width:4px"></div></div>
+    <div class="spacerow"><span class="label">s-2 · 8</span><div class="bar" style="width:8px"></div></div>
+    <div class="spacerow"><span class="label">s-3 · 12</span><div class="bar" style="width:12px"></div></div>
+    <div class="spacerow"><span class="label">s-4 · 20</span><div class="bar" style="width:20px"></div></div>
+    <div class="spacerow"><span class="label">s-5 · 32</span><div class="bar" style="width:32px"></div></div>
+    <div class="spacerow"><span class="label">s-6 · 52</span><div class="bar" style="width:52px"></div></div>
+    <div class="spacerow"><span class="label">s-7 · 84</span><div class="bar" style="width:84px"></div></div>
+    <div class="spacerow"><span class="label">s-8 · 136</span><div class="bar" style="width:136px"></div></div>
+  </div>
+
+  <h3>Radius — three states, no in-between</h3>
+  <p>Hard edges or pure circles. The tasteful 8px rounded rectangle is the one shape this system has no use for.</p>
+  <div class="grid g4">
+    <div class="rad" style="border-radius:0">--r-none · 0</div>
+    <div class="rad" style="border-radius:var(--r-chip);background:var(--pink)">--r-chip · 6px</div>
+    <div class="rad" style="border-radius:var(--r-full);background:var(--yellow)">--r-full · 999px</div>
+    <div class="rad" style="border-radius:var(--r-blob);background:var(--mint)">--r-blob · decorative</div>
+  </div>
+
+  <h3 style="margin-top:var(--s-6)">Shadow — hard offsets, zero blur</h3>
+  <p>A blurred shadow imitates a light source. Memphis has no light source.</p>
+  <div class="grid g4">
+    <div class="rad" style="background:var(--paper);box-shadow:var(--pop)">--pop · 4/4/0</div>
+    <div class="rad" style="background:var(--paper);box-shadow:var(--pop-lg)">--pop-lg · 8/8/0</div>
+    <div class="rad" style="background:var(--paper);box-shadow:6px 6px 0 var(--cyan)">--pop-color</div>
+    <div class="rad" style="background:var(--paper);box-shadow:var(--pop-press);transform:translate(3px,3px)">pressed</div>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sechead">
+    <span class="label" style="color:var(--tomato-deep)">04 — Shapes &amp; patterns</span>
+    <h2>Things that mean nothing, specified rigorously.</h2>
+    <svg class="zig" viewBox="0 0 200 14" aria-hidden="true"><path d="M3 11 L28 3 L53 11 L78 3 L103 11 L128 3 L153 11 L178 3 L197 9" fill="none" stroke="#FF5233" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <p>These are components. They get the same rigor as a button — and all of them ship <code>aria-hidden="true"</code> and <code>pointer-events:none</code>, because a thing that means nothing must announce nothing.</p>
+
+  <div class="grid g3" style="margin-bottom:var(--s-5)">
+    <div>
+      <div class="pat" style="display:grid;place-items:center;background:var(--paper)">
+        <svg width="180" height="60" viewBox="0 0 180 60" aria-hidden="true"><path d="M6 40 Q33 6 60 40 T114 40 T168 40" fill="none" stroke="#F5257F" stroke-width="8" stroke-linecap="round"/></svg>
+      </div><div class="patname">Squiggle · one per section</div>
+    </div>
+    <div>
+      <div class="pat" style="display:grid;place-items:center;background:var(--paper)">
+        <svg width="150" height="70" viewBox="0 0 150 70" aria-hidden="true"><path d="M15 62 A45 45 0 0 1 105 62 Z" fill="#FFD400" stroke="#17161B" stroke-width="4"/><circle cx="125" cy="20" r="13" fill="none" stroke="#17161B" stroke-width="4"/></svg>
+      </div><div class="patname">Arc + stray circle</div>
+    </div>
+    <div>
+      <div class="pat" style="display:grid;place-items:center;background:var(--paper)">
+        <svg width="160" height="60" viewBox="0 0 160 60" aria-hidden="true"><path d="M6 48 L30 12 L54 48 L78 12 L102 48 L126 12 L150 48" fill="none" stroke="#6B3FD4" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div><div class="patname">Zigzag · the underline</div>
+    </div>
+  </div>
+
+  <div class="grid g4">
+    <div><div class="pat p-terr">
+      <svg width="100%" height="100%" viewBox="0 0 200 110" preserveAspectRatio="none" aria-hidden="true">
+        <ellipse cx="24" cy="20" rx="11" ry="7" fill="#FF5233" transform="rotate(24 24 20)"/>
+        <rect x="60" y="12" width="16" height="9" fill="#6B3FD4" transform="rotate(-18 68 16)"/>
+        <circle cx="120" cy="26" r="7" fill="#FFD400"/>
+        <ellipse cx="170" cy="16" rx="12" ry="6" fill="#17161B" transform="rotate(40 170 16)"/>
+        <rect x="14" y="60" width="14" height="14" fill="#FFD400" transform="rotate(30 21 67)"/>
+        <ellipse cx="70" cy="72" rx="13" ry="7" fill="#17161B" transform="rotate(-30 70 72)"/>
+        <circle cx="128" cy="66" r="9" fill="#FF5233"/>
+        <rect x="158" y="70" width="18" height="8" fill="#6B3FD4" transform="rotate(16 167 74)"/>
+        <ellipse cx="44" cy="98" rx="10" ry="6" fill="#6B3FD4" transform="rotate(-50 44 98)"/>
+        <circle cx="100" cy="98" r="6" fill="#17161B"/>
+        <rect x="180" y="94" width="14" height="9" fill="#FFD400" transform="rotate(-24 187 98)"/>
+      </svg></div><div class="patname">Terrazzo</div></div>
+    <div><div class="pat p-stripe"></div><div class="patname">Stripes · 45° / 12px</div></div>
+    <div><div class="pat p-check"></div><div class="patname">Checker · never behind text</div></div>
+    <div><div class="pat p-dot"></div><div class="patname">Dot grid · safest ground</div></div>
+  </div>
+
+  <div class="rule-box">
+    <p class="label">The decoration budget</p>
+    <p><strong>Three per viewport.</strong> Past three, the shapes stop being jokes and become noise — and the page loses the white space that makes them land. Count before you add a fourth.</p>
+    <p style="margin-bottom:0"><strong>Never put text on terrazzo, checker, or stripes.</strong> A patterned ground destroys every ratio in section 01. Text goes on paper, bone, or a tint.</p>
+  </div>
+</section>
+
+<section class="wrap">
+  <div class="sechead">
+    <span class="label" style="color:var(--grape-deep)">05 — Components</span>
+    <h2>Everything filled gets an outline.</h2>
+    <svg class="zig" viewBox="0 0 200 14" aria-hidden="true"><path d="M3 11 L28 3 L53 11 L78 3 L103 11 L128 3 L153 11 L178 3 L197 9" fill="none" stroke="#6B3FD4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <h3>Buttons</h3>
+  <div style="display:flex;flex-wrap:wrap;gap:var(--s-4);align-items:center;margin-bottom:var(--s-6)">
+    <button class="btn btn-primary">View the work</button>
+    <button class="btn btn-secondary">Read more</button>
+    <button class="btn" disabled>Unavailable</button>
+    <span class="muted" style="font-size:.9375rem">Hover pops. Active presses. Disabled keeps a 4.9:1 label — never opacity alone.</span>
+  </div>
+
+  <h3>Input &amp; validation</h3>
+  <div class="grid g2" style="margin-bottom:var(--s-6)">
+    <div class="field">
+      <label class="label" for="a">Email</label>
+      <input id="a" type="email" placeholder="you@example.com">
+      <span class="label muted">Focus: 3px keyline + cyan ring</span>
+    </div>
+    <div class="field">
+      <label class="label" for="b" style="color:var(--error)">Email</label>
+      <input id="b" class="err" type="email" value="not-an-email" aria-describedby="e1">
+      <span class="errmsg" id="e1"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="7" fill="none" stroke="#C4123A" stroke-width="2"/><path d="M8 4v5M8 11.5v.5" stroke="#C4123A" stroke-width="2" stroke-linecap="round"/></svg>That address is missing an @.</span>
+    </div>
+  </div>
+
+  <h3>Cards</h3>
+  <div class="grid g3" style="margin-bottom:var(--s-6)">
+    <div class="card" style="transform:rotate(-1.5deg)"><div class="slab" style="background:var(--tomato)"></div><span class="label muted">Case study · 2025</span><h3>Disability Resource Portal</h3><p style="margin:0">Ink on paper. The slab carries the color; the copy stays readable.</p></div>
+    <div class="card" style="background:var(--cyan-tint)"><div class="slab" style="background:var(--cyan)"></div><span class="label muted">Case study · 2024</span><h3>Design system governance</h3><p style="margin:0">Tint fill, 15.89:1. This is how long copy gets onto color.</p></div>
+    <div class="card" style="background:var(--grape);color:#fff;transform:rotate(1.5deg)"><div class="slab" style="background:var(--yellow)"></div><span class="label" style="opacity:.85">Case study · 2026</span><h3 style="color:#fff">AI-native workflows</h3><p style="margin:0">Grape takes white type only — 6.39:1. Ink on grape is 2.82 and fails.</p></div>
+  </div>
+
+  <h3>Chips, links &amp; section heads</h3>
+  <div class="chiprow" style="margin-bottom:var(--s-4)">
+    <span class="chip" style="background:var(--yellow)">Design systems</span>
+    <span class="chip" style="background:var(--cyan)">Accessibility</span>
+    <span class="chip" style="background:var(--mint)">Governance</span>
+    <span class="chip" style="background:var(--tomato)">Research</span>
+    <span class="chip" style="background:var(--pink)">Prototyping</span>
+  </div>
+  <p>A <a href="#top">link is grape-deep and permanently underlined</a> — a link that differs only by hue is a color-only signal, and color is never the only carrier in this system. Hover swaps to tomato-deep and thickens the underline to 4px.</p>
+</section>
+
+<section class="wrap">
+  <div class="sechead">
+    <span class="label" style="color:var(--cyan-deep)">06 — Access</span>
+    <h2>The part that doesn't get to be playful.</h2>
+    <svg class="zig" viewBox="0 0 200 14" aria-hidden="true"><path d="M3 11 L28 3 L53 11 L78 3 L103 11 L128 3 L153 11 L178 3 L197 9" fill="none" stroke="#17161B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <p>Principle 07 carries over from the Swiss system unchanged: <strong>clear to everyone, or it isn't clear.</strong> A maximal aesthetic raises the stakes rather than lowering the bar — there are simply more ways to fail.</p>
+  <table>
+    <thead><tr><th>Rule</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>WCAG 2.2 AA floor, ratios computed not estimated</td><td>Tightest pair is ink-on-pink at 4.67:1. Nothing else is under 5.</td></tr>
+      <tr><td>Single light theme. No dark mode, ever.</td><td>Astigmatism. Medical requirement, not an aesthetic call.</td></tr>
+      <tr><td>Color is never the only carrier</td><td>Six hues is a decoration budget, not an information channel.</td></tr>
+      <tr><td>Keylines are compliance, not style</td><td>Cyan/mint/yellow have no perceptible edge on white (1.43–2.16:1).</td></tr>
+      <tr><td>Motion is 100% removable</td><td>All of it is decorative — <code>prefers-reduced-motion</code> kills every bit, wiggle included.</td></tr>
+      <tr><td>No rotated running text</td><td>Tilt slabs and chips. Never paragraphs, never form labels.</td></tr>
+      <tr><td>No text on terrazzo, checker or stripes</td><td>A patterned ground destroys the measured ratios.</td></tr>
+      <tr><td>Targets ≥ 44×44px, including tilted ones</td><td>A rotated chip's hit area rotates with it. Verify, don't assume.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="wrap">
+  <div class="sechead">
+    <span class="label" style="color:var(--yellow-deep)">07 — Against the Swiss system</span>
+    <h2>A shared spine, and a disagreement about everything on top of it.</h2>
+  </div>
+  <table>
+    <thead><tr><th>&nbsp;</th><th>Swiss — ../design.md</th><th>Memphis — this file</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Question</strong></td><td>What can I remove?</td><td>What can I get away with?</td></tr>
+      <tr><td><strong>Color</strong></td><td>Mono + one signal red</td><td>Six Play hues + six Voice hues</td></tr>
+      <tr><td><strong>Hierarchy from</strong></td><td>Weight, size, space</td><td>Color, shape, scale-jump</td></tr>
+      <tr><td><strong>Divider</strong></td><td>1px / 2px rule</td><td>Squiggle, zigzag</td></tr>
+      <tr><td><strong>Shadow</strong></td><td>None</td><td>Hard offset, zero blur</td></tr>
+      <tr><td><strong>Type ratio</strong></td><td>1.25</td><td>1.333</td></tr>
+      <tr><td><strong>Space</strong></td><td>Doubling — 4/8/16/32</td><td>Fibonacci — 4/8/12/20/32</td></tr>
+      <tr><td><strong>Decoration</strong></td><td>Has to justify itself</td><td><em>Is</em> the argument</td></tr>
+      <tr><td><strong>Shared</strong></td><td colspan="2">True white · single light theme · Space Mono · WCAG 2.2 AA · a real grid</td></tr>
+    </tbody>
+  </table>
+  <div class="rule-box"><p style="margin-bottom:0"><strong>Don't merge them.</strong> This folder is self-contained and nothing outside it was changed. The live site runs the Swiss system; read <code>../design.md</code> when you build it.</p></div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap"><div class="inner">
+    <span class="label" style="color:var(--grape-deep)">SUNDAE · alternate direction · not wired into the build</span>
+    <h2 style="margin:var(--s-3) 0">Loud page. Deadpan copy.</h2>
+    <p style="margin-bottom:0">Tokens live in <code>design.md</code> next to this file — CSS custom properties and a Tailwind v4 <code>@theme</code> block. Heads up: its <code>--spacing-*</code> names collide with the live app's scale. Prefix everything <code>--mem-*</code> before merging anything anywhere.</p>
+  </div></div>
+</footer>
+
+</body>
+</html>

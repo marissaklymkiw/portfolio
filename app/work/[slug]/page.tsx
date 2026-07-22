@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import DeviceRegistrationCaseStudy from "./DeviceRegistrationCaseStudy";
 import IndeedVisionCaseStudy from "./IndeedVisionCaseStudy";
+import SourcingAnalyticsCaseStudy from "./SourcingAnalyticsCaseStudy";
+import UscGuestAccessCaseStudy from "./UscGuestAccessCaseStudy";
 
 /* /work/[slug] — case-study route.
    Add a study by mapping a slug to its component below. Every study composes the
@@ -23,6 +25,20 @@ const STUDIES: Record<
     description:
       "Indeed analytics: facilitating the cross-functional workshop that set a two-year direction across merging teams, then following that priority into a sourcing dashboard that shipped in a paid product.",
     Component: IndeedVisionCaseStudy,
+  },
+  "sourcing-analytics": {
+    title:
+      "Recruiters were doing the work. They couldn’t see if it was working. | Marissa Klymkiw",
+    description:
+      "Indeed sourcing analytics: designing the suite that turned scattered recruiting effort into one honest read — is sourcing paying off, and what to do next. Problem → study → build → impact.",
+    Component: SourcingAnalyticsCaseStudy,
+  },
+  "usc-guest-access": {
+    title:
+      "Redesigning guest access so students stop sharing their passwords | Marissa Klymkiw",
+    description:
+      "USC Guest Access: students were sharing real logins to let parents help. I designed a secure, FERPA-aware way to invite and manage guests with granular control. Problem → research → design → testing.",
+    Component: UscGuestAccessCaseStudy,
   },
 };
 

@@ -32,10 +32,20 @@
   --color-muted: #6f6b77; /* secondary text, captions, mono labels — 5.19:1 AA */
   --color-rich: #121118; /* THE accent: links, labels, rules, arrows — 18.77:1 AAA */
   --color-rich-hover: #000000; /* the only place #000 is permitted */
+  --color-surface: #e6e4ea; /* the one tinted FILL — cards that hold process
+     artefacts, never text-on-tint below 4.5:1. Shares a value with --color-line
+     today; they are separate ROLES (fill vs hairline) and may diverge. */
   --color-line: #e6e4ea; /* hairline — 1.26:1 — SEPARATOR ONLY */
   --color-line-strong: #cfcbd6; /* hover borders — 1.59:1 — BORDERS ONLY, never text */
   --color-display-mute: #8e8a99; /* de-emphasized LARGE display text only — 3.36:1 */
   --color-error: #a4232f; /* form validation ONLY — 7.34:1 AAA */
+  /* --color-signal — THE INTERACTION ACCENT, the one deliberate, documented
+     break from monochrome (design.md §1). It marks INTERACTION only: the cursor
+     follower, and the hover state of interactive text (nav links). It never
+     colours resting text, status, structure/borders, or hierarchy — those stay
+     mono (reach for weight/size/space). Named `signal`, NOT `accent`, because §1
+     already calls the rich-black (#121118) the "accent". */
+  --color-signal: #e5322d;
 
   /* ---- Type families (bound to next/font vars in layout.tsx) ---- */
   --font-display: var(--font-hanken), var(--font-inter), sans-serif; /* headings + logo */
@@ -47,9 +57,27 @@
   --text-bignum: clamp(4rem, 13vw, 12rem);
   --text-marker: clamp(1.8rem, 5.4vw, 4.6rem);
   --text-lede: clamp(1.3rem, 2.4vw, 2.1rem); /* case-study lede: below marker, above intro */
-  --text-section: clamp(1.6rem, 3vw, 2.4rem);
+  /* the case-study h1. Its own step: bigger than --text-section, smaller than
+     --text-marker. Value lifted verbatim from the arbitrary class it replaced,
+     so this is a token-ising change with no visual delta. */
+  --text-title: clamp(2.5rem, 5.5vw, 4.5rem);
+  /* the StatBand figures — same, lifted verbatim from the arbitrary class. */
+  --text-stat: clamp(1.8rem, 4vw, 3.2rem);
+  /* The FLOORS on --text-title and --text-section are set by the mobile ladder,
+     not by desktop. Desktop is governed by the caps (72px / 38.4px) and is
+     unchanged. At 390px the old floors gave 32 / 25.6 / 24 for h1 / h2 / h3 —
+     h2 and h3 only 6% apart, which read as one size. Raised so the ladder steps
+     40 / 32 / 24 / 18, a consistent ~1.25–1.33 at every rung. Check the whole
+     ladder, not one token, before changing either floor. */
+  --text-section: clamp(2rem, 3vw, 2.4rem);
   --text-h2: clamp(1.2rem, 2.2vw, 1.75rem);
-  --text-h3: clamp(1.05rem, 1.8vw, 1.5rem);
+  /* FIXED, not a clamp. This was clamp(1.05rem, 1.8vw, 1.5rem), whose floor put
+     h3 at 16.8px on mobile — SMALLER than the 1.125rem body copy underneath it.
+     Raising the floor to 1.25rem fixed the inversion but left only 2px between
+     heading and body, which still read as flat. Since the clamp already capped
+     at 1.5rem on desktop, pinning it there makes mobile match desktop and gives
+     a 1.33 ratio against body at every width. h3 does not need to scale. */
+  --text-h3: 1.5rem;
   --text-intro: clamp(1.05rem, 1.35vw, 1.35rem);
   --text-body: 1rem;
   --text-prose: 1.125rem; /* long-form reading size — case-study prose */
@@ -218,10 +246,13 @@
     padding-bottom: clamp(40px, 7vw, 96px);
   }
 
-  /* mono label — the structural scaffolding */
+  /* mono label — the structural scaffolding. Sized to --text-small (0.95rem),
+     the shared mono-label size: nav, the section stripes, the card meta line and
+     the masthead discipline line all sit here so the scaffolding reads as one
+     size. Pills (text-tag) and the stat unit (text-unit) keep their own roles. */
   .lab {
     font-family: var(--font-mono);
-    font-size: var(--text-label);
+    font-size: var(--text-small);
     letter-spacing: var(--tracking-label);
     text-transform: uppercase;
     color: var(--color-muted);
@@ -280,7 +311,7 @@
   .mast-disc {
     flex: 0 0 auto;
     font-family: var(--font-mono);
-    font-size: clamp(0.78rem, 1vw, 1.05rem);
+    font-size: var(--text-small); /* the shared mono-label size — was a bespoke off-scale clamp */
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--color-ink);
@@ -686,3 +717,27 @@
     animation: none !important;
   }
 }
+
+/* When the cursor follower is active it REPLACES the native pointer (design.md
+   §1): the red circle IS the cursor. Toggled on <html> by CursorFollower ONLY
+   while it runs — so on touch and under prefers-reduced-motion, where the
+   follower self-disables, the native cursor is untouched. */
+html.cursor-none,
+html.cursor-none * {
+  cursor: none !important;
+}
+
+/* Experience STACK-carousel (ExperienceCarousel). Every slide is layered in the
+   same spot; the active card is on top, the upcoming cards fan back and to the
+   right (offset + scaled down + dimmed) so the deck reads as a physical stack.
+   Per-card transform/opacity/z are set inline by the component; this just
+   animates the shuffle. Off under reduced motion. */
+.exp-card {
+  transition: left 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .exp-card {
+    transition: none;
+  }
+}
+

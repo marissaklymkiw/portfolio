@@ -8,6 +8,7 @@ import {
 import "./globals.css";
 import Nav from "@/components/ui/Nav";
 import Footer from "@/components/ui/Footer";
+import CursorFollower from "@/components/ui/CursorFollower";
 
 /* Fonts self-hosted via next/font (no layout shift, clean on Vercel).
    Each exposes a CSS variable consumed by the font tokens in globals.css.
@@ -60,13 +61,16 @@ export default function RootLayout({
       lang="en"
       className={`${hanken.variable} ${inter.variable} ${spaceMono.variable} ${permanentMarker.variable}`}
     >
-      <body>
+      <body suppressHydrationWarning>
         <a className="skip" href="#main">
           Skip to content
         </a>
         <Nav />
         <main id="main">{children}</main>
         <Footer />
+        {/* the one chromatic element on the site — a red disc that trails the
+            pointer. Self-disables on touch + reduced-motion. See design.md §1. */}
+        <CursorFollower />
       </body>
     </html>
   );

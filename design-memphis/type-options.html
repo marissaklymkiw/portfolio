@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SUNDAE — display face options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Rubik:wght@800&family=Space+Grotesk:wght@700&family=Bungee&family=Fredoka:wght@600;700&family=Poppins:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#17161B; --paper:#FFFFFF; --bone:#FBF9F4;
+  --yellow:#FFD400; --cyan:#12C2D6; --mint:#3FD9A4; --tomato:#FF5233; --pink:#F5257F; --grape:#6B3FD4;
+  --grape-deep:#5B2FC2; --tomato-deep:#C43A18; --cyan-deep:#0E7A87; --pink-deep:#C2185B; --mint-deep:#0F7A55; --yellow-deep:#7A5A00;
+  --yellow-tint:#FFF2C2; --mint-tint:#DBF8EC; --cyan-tint:#DAF6FA; --pink-tint:#FFE4EF; --grape-tint:#ECE4FF;
+  --muted:#56535E;
+  --body:'Poppins',system-ui,sans-serif; --mono:'Space Mono',ui-monospace,monospace;
+  --s-3:12px; --s-4:20px; --s-5:32px; --s-6:52px; --s-7:84px;
+  --pop:4px 4px 0 var(--ink); --pop-lg:8px 8px 0 var(--ink);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.65}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--s-5)}
+.label{font-family:var(--mono);font-weight:700;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;line-height:1.2}
+p{max-width:64ch}
+.muted{color:var(--muted)}
+
+.top{background:var(--yellow-tint);border-bottom:4px solid var(--ink);padding:var(--s-6) 0}
+.top h1{font-family:'Archivo Black',sans-serif;font-size:clamp(2rem,5vw,3.4rem);line-height:1;letter-spacing:-.03em;margin:var(--s-3) 0}
+
+.opt{border-top:3px solid var(--ink);padding:var(--s-7) 0}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-4);margin-bottom:var(--s-5)}
+.num{font-family:var(--mono);font-weight:700;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;border:2px solid var(--ink);padding:5px 10px;box-shadow:var(--pop)}
+.fname{font-family:var(--mono);font-weight:700;font-size:1rem;letter-spacing:.06em;text-transform:uppercase}
+
+.stage{padding:var(--s-5) var(--s-5) var(--s-6);border:3px solid var(--ink);box-shadow:var(--pop-lg)}
+.word{font-size:clamp(3rem,10vw,7.5rem);line-height:.88;letter-spacing:-.03em;text-transform:lowercase;margin:0}
+.word em{font-style:normal;display:inline-block;background:var(--pink);border:3px solid var(--ink);padding:0 .1em;transform:rotate(-3deg);box-shadow:var(--pop-lg)}
+.h2{font-size:clamp(1.6rem,3.4vw,2.6rem);line-height:1.02;letter-spacing:-.02em;margin:var(--s-5) 0 0;max-width:22ch}
+.h3{font-size:1.5rem;line-height:1.1;margin:var(--s-4) 0 0}
+.take{margin-top:var(--s-4);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--s-4)}
+.take div{border-left:8px solid var(--ink);padding-left:var(--s-3)}
+.take .label{display:block;margin-bottom:6px;color:var(--muted)}
+
+/* faces */
+.f-archivo .word,.f-archivo .h2,.f-archivo .h3{font-family:'Archivo Black',sans-serif;font-weight:400}
+.f-bricolage .word,.f-bricolage .h2,.f-bricolage .h3{font-family:'Bricolage Grotesque',sans-serif;font-weight:800}
+.f-rubik .word,.f-rubik .h2,.f-rubik .h3{font-family:'Rubik',sans-serif;font-weight:800}
+.f-spacegk .word,.f-spacegk .h2,.f-spacegk .h3{font-family:'Space Grotesk',sans-serif;font-weight:700}
+.f-bungee .word,.f-bungee .h2,.f-bungee .h3{font-family:'Bungee',sans-serif;font-weight:400;letter-spacing:-.01em}
+.f-fredoka .word,.f-fredoka .h2,.f-fredoka .h3{font-family:'Fredoka',sans-serif;font-weight:700}
+.f-poppins .word,.f-poppins .h2,.f-poppins .h3{font-family:'Poppins',sans-serif;font-weight:600}
+
+footer{border-top:4px solid var(--ink);padding:var(--s-6) 0;background:var(--bone)}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <span class="label">SUNDAE · display face · <strong>settled: 03 Bricolage Grotesque 800</strong></span>
+  <h1>Syne is out. Bricolage Grotesque 800 is in. The other six are kept here as the record.</h1>
+  <p style="margin:0">Body stays <strong>Poppins</strong> and labels stay <strong>Space Mono</strong> — only the display face changes below. Each one is shown at hero size, at H2, and at H3, because a face that's great at 7rem can fall apart at 1.5rem. Tell me a number.</p>
+</div></header>
+
+<main>
+
+<section class="opt f-archivo"><div class="wrap">
+  <div class="head"><span class="num" style="background:var(--yellow)">01</span><span class="fname">Archivo Black</span><span class="muted">The poster face</span></div>
+  <div class="stage" style="background:var(--yellow-tint)">
+    <p class="word">sun<em>dae</em></p>
+    <p class="h2">Designing the structure under the screen</p>
+    <p class="h3">Governance is a design problem</p>
+  </div>
+  <div class="take">
+    <div><span class="label">Why it fits</span>Wide, heavy, flat-sided — this is closest to what 1980s Memphis <em>posters</em> actually used. Zero quirk, all mass. The color does the playing; the type just hits hard.</div>
+    <div><span class="label">Watch for</span>Only one weight exists. No 700/900 range to modulate with, so hierarchy has to come from size alone.</div>
+  </div>
+</div></section>
+
+<section class="opt f-rubik"><div class="wrap">
+  <div class="head"><span class="num" style="background:var(--cyan)">02</span><span class="fname">Rubik 800</span><span class="muted">The toy</span></div>
+  <div class="stage" style="background:var(--cyan-tint)">
+    <p class="word">sun<em>dae</em></p>
+    <p class="h2">Designing the structure under the screen</p>
+    <p class="h3">Governance is a design problem</p>
+  </div>
+  <div class="take">
+    <div><span class="label">Why it fits</span>Geometric with slightly softened corners — reads as a plastic object rather than a typeface. Probably the most <em>bright</em> of the seven, and it holds up small.</div>
+    <div><span class="label">Watch for</span>The soft corners edge toward friendly-tech. Keep the keylines hard so it doesn't drift into startup-mascot.</div>
+  </div>
+</div></section>
+
+<section class="opt f-bricolage"><div class="wrap">
+  <div class="head"><span class="num" style="background:var(--pink)">03</span><span class="fname">Bricolage Grotesque 800</span><span class="chip" style="background:var(--mint);border:2px solid var(--ink);box-shadow:var(--pop);font-family:var(--mono);font-weight:700;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px">✓ Chosen</span></div>
+  <div class="stage" style="background:var(--pink-tint)">
+    <p class="word">sun<em>dae</em></p>
+    <p class="h2">Designing the structure under the screen</p>
+    <p class="h3">Governance is a design problem</p>
+  </div>
+  <div class="take">
+    <div><span class="label">Why it fits</span>Contemporary and deliberately imperfect — odd terminals, uneven rhythm. Closest in <em>spirit</em> to what Syne was doing, but warmer and far less mannered.</div>
+    <div><span class="label">Watch for</span>If Syne bugged you because it looked try-hard, this may land the same way. It's the highest-risk pick here.</div>
+  </div>
+</div></section>
+
+<section class="opt f-spacegk"><div class="wrap">
+  <div class="head"><span class="num" style="background:var(--mint)">04</span><span class="fname">Space Grotesk 700</span><span class="muted">The family reunion</span></div>
+  <div class="stage" style="background:var(--mint-tint)">
+    <p class="word">sun<em>dae</em></p>
+    <p class="h2">Designing the structure under the screen</p>
+    <p class="h3">Governance is a design problem</p>
+  </div>
+  <div class="take">
+    <div><span class="label">Why it fits</span>Drawn <em>from</em> Space Mono — which is already the label face in both your systems. So the display and the scaffolding share actual DNA, not just vibes. Quirky in the details, sane in the mass.</div>
+    <div><span class="label">Watch for</span>Least loud of the set. If you want the hero to shout, this one talks.</div>
+  </div>
+</div></section>
+
+<section class="opt f-bungee"><div class="wrap">
+  <div class="head"><span class="num" style="background:var(--grape);color:#fff">05</span><span class="fname">Bungee</span><span class="muted">The wildcard</span></div>
+  <div class="stage" style="background:var(--grape-tint)">
+    <p class="word">sun<em>dae</em></p>
+    <p class="h2">Designing the structure under the screen</p>
+    <p class="h3">Governance is a design problem</p>
+  </div>
+  <div class="take">
+    <div><span class="label">Why it fits</span>Literally designed for signage. Maximum playful, maximum 80s-arcade. If "super bright and playful" was meant without brakes, this is it.</div>
+    <div><span class="label">Watch for</span>It's a costume. At H3 and in a table of contents it gets tiring fast, and a hiring manager may read it as novelty rather than craft. Use only if you'd restrict it to the hero.</div>
+  </div>
+</div></section>
+
+<section class="opt f-fredoka"><div class="wrap">
+  <div class="head"><span class="num" style="background:var(--tomato)">06</span><span class="fname">Fredoka 700</span><span class="muted">The soft one</span></div>
+  <div class="stage" style="background:var(--yellow-tint)">
+    <p class="word">sun<em>dae</em></p>
+    <p class="h2">Designing the structure under the screen</p>
+    <p class="h3">Governance is a design problem</p>
+  </div>
+  <div class="take">
+    <div><span class="label">Why it fits</span>Rounded geometric, genuinely cheerful, very legible at every size. The friendliest option and the easiest to live with.</div>
+    <div><span class="label">Watch for</span>Rounded terminals fight the hard keylines the system depends on — and it leans young. Closest of the seven to reading as a kids' app.</div>
+  </div>
+</div></section>
+
+<section class="opt f-poppins"><div class="wrap">
+  <div class="head"><span class="num" style="background:var(--bone)">07</span><span class="fname">Poppins 600 — no display face at all</span><span class="muted">The control</span></div>
+  <div class="stage" style="background:var(--paper)">
+    <p class="word">sun<em>dae</em></p>
+    <p class="h2">Designing the structure under the screen</p>
+    <p class="h3">Governance is a design problem</p>
+  </div>
+  <div class="take">
+    <div><span class="label">Why it fits</span>One face, doing everything. Poppins is a geometric sans with real 1980s in it, and dropping the display face means the <em>color and shapes</em> carry 100% of the personality.</div>
+    <div><span class="label">Watch for</span>Included as the baseline to judge the others against. It's the safe answer — and the hero loses its bite.</div>
+  </div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <span class="label" style="color:var(--grape-deep)">Next</span>
+  <p style="margin:var(--s-3) 0 0">Give me a number and I'll swap it into <code>design.md</code> and <code>design-system.html</code> — it's a two-token change (<code>--font-display</code> plus the Google Fonts link), and nothing else in the system moves. My pick if you want one: <strong>01 Archivo Black</strong> for the poster energy, or <strong>04 Space Grotesk</strong> if you'd rather the display face quietly rhyme with the Space Mono already in both systems.</p>
+</div></footer>
+
+</body>
+</html>

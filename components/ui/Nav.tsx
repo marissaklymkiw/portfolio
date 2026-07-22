@@ -71,7 +71,7 @@ export default function Nav() {
                 <Link
                   href={l.href}
                   aria-current={isActive(l.href) ? "page" : undefined}
-                  className={`font-mono text-label uppercase tracking-[0.06em] transition-colors hover:text-rich ${
+                  className={`font-mono text-label uppercase tracking-[0.06em] transition-colors hover:text-signal ${
                     isActive(l.href) ? "text-rich font-bold" : "text-ink"
                   }`}
                 >
@@ -82,10 +82,21 @@ export default function Nav() {
           </ul>
         </nav>
 
-        {/* meta */}
-        <div className="justify-self-end font-mono text-label tracking-[0.04em] text-muted max-[860px]:hidden">
-          Staff Product Design
-        </div>
+        {/* contact CTA — the one action in the bar. Was a "Staff Product Design"
+            meta line, which only restated the hero; this scrolls to the footer
+            contact block (Footer id="contact", global). Ghost button: gray on a
+            gray hairline, both `muted` (#6f6b77, 5.19:1 on paper) — text clears
+            AA (4.5:1) and the border clears WCAG 1.4.11 (3:1) for an interactive
+            boundary; the lighter `line` tokens would fail that 3:1. Darkens to
+            `rich` on hover; focus-visible ring for keyboard. self-center so the
+            box sits centered in the baseline-aligned bar rather than dipping
+            below it. Hidden under 860px, where the toggle takes over. */}
+        <Link
+          href="#contact"
+          className="justify-self-end self-center inline-flex items-center rounded-[4px] border border-muted px-md py-[7px] font-mono text-label uppercase tracking-[0.06em] text-muted transition-colors hover:border-rich hover:text-rich focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rich max-[860px]:hidden"
+        >
+          Contact
+        </Link>
 
         {/* mobile toggle */}
         <button
@@ -123,7 +134,7 @@ export default function Nav() {
                   href={l.href}
                   onClick={() => setOpen(false)}
                   aria-current={isActive(l.href) ? "page" : undefined}
-                  className={`block py-md font-mono text-label uppercase tracking-label ${
+                  className={`block py-md font-mono text-label uppercase tracking-label transition-colors hover:text-signal ${
                     isActive(l.href) ? "text-rich font-bold" : "text-ink"
                   }`}
                 >

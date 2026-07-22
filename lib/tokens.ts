@@ -17,6 +17,7 @@ export const color = {
   muted: "#6f6b77", // secondary text, captions, mono labels
   rich: "#121118", // THE accent: links, labels, rules, arrows, focus
   richHover: "#000000", // the only place #000 is permitted
+  surface: "#e6e4ea", // the one tinted FILL — cards only, ink text only
   line: "#e6e4ea", // hairline separators — SEPARATOR ONLY
   lineStrong: "#cfcbd6", // hover borders — BORDERS ONLY, never text
   displayMute: "#8e8a99", // de-emphasized LARGE display text only
@@ -43,7 +44,7 @@ export const contrast = {
 } as const;
 
 export const font = {
-  display: 'var(--font-hanken), var(--font-inter), sans-serif', // headings + logo
+  display: "var(--font-hanken), var(--font-inter), sans-serif", // headings + logo
   body: 'var(--font-inter), "Helvetica Neue", Arial, sans-serif', // body + hero name
   mono: 'var(--font-space-mono), ui-monospace, "SF Mono", Menlo, monospace', // scaffolding
 } as const;
@@ -54,9 +55,11 @@ export const fontSize = {
   marker: "clamp(1.8rem, 5.4vw, 4.6rem)",
   // case-study lede: paragraph-length, so below `marker` and above `intro`
   lede: "clamp(1.3rem, 2.4vw, 2.1rem)",
-  section: "clamp(1.6rem, 3vw, 2.4rem)",
+  title: "clamp(2.5rem, 5.5vw, 4.5rem)", // case-study h1
+  stat: "clamp(1.8rem, 4vw, 3.2rem)", // StatBand figures
+  section: "clamp(2rem, 3vw, 2.4rem)",
   h2: "clamp(1.2rem, 2.2vw, 1.75rem)",
-  h3: "clamp(1.05rem, 1.8vw, 1.5rem)",
+  h3: "1.5rem",
   intro: "clamp(1.05rem, 1.35vw, 1.35rem)",
   body: "1rem",
   // long-form reading size — case-study prose. Larger than `body` so a wider

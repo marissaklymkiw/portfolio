@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Label from "@/components/ui/Label";
 import Button from "@/components/ui/Buttons";
+import ArrowForward from "@/components/ui/ArrowForward";
 
 /**
  * CyclingHero — typewriter headline. The whole line, "I " + a verb-phrase,
@@ -126,7 +127,9 @@ export default function CyclingHero() {
             View my work
           </Button>
           <Button href="/ethos" variant="ghost">
-            My ethos →
+            <span className="inline-flex items-center gap-2">
+              My ethos <ArrowForward />
+            </span>
           </Button>
         </div>
       </div>

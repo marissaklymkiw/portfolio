@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ArrowBack from "@/components/ui/ArrowBack";
 import { getLibraryBooks } from "@/lib/notion";
 import { bookSlug } from "@/lib/library";
 import type { Metadata } from "next";
@@ -76,7 +77,8 @@ export default async function BookPage({
           href="/library"
           className="inline-flex items-center gap-1 font-mono text-sm text-bark hover:text-violet transition-colors mb-[var(--space-xl)]"
         >
-          ← Library
+          <ArrowBack />
+          Library
         </Link>
 
         <div className="grid grid-cols-1 gap-[var(--space-xl)] min-[720px]:grid-cols-[220px_1fr]">
