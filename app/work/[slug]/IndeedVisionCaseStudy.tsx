@@ -68,7 +68,7 @@ export default function IndeedVisionCaseStudy() {
              cold, above the facts, and the lede below reads as its caption. */
           <CaseStudyHero
             src="/work/indeed-vision/jtbd-prioritization.png"
-            alt="The workshop's prioritization board. On the left, Prioritize JTBDs with Voting: a satisfaction-score versus importance-score plot with jobs-to-be-done plotted as bubbles carrying vote counts, and an opportunity zone marked under 75% satisfaction and over 75% importance. On the right, a decision tree of prioritized JTBDs arranged as a pyramid, ranked by votes from thirteen at the apex down to zero at the base."
+            alt="JTBD prioritization board: a satisfaction-versus-importance plot, and jobs voted into a pyramid."
             width={2430}
             height={1416}
             priority
@@ -157,7 +157,7 @@ export default function IndeedVisionCaseStudy() {
           <Figure
             zoomable={false}
             src="/work/indeed-vision/betty-coherence.png"
-            alt="A person at the center holding together scattered, disconnected charts and documents in separate color families on either side, illustrating fragmented analytics tools that don't share a common view."
+            alt="A person holding together scattered, disconnected charts from tools that share no common view."
             width={1376}
             height={768}
           />
@@ -232,7 +232,7 @@ export default function IndeedVisionCaseStudy() {
               stage opens on, before it argues the problem was really direction. */}
           <Figure
             src="/work/indeed-vision/analytics-in-journeys.png"
-            alt="A slide headed Analytics in Journeys, the evolution of analytics at Indeed, in three stages. Before: analytics experiences are decentralized and disjointed, shown as a single dense report. Fully available in the first half of 2023: centralized analytics provides a unified experience across key product areas, shown as a set of consistent report screens. Launching in the third and fourth quarters of the 2023 financial year: analytics capabilities are getting closer to the user, shown as a performance module inside a job detail page."
+            alt="Analytics in Journeys slide: reports decentralized, then centralized, then inside the product."
             width={2542}
             height={1420}
             caption="The merge as the org saw it: decentralized, then unified, then pushed closer to the user. A tidy story about tools, which is exactly why it kept reading as an org-chart problem rather than a direction problem."
@@ -304,7 +304,7 @@ export default function IndeedVisionCaseStudy() {
               need-statement boards" — it is exactly that, for JTBD 1.05.3. */}
           <Figure
             src="/work/indeed-vision/opportunity-workflow-hmw.png"
-            alt="The opportunity workflow board for one job-to-be-done, 1.05.3, diagnose issues when troubleshooting poor performance on a job. A five-step end-to-end workflow runs left to right with the current state in grey and the future state in pink beneath it, and a field of How Might We statements is clustered to the right under grouping labels such as educate clients on their market, clearly communicate ROI, and correlate performance with the market."
+            alt="Opportunity workflow board: a five-step journey, its future state, and How Might We statements."
             width={3138}
             height={1746}
             caption="One job, worked end to end: the five-step workflow, the future state under it, and the How Might We statements the group generated from it."
@@ -348,13 +348,13 @@ export default function IndeedVisionCaseStudy() {
             figures={[
               {
                 src: "/work/indeed-vision/where-are-we-going.png",
-                alt: "A slide headed Where are we going? As an external Analytics Experience user. A journey line carries five outcomes stated in the user's voice: threaded analytics, navigation, benchmarking, return on investment, and actionable next steps. Each is tagged against the key problems it addresses: discoverability, data consistency, or user questions.",
+                alt: "Where are we going? slide: five user outcomes on a journey line, tagged to the problems they fix.",
                 width: 2526,
                 height: 1420,
               },
               {
                 src: "/work/indeed-vision/roadmap-wip.png",
-                alt: "A roadmap slide marked work in progress. Swimlanes of work are laid across five quarters, from ROI and spend summary through benchmarking to job optimization and recommendations, with a What isn't here? column listing the gaps the roadmap does not yet cover.",
+                alt: "Work-in-progress roadmap: swimlanes across five quarters, plus a What isn't here? gaps column.",
                 width: 2530,
                 height: 1410,
               },
@@ -399,13 +399,13 @@ export default function IndeedVisionCaseStudy() {
             figures={[
               {
                 src: "/work/indeed-vision/anex-future-state-journeys.png",
-                alt: "The ANEX offsite boards. Two teams, Blue and Yellow, each working a future-state journey down the same structure: user journey with a stated goal and five steps, then context and capabilities, data needs, dependencies and collaborators, value to users, value to Indeed, and opportunity crafting, each block timeboxed.",
+                alt: "ANEX offsite boards: two teams working future-state journeys down the same timeboxed structure.",
                 width: 3434,
                 height: 1964,
               },
               {
                 src: "/work/indeed-vision/anex-workflow-wireframe.png",
-                alt: "A wireframe of the future-state analytics workflow, headed How is my team performing? A row of measures sits above a Recruiters who may need help section, which states that three recruiters have candidates stuck in the pipeline for more than five days, gives a Why? breakdown of likely causes, and offers an action beside each. Below it, a table ranks recruiter performance by slowest response time.",
+                alt: "Future-state wireframe: How is my team performing?, with recruiters needing help and why.",
                 width: 1390,
                 height: 1944,
               },
@@ -467,7 +467,7 @@ export default function IndeedVisionCaseStudy() {
             steps={[
               {
                 src: "/work/indeed-vision/opportunity-workflow-hmw.png",
-                alt: "The workshop opportunity board, shown here as a reference thumbnail: a five-step workflow with a field of How Might We statements clustered under grouping labels including clearly communicate ROI.",
+                alt: "Workshop opportunity board: a five-step workflow beside grouped How Might We statements.",
                 width: 3138,
                 height: 1746,
                 stage: "03 · Workshop",
@@ -475,7 +475,7 @@ export default function IndeedVisionCaseStudy() {
               },
               {
                 src: "/work/indeed-vision/anex-workflow-wireframe.png",
-                alt: "The offsite future-state wireframe, shown here as a reference thumbnail: headed How is my team performing?, with a measures row above a Recruiters who may need help section and a ranked performance table.",
+                alt: "Offsite wireframe: How is my team performing?, a measures row and a ranked performance table.",
                 width: 1390,
                 height: 1944,
                 stage: "05 · Offsite",
@@ -483,7 +483,7 @@ export default function IndeedVisionCaseStudy() {
               },
               {
                 src: "/work/indeed-vision/sourcing-summary-shipped.png",
-                alt: "The shipped Smart Sourcing summary page, shown here as a reference thumbnail: a plain-language sourcing-at-a-glance summary and stat tiles above a sourcing funnel, decline-reasons breakdown, and per-recruiter performance chart.",
+                alt: "Shipped summary page: a plain-language read and stat tiles above the sourcing funnel.",
                 // @2x export (2880×3976 on disk); declared at 1x so the lightbox
                 // zoom ceiling is 1440, not the doubled pixel width.
                 width: 1440,
@@ -496,7 +496,7 @@ export default function IndeedVisionCaseStudy() {
 
           <WindowFigure
             src="/work/indeed-vision/sourcing-summary-shipped.png"
-            alt="The shipped Smart Sourcing summary page, built around the question how is your recruiting performance? It opens with a plain-language sourcing-at-a-glance summary and stat tiles, then a sourcing funnel from contacts used to positive responses, a decline-reasons breakdown, and a per-recruiter performance chart measured against the team average — leading with plain-language answers rather than raw charts."
+            alt="Smart Sourcing summary: a plain-language read, stat tiles, funnel, and per-recruiter results."
             /* @2x export (2880×3976 on disk); declared at 1x so the lightbox
                zoom ceiling is 1440, not the doubled pixel width. */
             width={1440}

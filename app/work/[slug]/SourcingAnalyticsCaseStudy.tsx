@@ -163,7 +163,7 @@ export default function SourcingAnalyticsCaseStudy() {
               leads with the mess, not another portrait. */}
           <Figure
             src="/work/sourcing-analytics/ss-overwhelm.png"
-            alt="A weary recruiter at the center of a ring of six tools she juggles all week: sourcing candidates on LinkedIn, posting and reviewing jobs on Indeed, tracking the pipeline in a spreadsheet, interviewing over Zoom, phone screens to identify candidates, and jotting candidate notes."
+            alt="A weary recruiter ringed by six tools: LinkedIn, Indeed, a spreadsheet, Zoom, phone, notes."
             width={2560}
             height={1960}
             caption="A week of sourcing, spread across tools and tabs, with no single read on whether any of it is working."
@@ -285,7 +285,7 @@ export default function SourcingAnalyticsCaseStudy() {
               it is the same shipped artifact. */}
           <WindowFigure
             src="/work/indeed-vision/sourcing-summary-shipped.png"
-            alt="The shipped sourcing performance summary. It opens with a plain-language sourcing-at-a-glance read and stat tiles, then a sourcing funnel from contacts used to positive responses, a decline-reasons breakdown, and a per-recruiter performance chart measured against the team average — leading with the answer rather than raw charts."
+            alt="Sourcing performance summary: a plain-language read, stat tiles, funnel, and decline reasons."
             width={1440}
             height={1988}
             caption="The Overview as it shipped, shown from the top: a plain-language answer first, then the funnel, decline reasons, and per-recruiter performance below. Open it to see the full page."
