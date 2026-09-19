@@ -1,3 +1,7 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import { SELF_FOOTER_ROUTES } from "@/lib/work/self-footer";
 import ArrowForward from "./ArrowForward";
 
 /**
@@ -17,6 +21,12 @@ import ArrowForward from "./ArrowForward";
 const linkBase = "font-mono text-label uppercase tracking-label transition-colors";
 
 export default function Footer() {
+  /* Client only so it can read the route: the root layout renders this on every
+     page, and a page that renders its own footer needs this one gone rather than
+     hidden. See lib/work/self-footer.ts for why hiding it was a bug. */
+  const pathname = usePathname();
+  if (pathname && SELF_FOOTER_ROUTES.has(pathname)) return null;
+
   return (
     <footer id="contact" className="canvas border-t border-ink pt-lg pb-2xl">
       <div className="flex flex-wrap justify-between gap-lg">
@@ -52,9 +62,13 @@ export default function Footer() {
               unlike #wordmark (home-only + position:sticky, which browsers treat
               as already in view and won't scroll to). Arrow is the shared
               ArrowForward rotated -90° to point up. */}
+          {/* py-md with -my-md grows the tap target from 14px to ~46px without
+              moving anything: the padding expands the hit box, the negative
+              margin cancels its effect on the column rhythm. Both values are on
+              the spacing scale. */}
           <a
             href="#main"
-            className={`${linkBase} inline-flex items-center gap-1.5 text-muted hover:text-ink`}
+            className={`${linkBase} inline-flex items-center gap-1.5 py-md -my-md text-muted hover:text-ink`}
           >
             Back to top <ArrowForward className="-rotate-90" />
           </a>

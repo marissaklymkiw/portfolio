@@ -49,8 +49,9 @@ import { useId, useState } from "react";
 function CalloutMark({ side, text, x, y, dir = "horizontal" }: Callout) {
   const isBefore = side === "before";
 
-  /* Solid paper behind the label, not a text-shadow. Debo's callouts sit in
-     generous empty margins; these two screenshots are dense edge to edge, so a
+  /* Solid paper behind the label, not a text-shadow. The pattern this follows
+     puts callouts in generous empty margins; these two screenshots are dense
+     edge to edge, so a
      glow leaves the text sitting on card copy and unreadable. An opaque chip is
      the only thing that holds at every divider position. Bold for the same
      reason: this is an assertion about the screen, not a caption.
@@ -161,15 +162,15 @@ export default function BeforeAfterSlider({
   const [pos, setPos] = useState(50);
   const uid = useId();
 
-  /* Solid-filled pills, after Debo Biswas's before/after frames. His are orange
-     and blue; this system is monochrome and reserves its one accent (signal
+  /* Solid-filled pills, after the usual before/after frame treatment, which is
+     typically two hues; this system is monochrome and reserves its one accent (signal
      red) for interaction, so the pair is differentiated by TONE instead: BEFORE
      takes muted, AFTER takes ink. That also carries meaning — the redesign is
      the darker, louder chip. Both are paper-on-fill and clear AA (5.19:1 and
      18.56:1). Round because pills are the one round thing in a square system.
 
-     They sit ABOVE the frame rather than inside its corners, which is where
-     Debo puts his. Both of these screenshots open with a branded header, so an
+     They sit ABOVE the frame rather than inside its corners, which is the more
+     common placement. Both of these screenshots open with a branded header, so an
      inset pill lands on the UCLA logo every time — it read as a mistake rather
      than a label. Outside the frame nothing is occluded and the left/right
      placement still carries which half is which. */
@@ -220,8 +221,9 @@ export default function BeforeAfterSlider({
 
         {/* BEFORE callouts, clipped to the LEFT of the divider so they appear
             and disappear with the half they annotate — the inverse of the after
-            clip above. Debo bakes his into the image; keeping ours in the DOM
-            means they stay selectable, translatable, and re-editable. */}
+            clip above. The usual approach bakes callouts into the image; keeping
+            ours in the DOM means they stay selectable, translatable, and
+            re-editable. */}
         <div
           className="pointer-events-none absolute inset-0 z-10"
           style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
@@ -279,8 +281,8 @@ export default function BeforeAfterSlider({
         </div>
       </div>
 
-      {/* The affordance line, after Debo's "Hover or drag to compare". Ours says
-          drag, not hover: hover-scrubbing does not exist on touch and gives
+      {/* The affordance line, after the conventional "Hover or drag to compare".
+          Ours says drag, not hover: hover-scrubbing does not exist on touch and gives
           keyboard users nothing, so the handle is the honest affordance. Mono
           and centred so it reads as an instruction to the control above it
           rather than as part of the caption below. */}

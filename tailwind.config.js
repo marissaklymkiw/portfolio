@@ -220,13 +220,16 @@ module.exports = {
         // Long-form reading measure for case studies.
         //
         // NOTE: `ch` is the width of the "0" glyph, which is much wider than an
-        // average letter — so this does NOT mean 88 characters. Measured in
-        // Chrome, 88ch at 18px Inter renders ~990px and ~125 real characters
-        // per line. That is past the classic 45–75 guideline, chosen
-        // deliberately: the canvas is 1312px and a narrower column read as
-        // cramped against it. If you tighten this, measure the RESULT rather
-        // than trusting the unit.
-        reading: "88ch",
+        // average letter, so this does NOT mean 61 characters. Measured in
+        // Chrome at 18px Inter: 1ch = 11.29px, and 61ch ≈ 690px ≈ 80 real
+        // characters per line. Before this was set, Prose carried no measure at
+        // all and filled the 803px track at 93 characters.
+        //
+        // 80 is the target: past the classic 45–75 guideline, chosen
+        // deliberately because the canvas is wide and a tighter column read as
+        // cramped against it. If you change this, MEASURE the rendered line
+        // rather than trusting the unit.
+        reading: "61ch",
       },
     },
   },

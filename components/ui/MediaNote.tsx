@@ -2,7 +2,7 @@ import Image from "next/image";
 
 /**
  * MediaNote — a framed still with a status label underneath, after the
- * "DURING SESSION" cards on Debo Biswas's case studies.
+ * "DURING SESSION" process cards common to editorial case studies.
  *
  * Sized to sit BESIDE a paragraph rather than interrupt it, so a piece of
  * evidence can sit next to the claim it supports instead of pushing the reader

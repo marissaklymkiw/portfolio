@@ -50,7 +50,11 @@ export default function Nav() {
           href="/"
           aria-label="Marissa Klymkiw — home"
           onClick={() => setOpen(false)}
-          className={`brand justify-self-start ${shrunk ? "shrunk" : ""}`}
+          /* py-sm/-my-sm lifts the hit box from 25px to ~41px without changing
+             the bar: the padding grows the target, the negative margin keeps the
+             baseline where it was. Kept at sm rather than md because the header
+             is 52px tall and a 57px target would spill out of it. */
+          className={`brand justify-self-start py-sm -my-sm ${shrunk ? "shrunk" : ""}`}
         >
           <span className="bword">
             <span>m</span>
@@ -104,7 +108,12 @@ export default function Nav() {
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((o) => !o)}
-          className="hidden max-[860px]:flex flex-col gap-[5px] p-2 -mr-2 justify-self-end"
+          /* p-md with -mr-md takes the hit box from 40x32 to 56x48 while leaving
+             the bars optically flush with the gutter. This is the primary
+             navigation control on a phone and it was the smallest target on the
+             page; 32px cleared WCAG 2.2 AA (24x24) but not the 44px touch
+             guideline. Both values are on the spacing scale. */
+          className="hidden max-[860px]:flex flex-col gap-[5px] p-md -mr-md justify-self-end"
         >
           <span
             className={`block w-6 h-[2px] bg-ink transition-transform ${

@@ -34,7 +34,11 @@ export type RailStage = {
 };
 
 export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
-  const [active, setActive] = useState(stages[0]?.id ?? "");
+  /* Starts empty, not at stages[0]. Seeding the first stage marked "The problem"
+     as current while the reader was still in the un-indexed hero — a status that
+     was wrong before a single scroll event. Nothing is current until the reader
+     is actually inside a stage. */
+  const [active, setActive] = useState("");
 
   useEffect(() => {
     const sections = stages
@@ -42,11 +46,40 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
       .filter((el): el is HTMLElement => Boolean(el));
     if (!sections.length) return;
 
+    /* The observer has to track what LEFT the band as well as what entered it.
+       Setting active only on isIntersecting meant nothing ever cleared it: scroll
+       to the end and back to the top and the rail still reported "Reflection",
+       with aria-current="true" on it, while the hero filled the screen. A screen
+       reader was told the reader was somewhere they were not, which is worse
+       than no status at all (principle 07: access is structural). */
+    const visible = new Set<string>();
+
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) setActive(e.target.id);
+          if (e.isIntersecting) visible.add(e.target.id);
+          else visible.delete(e.target.id);
         });
+
+        if (visible.size) {
+          // more than one stage can sit in the band on a short section; the one
+          // being read is the earliest in document order.
+          const first = stages.find((s) => visible.has(s.id));
+          if (first) setActive(first.id);
+          return;
+        }
+
+        /* Nothing in the read band: either above the first stage (no stage is
+           current) or in the gap between two. Fall back to the last stage whose
+           top has already passed the band, so a long figure between stages keeps
+           the stage it belongs to rather than clearing the index. */
+        const bandTop = window.innerHeight * 0.45;
+        let current = "";
+        for (const s of stages) {
+          const el = document.getElementById(s.id);
+          if (el && el.getBoundingClientRect().top <= bandTop) current = s.id;
+        }
+        setActive(current);
       },
       { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
     );
@@ -146,7 +179,7 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
             <li key={s.id}>
               {/* Inter, sentence case, NOT the mono uppercase the nav uses.
                   Letterspaced all-caps Inter is the "screams Claude Code UI"
-                  look to avoid; sentence-case Inter is Debo Biswas's rail idiom.
+                  look to avoid; sentence-case Inter is the editorial rail idiom.
                   Size stays text-label so it matches the top nav and the section
                   eyebrows. "Go back" above keeps its mono .lab treatment. */}
               <a

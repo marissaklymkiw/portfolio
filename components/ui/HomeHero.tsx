@@ -9,7 +9,8 @@
  *
  * The treatment: the interlock staircase. `marissa` upper-left steps to
  * `klymkiw` lower-right at a 3.4em left offset — a loosened corner kiss,
- * deliberately not a copy of Pizzolato's bar. A full-width 2px ink rule carries
+ * deliberately looser than the corner-to-corner bar it departs from. A
+ * full-width 2px ink rule carries
  * the mono discipline line.
  *
  * The name is Inter, NOT Hanken: Hanken names headings, but the wordmark is a

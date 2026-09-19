@@ -158,7 +158,7 @@ export const layout = {
    * canvas, which would run ~130 characters per line.
    */
   measure: "62ch", // short intro lead-in
-  reading: "72ch", // long-form case-study prose
+  reading: "61ch", // long-form case-study prose — ~80 chars/line at 18px Inter
 } as const;
 
 /** The stated philosophy. Six are Swiss-canonical; the seventh is the one print never had to answer. */

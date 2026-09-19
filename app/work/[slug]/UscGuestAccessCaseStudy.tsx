@@ -163,6 +163,17 @@ export default function UscGuestAccessCaseStudy() {
             </p>
           </Prose>
 
+          {/* The old system's front door — the legacy OASIS "For Guests" login.
+              A real before-state screenshot, captured from the still-live guest
+              portal, grounds the "sharing a login was the only way in" claim. */}
+          <Figure
+            src="/work/usc-guest-access/oasis-guest-login.jpg"
+            alt="The legacy OASIS 'For Guests' login screen: a cardinal header reading On-line Academic Student Information System, with three fields — Student USC ID, Guest Login ID, and Guest PIN — credentials the student had to create and hand off to each guest."
+            width={1486}
+            height={826}
+            caption="The old front door: OASIS for Guests. Students had to generate a Login ID and PIN themselves and pass them to every guest — the friction that made simply sharing a password the easier path."
+          />
+
           {/* the guests themselves — USC parents at orientation. It puts real
               faces on the people students were sharing passwords to help. Full
               colour, per the system. */}

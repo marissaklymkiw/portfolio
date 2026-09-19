@@ -71,7 +71,10 @@ export default function RootLayout({
         {/* the one chromatic element on the site — a red disc that trails the
             pointer. Self-disables on touch + reduced-motion. See design.md §1. */}
         <CursorFollower />
-      </body>
+      {/* impeccable-live-start */}
+<script src="http://localhost:8400/live.js?token=abec2eb4-8c0e-473d-8d9f-1e1e7c3fec49"></script>
+{/* impeccable-live-end */}
+</body>
     </html>
   );
 }

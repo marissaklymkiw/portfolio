@@ -209,8 +209,45 @@
     padding-right: var(--pad);
   }
 
+  /* Option C (DRP) squares its content imagery instead of the
+     system's 16px radius. Scoped to the .no-media-radius wrapper so every other
+     study keeps its rounded corners. Only rounded-2xl (content images + their
+     clipping wrappers) is squared; rounded-full pills/handles are untouched. */
+  .no-media-radius img,
+  .no-media-radius [class~="rounded-2xl"] {
+    border-radius: 0 !important;
+  }
+
+  /* Option C also drops the ink rule above each section; whitespace carries the
+     breaks (the stages and the experience carousel each render a border-t
+     border-ink on their <section>). Scoped to the same wrapper so other studies
+     keep their dividers. The metadata block's own top/bottom rules live on a
+     <dl>, not a <section>, so they stay. */
+  .no-media-radius section {
+    border-top: 0 !important;
+  }
+
+  /* Option C also drops the section numbers, both the "01" inline in each
+     heading and the number column in the left rail. Scoped so other studies
+     keep theirs. Hiding the number removes it from the accessibility tree too,
+     so the heading and its rail link still share the same name (WCAG 2.5.3). */
+  .no-media-radius h2 > .tabular-nums,
+  .no-media-radius ul a > .tabular-nums {
+    display: none;
+  }
+  .no-media-radius ul a:has(> .tabular-nums) {
+    grid-template-columns: 1fr;
+    column-gap: 0;
+  }
+
+  /* Option C renders its own big-links footer. The shared one is no longer
+     rendered at all on that route (see lib/work/self-footer.ts), so there is
+     nothing to hide here. Hiding it used to leave <footer id="contact"> in the
+     DOM, which made the header's CONTACT button scroll to an invisible element
+     and did nothing. */
+
   /* -------------------------------------------------------------------
-     The scroll-cover (the Pizzolato effect).
+     The scroll-cover.
 
      The name PINS under the sticky header while everything below it — an
      opaque white layer — rises over it and covers it. Three things make it
@@ -469,49 +506,14 @@
     }
   }
 
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    opacity: 0.5;
-    mask-image: linear-gradient(
-      to bottom,
-      transparent,
-      #000 40%,
-      #000 70%,
-      transparent
-    );
-  }
-  .hero-bg--graph {
-    background-image: linear-gradient(var(--color-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
-    background-size: 72px 72px;
-  }
-  .hero-bg--lined {
-    background-image: linear-gradient(var(--color-line) 1px, transparent 1px);
-    background-size: 100% 36px;
-  }
-  .hero-bg--dot {
-    background-image: radial-gradient(var(--color-line) 1.5px, transparent 1.7px);
-    background-size: 28px 28px;
-  }
-  .hero-bg--iso {
-    background-image: repeating-linear-gradient(
-        30deg,
-        var(--color-line) 0 1px,
-        transparent 1px 42px
-      ),
-      repeating-linear-gradient(
-        150deg,
-        var(--color-line) 0 1px,
-        transparent 1px 42px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        var(--color-line) 0 1px,
-        transparent 1px 42px
-      );
-  }
+  /* REMOVED: .hero-bg and its --graph / --lined / --dot / --iso variants.
+     Decorative hairline grid, rule, dot, and isometric fields tiled on a fixed
+     pixel cell — the retired system's hero backdrop, and a generated-UI
+     signature the Swiss test rejects: a grid overlay earns its place on a
+     canvas, map, blueprint, or measurement surface, and this was none of those.
+     Their only consumer was CyclingHero, which nothing imported; both are gone.
+     Not to be confused with .cs .cs-hero-bg in app/work/[slug]/case-study.css,
+     which is a different (also unused) class. */
 
   .circle-mark {
     position: relative;

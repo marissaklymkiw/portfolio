@@ -1,5 +1,7 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
+import ArrowBack from "@/components/ui/ArrowBack";
 import CaseStudyRail, { type RailStage } from "@/components/ui/CaseStudyRail";
 import {
   GalleryDialog,
@@ -16,7 +18,7 @@ export type { RailStage };
  * (see app/work/[slug]/DeviceRegistrationCaseStudy.tsx). Adding a second study
  * means writing content against these, not restyling anything.
  *
- * STRUCTURE (after reginasmirnova.com/shares, restaged in the Swiss system):
+ * STRUCTURE (an editorial case-study order, restaged in the Swiss system):
  *   back link → title → metadata as label/value columns → tools → oversized
  *   lede → full-width hero image → stages, each: section rule + mono tag +
  *   heading + a measured body column with the right side left open.
@@ -25,12 +27,16 @@ export type { RailStage };
  * reference: the argument lands first, so the image reads as evidence for a
  * claim already made rather than as decoration to scroll past.
  *
- * Body copy is measured with `max-w-reading` (88ch at 18px ≈ 990px, ~125 real
+ * Body copy is measured with `max-w-reading` (61ch at 18px ≈ 690px, ~80 real
  * characters). Beware the unit: `ch` is the width of the "0" glyph, NOT a
- * character — 88ch is ~125 letters, not 88. That is past the classic 45–75
- * guideline, chosen deliberately against a 1312px canvas where a tighter column
- * read as cramped. If you change it, MEASURE the rendered line rather than
- * trusting the number.
+ * character — measured here, 1ch = 11.29px, so 61ch is ~80 letters, not 61.
+ * That is past the classic 45–75 guideline, chosen deliberately against a wide
+ * canvas where a tighter column read as cramped. If you change it, MEASURE the
+ * rendered line rather than trusting the number.
+ *
+ * This comment used to claim Prose carried the measure while Prose did not set
+ * it at all; body copy filled the full 803px track at 93 characters per line.
+ * The cap now lives on Prose itself. Keep them in sync.
  *
  * RADIUS — a deliberate exception to design.md §3, which says the system is
  * binary (fully round, or sharp). CONTENT IMAGERY is rounded at `rounded-2xl`
@@ -299,6 +305,18 @@ export function CaseStudyBody({
         <CaseStudyRail stages={stages} />
       </div>
       <div className="min-w-0">
+        {/* The rail carries "Go back" on desktop, so hiding the rail took the
+            only route out of a ~9,500px page with it: on a phone the sole exit
+            was the browser's back button. This is the back link alone, without
+            the sticky index the rail comment rightly refuses. py-md/-my-md grows
+            the tap target past 44px without moving anything. */}
+        <Link
+          href="/work"
+          className="lab lab--ink md:hidden mb-xl inline-flex items-center gap-xs py-md -my-md hover:text-rich-hover"
+        >
+          <ArrowBack />
+          Go back
+        </Link>
         {lead}
         {children}
       </div>
@@ -323,9 +341,9 @@ export function CaseStudyBody({
  *
  * THE EYEBROW LIVES HERE AND NOWHERE ELSE. Beat does not take one and should
  * not be given one later: the pattern works because it marks the six section
- * breaks and nothing smaller. Debo Biswas's case studies, the reference for it,
- * carry five across a whole study, one per top-level heading — a phrase that
- * sets the scene, over a heading that names the section.
+ * breaks and nothing smaller. The editorial pattern it comes from carries about
+ * five across a whole study, one per top-level heading — a phrase that sets the
+ * scene, over a heading that names the section.
  */
 export function Stage({
   id,
@@ -339,8 +357,9 @@ export function Stage({
   num: string;
   name: string;
   /** a short phrase that sells the section, set as a mono eyebrow ABOVE the
-      heading — the register of Debo Biswas's section eyebrows ("MONDAY MORNING
-      BEFORE CLINIC"). NOT the number: the number sits inline next to the name.
+      heading. The register is a scene-setting fragment, not a label ("MONDAY
+      MORNING BEFORE CLINIC"). NOT the number: the number sits inline next to
+      the name.
       Optional, but every stage in a finished study should carry one. */
   eyebrow?: string;
   /** optional deck under the heading. Omit to let the section run on one
@@ -405,9 +424,19 @@ export function Stage({
  * "0", not a character, so the rendered line is far longer than the number
  * suggests. Measure, don't assume.
  */
+/**
+ * Body copy. `max-w-reading` is what holds the line length; without it Prose
+ * fills whatever track it is dropped into. It used to: measured at 803px on the
+ * case-study column, which is 93 characters per line. The measure caps it at
+ * ~80.
+ *
+ * The cap is on the TEXT, not the column. Figures, the hero, and the carousel
+ * keep the full track width on purpose: narrowing the whole column to fix the
+ * prose would shrink the screenshots too, and those are the evidence.
+ */
 export function Prose({ children }: { children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-lg text-prose text-ink [&_strong]:font-bold [&_a]:text-rich [&_a]:underline [&_a]:decoration-1 [&_a]:underline-offset-[3px]">
+    <div className="flex flex-col gap-lg max-w-reading text-prose text-ink [&_strong]:font-bold [&_a]:text-rich [&_a]:underline [&_a]:decoration-1 [&_a]:underline-offset-[3px]">
       {children}
     </div>
   );
@@ -455,10 +484,10 @@ export function Phase({ children }: { children: ReactNode }) {
 /* There is deliberately NO tier below Beat.
  *
  * A third heading level existed here briefly and was removed: a study only ever
- * needs section → move → prose. Debo Biswas's case studies, the reference for
- * this layout, run two levels deep in the reading flow — an eyebrowed section
- * heading and body — and everything that looks like a sub-heading there turns
- * out to be a figure caption inside a grid, not a heading in the flow.
+ * needs section → move → prose. The editorial layout this follows runs two
+ * levels deep in the reading flow — an eyebrowed section heading and body — and
+ * everything that looks like a sub-heading there turns out to be a figure
+ * caption inside a grid, not a heading in the flow.
  *
  * If a Beat feels too heavy for what it introduces, that is a signal the block
  * doesn't need a heading at all, not that it needs a smaller one. Cut it and
@@ -888,14 +917,39 @@ export function CompetitorLandscape({
 export type Stat = { value: string; label: string };
 
 /** Big numbers separated by thin vertical rules. No cards, no accent stripes. */
-export function StatBand({ stats, note }: { stats: Stat[]; note?: string }) {
+export function StatBand({
+  stats,
+  note,
+  bordered = true,
+}: {
+  stats: Stat[];
+  note?: string;
+  /** the ink rule above the numbers. On by default; pass false to let the band
+      sit flush under a heading without a divider. */
+  bordered?: boolean;
+}) {
   return (
     <div className="my-xl">
-      <dl className="grid grid-cols-3 gap-lg border-t border-ink pt-lg m-0">
+      {/* Stacked below `sm`, three columns above it. Three columns on a phone
+          gives each figure ~106px, which breaks "80–85%" across two lines mid-
+          number and stacks the labels five to seven lines deep — the headline
+          result of the study, rendered as a defect, on the half of the audience
+          that arrives from a phone link. The vertical rules go with the columns:
+          a left border on a full-width stacked row is a stray mark, not a
+          divider. min-w-0 lets a long label wrap inside its track instead of
+          spilling past it (an unbreakable word like "device-network" overflowed
+          a 106px column by 7px). */}
+      <dl
+        className={`grid grid-cols-1 gap-xl sm:grid-cols-3 sm:gap-lg m-0 ${
+          bordered ? "border-t border-ink pt-lg" : ""
+        }`}
+      >
         {stats.map((s, i) => (
           <div
             key={s.label}
-            className={i > 0 ? "border-l border-line pl-lg" : ""}
+            className={`min-w-0 ${
+              i > 0 ? "sm:border-l sm:border-line sm:pl-lg" : ""
+            }`}
           >
             <dt className="sr-only">{s.label}</dt>
             <dd className="m-0">

@@ -29,3 +29,7 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# tooling (Impeccable skill install + session state)
+/.impeccable/
+/.claude/skills/impeccable/

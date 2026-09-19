@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import DeviceRegistrationCaseStudy from "./DeviceRegistrationCaseStudy";
+import DeviceRegistrationOptionCCaseStudy from "./DeviceRegistrationOptionCCaseStudy";
 import IndeedVisionCaseStudy from "./IndeedVisionCaseStudy";
 import SourcingAnalyticsCaseStudy from "./SourcingAnalyticsCaseStudy";
 import UscGuestAccessCaseStudy from "./UscGuestAccessCaseStudy";
@@ -12,12 +12,16 @@ const STUDIES: Record<
   string,
   { title: string; description: string; Component: () => React.ReactElement }
 > = {
+  /* The Device Registration study. Option C won the variant comparison and was
+     promoted into this slug; the other four arcs (base, trimmed, impact, anchor)
+     are no longer routed. Their component files remain on disk, unreferenced, as
+     a record of the options considered. */
   "device-registration": {
     title:
-      "One front door for every device that can’t log in for itself | Marissa Klymkiw",
+      "From 2\u20133 business days to under 24 hours: one path for every campus device that can\u2019t log in by itself | Marissa Klymkiw",
     description:
-      "UCLA device registration: reframing an engineering-led build into reusable patterns the design system inherits. Problem → approach → system → adoption → impact.",
-    Component: DeviceRegistrationCaseStudy,
+      "UCLA device registration: a leadership-led arc covering the problem, my role, delivery infrastructure, alignment, outcomes, and reflection.",
+    Component: DeviceRegistrationOptionCCaseStudy,
   },
   "indeed-vision": {
     title:
