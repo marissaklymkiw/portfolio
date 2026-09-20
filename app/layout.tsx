@@ -9,6 +9,7 @@ import "./globals.css";
 import Nav from "@/components/ui/Nav";
 import Footer from "@/components/ui/Footer";
 import CursorFollower from "@/components/ui/CursorFollower";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 /* Fonts self-hosted via next/font (no layout shift, clean on Vercel).
    Each exposes a CSS variable consumed by the font tokens in globals.css.
@@ -71,6 +72,19 @@ export default function RootLayout({
         {/* the one chromatic element on the site — a red disc that trails the
             pointer. Self-disables on touch + reduced-motion. See design.md §1. */}
         <CursorFollower />
+
+        {/* GA4. Google's own App Router integration, which loads gtag with the
+            right strategy and wires route changes to page_view — a plain
+            <script> in the App Router misses client-side navigations, so every
+            page after the first would go unrecorded.
+
+            Renders only when NEXT_PUBLIC_GA_ID is set, so local development and
+            any preview without the env var send nothing. That keeps her own
+            work out of the numbers by default rather than by remembering to
+            filter it later. */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       {/* impeccable-live-start */}
 <script src="http://localhost:8400/live.js?token=abec2eb4-8c0e-473d-8d9f-1e1e7c3fec49"></script>
 {/* impeccable-live-end */}

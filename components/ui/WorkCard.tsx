@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ArrowForward from "./ArrowForward";
+import { isGated } from "@/lib/work-gate";
 import type { Study } from "@/lib/work/studies";
 
 /**
@@ -80,7 +81,14 @@ function CardInner({ study }: { study: Study }) {
         {/* meta line — MODEL · CATEGORY · STATUS. Status keeps its live=rich /
             else=muted weighting — the one place hue-free emphasis still marks a
             shipped study; the system is monochrome, so "live" reads as ink. */}
+        {/* "Protected" is read from GATED_SLUGS, the same set the page itself
+            enforces, so a card can never advertise a state the study does not
+            actually have. It sits FIRST, ahead of model and category: it is the
+            one fact that changes what the reader can expect when they click,
+            and finding out after the click is worse. Muted like the rest of the
+            line rather than highlighted — it is a caveat, not a badge. */}
         <span className="font-mono text-small uppercase tracking-label text-muted">
+          {isGated(study.slug) && <>Protected &middot; </>}
           {study.model && <>{study.model} &middot; </>}
           {study.category}
           {study.status && (

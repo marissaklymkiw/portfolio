@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import WorkGate from "@/components/ui/WorkGate";
+import { isGated, isUnlocked } from "@/lib/work-gate";
 import DeviceRegistrationOptionCCaseStudy from "./DeviceRegistrationOptionCCaseStudy";
 import IndeedVisionCaseStudy from "./IndeedVisionCaseStudy";
 import SourcingAnalyticsCaseStudy from "./SourcingAnalyticsCaseStudy";
@@ -54,6 +56,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const study = STUDIES[slug];
   if (!study) return {};
+
+  /* A LOCKED STUDY GETS NEUTRAL METADATA. Gating the body while leaving the
+     real title in <head> would have defeated the point: these titles carry the
+     delta ("from 2-3 business days to less than 24 hours"), and <title> shows
+     up in the browser tab, in search results, and in the unfurled card when the
+     link is pasted into Slack or LinkedIn. PRODUCT.md notes that the unfurl is
+     frequently the first impression, which cuts both ways.
+
+     `robots: noindex` for the same reason: there is nothing behind the gate for
+     a crawler to index, and without this the gate page itself could surface in
+     search carrying the real headline.
+
+     Note the metadata is resolved per request, like the page, so it flips back
+     to the real title once unlocked. */
+  if (isGated(slug) && !(await isUnlocked())) {
+    return {
+      title: "Protected case study | Marissa Klymkiw",
+      description:
+        "This case study is password protected. The password is on my resume, or get in touch and I will send it over.",
+      robots: { index: false, follow: false },
+    };
+  }
+
   return { title: study.title, description: study.description };
 }
 
@@ -65,6 +90,15 @@ export default async function WorkCaseStudyPage({
   const { slug } = await params;
   const study = STUDIES[slug];
   if (!study) notFound();
+
+  /* THE GATE. Deliberately here rather than inside the template: when a study
+     is locked the study component is never INVOKED, so none of its markup is
+     built, rendered, or serialised. Not the headline, not the metadata columns,
+     not an image URL. A gate further down the tree could only omit part of a
+     page whose top had already been rendered, and the top is where the outcome
+     figures live. See lib/work-gate.ts for why this is server-side at all. */
+  if (isGated(slug) && !(await isUnlocked())) return <WorkGate />;
+
   const { Component } = study;
   return <Component />;
 }

@@ -33,3 +33,9 @@ next-env.d.ts
 # tooling (Impeccable skill install + session state)
 /.impeccable/
 /.claude/skills/impeccable/
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
