@@ -1,33 +1,30 @@
 import {
-  Aside,
+  BulletList,
   CaseStudyBody,
   CaseStudyHeader,
   CaseStudyHero,
   CaseStudyLede,
   CaseStudyMeta,
   CaseStudyRoot,
-  EvolutionRail,
   Figure,
   FigureRow,
-  NumberedList,
   Prose,
   Pullquote,
   Quote,
   Stage,
-  StatBand,
-  WindowFigure,
 } from "@/components/ui/CaseStudy";
+import StudyNav from "@/components/ui/StudyNav";
 
 /**
  * Indeed — analytics vision. Ported from indeed-vision-case-study_9.html and
  * restaged on the same primitives as the DRP study.
  *
- * COPY IS VERBATIM from the source file, save for §06 and §07. In §06 the
- * shipped summary page is now designed: the old FigureSlot placeholder is
- * replaced by an <EvolutionRail> (the workshop → offsite → shipped question,
- * sharpened across three stages) followed by the shipped page in a
- * <WindowFigure>. In §07 the old "My role" credit block is replaced by a
- * Reflection. No <Todo> CONFIRMs remain.
+ * COPY IS MK's OWN, supplied section by section in 2026. The "What shipped"
+ * section was REMOVED at her direction: it carried the competitive teardown
+ * (87 slides, 11 direct and 7 indirect competitors), an EvolutionRail tracing
+ * the question across workshop → offsite → shipped, the shipped Smart Sourcing
+ * summary screenshot, and a StatBand. The full block is recoverable from git.
+ * The study now ends on "Unresolved" rather than on what shipped.
  *
  * THE HERO IS THE JTBD PRIORITIZATION BOARD, not a screen. That is the point of
  * the study: the deliverable was a direction, not an interface, and the shipped
@@ -48,33 +45,37 @@ import {
  * Server component: nothing here needs the client.
  */
 const STAGES = [
-  { id: "problem", num: "01", name: "The problem" },
-  { id: "why", num: "02", name: "The real fight" },
-  { id: "workshop", num: "03", name: "The workshop" },
-  { id: "direction", num: "04", name: "Shared direction" },
-  { id: "offsite", num: "05", name: "Narrowing focus" },
-  { id: "shipped", num: "06", name: "What shipped" },
-  { id: "reflection", num: "07", name: "Reflection" },
+  { id: "background", num: "01", name: "Background" },
+  { id: "problem", num: "02", name: "The problem" },
+  { id: "why", num: "03", name: "The real fight" },
+  { id: "workshop", num: "04", name: "The workshop" },
+  { id: "direction", num: "05", name: "Shared direction" },
+  { id: "offsite", num: "06", name: "Narrowing focus" },
+  /* The close is "Unresolved", not "Reflection". The doc ends this study on the
+     open question rather than on a summary, which is the stronger ending: the
+     direction shipped at both ends of the spectrum it named, and whether that
+     is the hybrid working or Betty opening two tabs is genuinely not settled.
+     Naming that is the seniority signal a tidy reflection would spend. */
+  {
+    id: "reflection",
+    num: "07",
+    name: "Unresolved: where should analytics live?",
+    short: "Unresolved",
+  },
 ];
 
 export default function IndeedVisionCaseStudy() {
   return (
+    /* All three studies carry the SAME four classes: the shared 1224px measure,
+       squared content media, no ink rule above each section, and no stage
+       numbers. If you change one study here, change all three, or the set stops
+       reading as one system. See globals.css for what each class does. */
+    <div className="no-media-radius no-section-rule no-stage-numbers study-canvas">
     <CaseStudyRoot>
+      {/* No hero in the header: it moves down under the metadata, below. */}
       <CaseStudyHeader
         badge={{ mark: "Indeed", label: "Analytics & Insights" }}
         title="Every team was shipping analytics. Nobody was shipping a direction."
-        hero={
-          /* This board IS the claim — a direction being made — so it can open
-             cold, above the facts, and the lede below reads as its caption. */
-          <CaseStudyHero
-            src="/work/indeed-vision/jtbd-prioritization.png"
-            alt="JTBD prioritization board: a satisfaction-versus-importance plot, and jobs voted into a pyramid."
-            width={2430}
-            height={1416}
-            priority
-            caption="The direction, being made. Jobs plotted by satisfaction against importance, voted, then ranked into the pyramid that became the two-year direction."
-          />
-        }
       />
 
       {/* Metadata and lede lead the right column so the rail (Go back + index)
@@ -84,7 +85,7 @@ export default function IndeedVisionCaseStudy() {
         lead={
           <>
             <CaseStudyMeta
-              className=""
+              className="border-t border-b border-line pt-lg pb-lg"
               meta={[
                 { label: "Role", value: "Senior UX Designer" },
                 { label: "Timeframe", value: "2023–2024" },
@@ -114,24 +115,95 @@ export default function IndeedVisionCaseStudy() {
               ]}
             />
 
+            {/* The hero, moved into the container and set directly under the
+                metadata block rather than full-width in the header, matching
+                DRP. This board IS the claim, a direction being made, so the
+                lede below still reads as its caption. */}
+            <CaseStudyHero
+              src="/work/indeed-vision/jtbd-prioritization.png"
+              alt="JTBD prioritization board: a satisfaction-versus-importance plot, and jobs voted into a pyramid."
+              width={2430}
+              height={1416}
+              priority
+              caption="The direction, being made. Jobs plotted by satisfaction against importance, voted, then ranked into the pyramid that became the two-year direction."
+            />
+
+            {/* MK's text, verbatim, and set plain. The previous lede bolded its
+                second half; nothing here is marked for emphasis, and inventing
+                a bold phrase would put stress on a clause she did not stress. */}
             <CaseStudyLede>
-              Indeed reorganized its analytics teams and asked a hard question:
-              what should these tools become together? I facilitated the
-              cross-functional workshop that set that direction, then{" "}
-              <strong>
-                followed the priority it surfaced into sourcing analytics, where
-                my work shipped in a paid product
-              </strong>
-              .
+              I aligned three analytics teams around a shared product direction,
+              then helped carry the highest-priority opportunity into the
+              sourcing analytics work that became part of Project
+              Galaxy&rsquo;s MVP.
             </CaseStudyLede>
           </>
         }
       >
-        {/* 01 · The problem */}
+        {/* 01 · Background — MK's text, verbatim. Opens the spine ahead of
+            "The problem": the history is what makes the merge-to-direction
+            turn legible, and without it the reorg and the third team arrive
+            later as assumed context.
+
+            The two products are NAMED here rather than left as "One" and
+            "Another", so that "Hiring Insights and Centralized Analytics" in
+            The real fight lands on terms the reader already has.
+
+            The umbrella is "the employer analytics experience", lower case and
+            deliberately not a proper noun: an earlier draft called it "Employer
+            Analytics", which read as a third product name sitting beside the
+            two real ones. Only Hiring Insights and Centralized Analytics are
+            products here. */}
+        <Stage
+          id="background"
+          num="01"
+          name="Background"
+          eyebrow="Two analytics products...then a third"
+        >
+          <Prose>
+            <p>
+              Indeed provided employers with several ways to see how their
+              hiring was going, and it had built them in different places.
+              The employer analytics experience lived across separate products,
+              each with its own team, research, terminology, and roadmap.
+              Centralized
+              Analytics reported what an employer was spending and how their
+              jobs were performing. Hiring Insights covered the hiring market
+              they were competing in. Nobody had built
+              them to be read together, because until customers started asking a
+              question that spanned all of them, nobody had needed to.
+            </p>
+            <p>
+              In 2023 a reorganization brought those teams under the same
+              product leadership, and the senior leaders inheriting analytics
+              were new to the space. The mandate was the merge.
+            </p>
+            <p>
+              Then the shape changed. Partway through, sourcing analytics rose
+              in priority: a third team, covering the proactive side of
+              recruiting where employers go find candidates instead of waiting
+              for them to apply. That is what turned a merge problem into a
+              direction problem. Two tools can be combined. Three teams, with
+              other product groups already asking to reuse analytics in their
+              own surfaces, need a model to build from.
+            </p>
+            <p>
+              I started on this work before the reorganization formalized
+              anything, auditing jobs to be done (JTBD) across the products.
+              That audit became the basis for a cross-functional workshop in May
+              and June 2023, and a year later for a three-day offsite in April
+              2024, where the direction had to absorb sourcing without going
+              vague.
+            </p>
+          </Prose>
+        </Stage>
+
+        {/* 02 · The problem */}
         <Stage
           id="problem"
-          num="01"
+          num="02"
           name="The problem"
+          eyebrow="Three tools, one story rebuilt by hand"
         >
           <Prose>
             <p>
@@ -168,64 +240,53 @@ export default function IndeedVisionCaseStudy() {
         {/* 02 · The real fight */}
         <Stage
           id="why"
-          num="02"
+          num="03"
           name="The real fight"
+          eyebrow="Not an org chart, a product direction"
         >
+          {/* MK's text, verbatim. This replaced a NumberedList whose four labels
+              ("No shared view of user need", "No shared direction", "Demand
+              from beyond analytics", "A moving target") were invented to fit
+              that primitive, and whose bodies paraphrased rather than quoted.
+              Her four items lead with their own claim sentence, so they are a
+              plain list with the claim in bold. */}
           <Prose>
             <p>
-              The mandate looked like an org-chart problem: get Hiring Insights
-              and Centralized Analytics to come together instead of growing as
-              separate tools with separate OKRs. It was really a
-              product-direction problem, and four things made it hard.
+              The mandate sounded simple: bring Hiring Insights and Centralized
+              Analytics together instead of letting them grow as separate tools
+              with separate OKRs.
             </p>
+            <p>
+              But the real problem was not the org chart. It was the absence of
+              a shared product direction.
+            </p>
+            <p>Four things made that visible:</p>
           </Prose>
 
-          <div className="mt-xl">
-            <NumberedList
-              items={[
-                {
-                  label: "No shared view of user need",
-                  body: (
-                    <p>
-                      Each team held its own research in its own silo. The same
-                      customer job was being solved three different ways, or not
-                      at all.
-                    </p>
-                  ),
-                },
-                {
-                  label: "No shared direction",
-                  body: (
-                    <p>
-                      Nobody had articulated what these products should become
-                      together, and there was no room where the people who could
-                      decide that sat down at once.
-                    </p>
-                  ),
-                },
-                {
-                  label: "Demand from beyond analytics",
-                  body: (
-                    <p>
-                      Other product teams wanted to reuse analytics in their own
-                      surfaces, so the answer couldn’t just merge two tools. It
-                      had to set a direction the whole org could build on.
-                    </p>
-                  ),
-                },
-                {
-                  label: "A moving target",
-                  body: (
-                    <p>
-                      Priorities shifted mid-flight. Partway through, sourcing
-                      analytics rose in importance, and the direction had to
-                      absorb that instead of ignoring it.
-                    </p>
-                  ),
-                },
-              ]}
-            />
-          </div>
+          <BulletList
+            items={[
+              <>
+                <strong>Teams were solving the same jobs differently.</strong>{" "}
+                Each product had its own research, terminology, and roadmap, so
+                overlapping customer needs were being answered in different
+                ways, or not at all.
+              </>,
+              <>
+                <strong>No one had named the future state.</strong> The teams
+                did not yet have a shared answer for what analytics should
+                become together.
+              </>,
+              <>
+                <strong>Other products wanted analytics too.</strong> The
+                solution could not be &ldquo;merge two tools.&rdquo; It had to
+                define a model other teams could build from.
+              </>,
+              <>
+                <strong>The target kept moving.</strong> As sourcing rose in
+                priority, the direction had to expand without losing coherence.
+              </>,
+            ]}
+          />
 
           {/* the merge, as a picture: decentralized and disjointed, then
               unified, then closer to the user. This is the org-chart problem the
@@ -238,27 +299,23 @@ export default function IndeedVisionCaseStudy() {
             caption="The merge as the org saw it: decentralized, then unified, then pushed closer to the user. A tidy story about tools, which is exactly why it kept reading as an org-chart problem rather than a direction problem."
           />
 
+          {/* MK's text, verbatim, and set plain. The previous version bolded
+              "destination", "threaded", and "hybrid", and closed on a further
+              paragraph ("My job wasn't to design another screen...") that is
+              not in her text, so it is gone. */}
           <div className="mt-xl">
             <Prose>
               <p>
-                The competitive analysis I ran alongside the merge put the real
-                choice on a single slide: analytics as a{" "}
-                <strong>destination</strong> you go to, analytics{" "}
-                <strong>threaded</strong> into the products where the work
-                already happens, or a <strong>hybrid</strong> that gives you the
-                right amount in context and a deep dive when you want one. Naming
-                that spectrum is what turned “merge two tools” into a decision
-                somebody could make. Indeed went on to ship both ends of it: the
-                job performance report is threaded, and the sourcing analytics
-                summary is a destination.
+                The choice I helped clarify was where analytics should live: as
+                a destination customers visit, threaded into the workflow where
+                decisions happen, or a hybrid of both. This mattered because the
+                decision was not just where to put analytics; it was how Indeed
+                would avoid building three disconnected answers to the same
+                employer questions.
               </p>
               <p>
-                My job wasn’t to design another screen. It was to{" "}
-                <strong>
-                  create the alignment that would tell everyone which screens
-                  were worth designing
-                </strong>
-                .
+                That framing turned &ldquo;merge the tools&rdquo; into a product
+                decision the organization could actually make.
               </p>
             </Prose>
           </div>
@@ -267,36 +324,46 @@ export default function IndeedVisionCaseStudy() {
         {/* 03 · The workshop */}
         <Stage
           id="workshop"
-          num="03"
+          num="04"
           name="The workshop"
+          eyebrow="Pulling the decision into a room"
         >
+          {/* MK's text, verbatim, and set plain. The previous version opened on
+              "You can't merge two products in a slide deck", bolded five method
+              names mid-paragraph, and ran the audit LAST as backfill. Hers puts
+              the audit first, which is the right order: the audit is what made
+              the workshop a decision-making room rather than an ideation
+              session, and that is the claim the section rests on. */}
           <Prose>
             <p>
-              You can’t merge two products in a slide deck. So I helped pull the
-              decision into a room. I planned and facilitated a cross-functional
-              ideation workshop in FigJam across May and June 2023, bringing
-              together people who normally worked in silos: PMs, leadership new
-              to analytics, an architect, engineering managers, research, and
-              customer success.
+              Before the reorg formalized the merge, I audited the JTBD across
+              Hiring Insights and Centralized Analytics
+              and found <strong>31 overlapping customer jobs</strong>.
             </p>
             <p>
-              The session ran on real methods, not opinion. Teams worked from a{" "}
-              <strong>prioritized set of jobs-to-be-done</strong>, ranked by
-              value, then built <strong>end-to-end opportunity workflows</strong>{" "}
-              for the jobs that mattered most, generated{" "}
-              <strong>How-Might-We statements</strong>, and translated each into
-              a clear <strong>need statement</strong>. That is how the group
-              moved from three siloed tools to one shared, prioritized
-              foundation to build on.
+              The audit turned 31 overlapping jobs into a shared decision set,
+              giving the group a way to prioritize investment instead of
+              continuing parallel discovery across separate tools.
             </p>
             <p>
-              The groundwork predated the mandate. Before the reorg formalized
-              the merge, I audited the jobs-to-be-done across both products and
-              found <strong>31 that overlapped</strong>. I prioritized them by
-              user need and RICE and built the vision brief and scope alongside
-              a senior designer. In the session, the group used that
-              prioritized set and a satisfaction-versus-importance read to vote
-              the top jobs into a shared two-year direction.
+              That became the foundation for the workshop: not a blank ideation
+              session, but a decision-making room built around prioritized user
+              need.
+            </p>
+            <p>
+              Across May and June 2023, I planned and facilitated a
+              cross-functional FigJam workshop with PMs, new analytics
+              leadership, architecture, engineering, research, and customer
+              success. The group worked from the prioritized JTBD set, mapped{" "}
+              <strong>end-to-end opportunity workflows</strong>, generated{" "}
+              <strong>How Might We statements</strong>, and translated them into{" "}
+              <strong>need statements</strong>.
+            </p>
+            <p>
+              The output was a shared, ranked foundation for the two-year
+              direction: which customer jobs mattered most, where analytics
+              should support them, and what the teams should build toward
+              together.
             </p>
           </Prose>
 
@@ -327,16 +394,22 @@ export default function IndeedVisionCaseStudy() {
         {/* 04 · Shared direction */}
         <Stage
           id="direction"
-          num="04"
+          num="05"
           name="Shared direction"
+          eyebrow="What three teams agreed to build toward"
         >
           <Prose>
             <p>
+              {/* "as the senior PM quoted above notes" replaced: a spatial
+                  reference assumes the reader arrived top-down and sighted, and
+                  it silently breaks whenever a section is reordered, which has
+                  already happened twice on this page. The attribution now names
+                  the role instead of a position. */}
               The teams aligned on a single, prioritized set of user needs to
               build toward, instead of three tools solving overlapping jobs in
-              isolation. That alignment fed a two-year roadmap and, as the senior
-              PM quoted above notes, helped orient leadership who were new to the
-              product space.
+              isolation. That alignment fed a two-year roadmap and, as the
+              senior product manager on the analytics team put it, helped orient
+              leadership who were new to the product space.
             </p>
           </Prose>
 
@@ -366,8 +439,9 @@ export default function IndeedVisionCaseStudy() {
         {/* 05 · Narrowing focus */}
         <Stage
           id="offsite"
-          num="05"
+          num="06"
           name="Narrowing focus"
+          eyebrow="Three days to absorb sourcing without going vague"
         >
           <Prose>
             <p>
@@ -381,8 +455,7 @@ export default function IndeedVisionCaseStudy() {
               top opportunities, then pressure-tested each through a{" "}
               <strong>return-on-effort metrics framework</strong> and a phased
               path to delivery, from a “skateboard” first version to the full
-              “car.” Afterward I RICE-sized the resulting jobs-to-be-done to rank
-              them.
+              “car.” Afterward I RICE-sized the resulting JTBD to rank them.
             </p>
             <p>
               That is how a broad direction became a focus, and where sourcing
@@ -410,181 +483,52 @@ export default function IndeedVisionCaseStudy() {
                 height: 1944,
               },
             ]}
-            caption="The offsite, both halves. Two teams down the same structure, from a stated goal through data needs and dependencies to a crafted opportunity — and one of those journeys drawn out as a workflow that leads with what to do about the data rather than the data itself."
+            caption="The offsite, both halves. Two teams down the same structure, from a stated goal through data needs and dependencies to a crafted opportunity, and one of those journeys drawn out as a workflow that leads with what to do about the data rather than the data itself."
           />
         </Stage>
 
-        {/* 06 · What shipped */}
-        <Stage
-          id="shipped"
-          num="06"
-          name="What shipped"
-        >
-          <Prose>
-            <p>
-              A vision is only as real as the piece of it that ships. Coming out
-              of the offsite I moved from facilitating the direction to
-              designing it. I started with a competitive analysis of the
-              sourcing and analytics landscape —{" "}
-              <strong>eleven direct competitors and seven indirect ones</strong>
-              , torn down across <strong>87 slides</strong> — mapping how
-              competitors structured their data and where they placed analytics
-              in the workflow.
-            </p>
-            <p>
-              The teardown said the quiet part plainly: Indeed offered “very
-              basic insights around sourcing performance,” and for its most
-              powerful sourcing capabilities,{" "}
-              <strong>no reporting at all</strong>. It also named the pattern
-              set a credible answer would have to match — LinkedIn Recruiter’s
-              performance summary and sourcing pipeline reports, Gem’s pipeline
-              analytics grouped by recruiter — and the drill-down logic to hang
-              it on, which I wrote up as the “Icicles” framework: relevant data
-              made contextually available, with the option to go deeper.
-            </p>
-            <p>
-              From there I designed and delivered the sourcing-analytics
-              experience: a{" "}
-              <strong>recruiter and talent-management dashboard</strong> built
-              around one question, “how is your recruiting performance?” It led
-              with a plain-language performance summary and gauge, surfaced
-              pipeline-health and expiring-contact signals, compared sourcing
-              against advertising through full candidate-acquisition funnels,
-              and offered insight-led recommendations instead of raw charts.
-              That work fed <strong>Project Galaxy’s MVP</strong>, which shipped
-              and lives today behind the paywall in Indeed’s paid product.
-            </p>
-          </Prose>
-
-          {/* the throughline made explicit: one question, sharpened across
-              three stages, ending on the page that shipped. The first two
-              thumbnails are the artifacts already shown in full above (§03,
-              §05); here they are reference, so the rail reads as one thought
-              maturing rather than three separate exhibits. The shipped page is
-              then given at full size below as the payoff. */}
-          <EvolutionRail
-            caption="One question, sharpened across three stages. The workshop asked how to make ROI legible; the offsite turned that into “how is my team performing?”; the shipped page answers it as “how is your recruiting performance?” — the same thought, three fidelities apart."
-            steps={[
-              {
-                src: "/work/indeed-vision/opportunity-workflow-hmw.png",
-                alt: "Workshop opportunity board: a five-step workflow beside grouped How Might We statements.",
-                width: 3138,
-                height: 1746,
-                stage: "03 · Workshop",
-                question: "How might we make ROI legible?",
-              },
-              {
-                src: "/work/indeed-vision/anex-workflow-wireframe.png",
-                alt: "Offsite wireframe: How is my team performing?, a measures row and a ranked performance table.",
-                width: 1390,
-                height: 1944,
-                stage: "05 · Offsite",
-                question: "How is my team performing?",
-              },
-              {
-                src: "/work/indeed-vision/sourcing-summary-shipped.png",
-                alt: "Shipped summary page: a plain-language read and stat tiles above the sourcing funnel.",
-                // @2x export (2880×3976 on disk); declared at 1x so the lightbox
-                // zoom ceiling is 1440, not the doubled pixel width.
-                width: 1440,
-                height: 1988,
-                stage: "06 · Shipped",
-                question: "How is your recruiting performance?",
-              },
-            ]}
-          />
-
-          <WindowFigure
-            src="/work/indeed-vision/sourcing-summary-shipped.png"
-            alt="Smart Sourcing summary: a plain-language read, stat tiles, funnel, and per-recruiter results."
-            /* @2x export (2880×3976 on disk); declared at 1x so the lightbox
-               zoom ceiling is 1440, not the doubled pixel width. */
-            width={1440}
-            height={1988}
-            caption="The Smart Sourcing summary page as delivered, shown from the top — a plain-language answer, then the funnel, decline reasons, and per-recruiter performance below. Open it to see the full page. This is the piece of the vision that shipped into Project Galaxy’s MVP."
-          />
-
-          <StatBand
-            stats={[
-              {
-                value: "31",
-                label:
-                  "overlapping jobs audited across two products, prioritized into one direction",
-              },
-              {
-                value: "2",
-                label:
-                  "cross-functional vision workshops planned and facilitated across the reorg",
-              },
-              {
-                value: "Shipped",
-                label:
-                  "sourcing dashboard reached Project Galaxy’s MVP, live in a paid product",
-              },
-            ]}
-            note="The confidential parts stay off the page. The number still to chase is a single Galaxy adoption or before/after figure."
-          />
-        </Stage>
-
-        {/* 07 · Reflection — replaces the old "My role" credit block. The
-            confidentiality Aside is preserved: it is a viewing caveat, not role
-            copy, and still governs what this page can show. DRAFT VOICE: the
-            body is a first pass drawn from the narrative for MK to make her own. */}
+        {/* 07 · Unresolved. Body is MK's own copy from the 2026 case-study doc,
+            which closes this study on the open question rather than a summary.
+            The confidentiality Aside that used to close this stage was removed
+            at MK's direction. */}
         <Stage
           id="reflection"
           num="07"
-          name="Reflection"
+          name="Unresolved: where should analytics live?"
+          eyebrow="Both ends of the spectrum, and no owner for the choice"
         >
-          <Pullquote>
-            A direction is only real once a piece of it ships — so I stopped
-            handing vision off and followed it into the product myself.
-          </Pullquote>
-
           <Prose>
             <p>
-              What worked was triangulating across functions before anyone asked
-              for a direction. Pulling the merging teams to a single prioritized
-              set of user needs — through the JTBD overlap audit, the
-              satisfaction-versus-importance vote, and the workshop — turned three
-              tools solving overlapping jobs into one shared two-year direction.
-              That direction held: it survived every leadership transition and
-              became shared language across time zones, and the part I’m proudest
-              of is that I carried the priority it set all the way into a sourcing
-              dashboard that shipped, rather than handing the vision off at the
-              slide.
+              Where analytics belongs is not a settled question. An
+              employer&rsquo;s question spans products, but each product ships on
+              its own roadmap and owns its own surface, so the cheapest answer is
+              always the local one. Indeed shipped both ends of the spectrum I
+              had named: the job performance report threaded into the workflow,
+              the sourcing analytics summary as a destination you go to. Both are
+              defensible alone. Together they are either the hybrid working
+              exactly as intended, or Betty opening two tabs instead of three.
             </p>
+            {/* The "direction held" sentence is carried over from the reflection
+                this section replaced. It earns its place here rather than in a
+                summary: it is the evidence that the approach worked, and the
+                concession that follows only lands if the thing being conceded
+                was otherwise durable. */}
             <p>
-              What I’d do differently is instrument the outcome sooner. I can show
-              the direction, the priority, and the surface that shipped, but the
-              number that closes the loop — Galaxy adoption, or a before-and-after
-              on sourcing performance — is the one I’m still chasing; next time the
-              metric goes into the plan on day one. I’d also design the gaps as
-              deliberately as the features earlier. The roadmap’s “What isn’t
-              here?” column was the uncomfortable slide and the most useful one,
-              and naming what a plan doesn’t cover is what keeps a direction from
-              hardening into a promise nobody agreed to.
-            </p>
-            <p>
-              The vision only partly shipped, and that’s where the work goes next.
-              The summary page answers “how is your recruiting performance?” at a
-              glance, but the fuller experience — the acquisition-channels view
-              comparing sourcing against advertising, and the deeper drill-downs
-              the “Icicles” framework was built to carry — is still ahead, along
-              with closing the adoption loop that would prove the direction paid
-              off.
+              I&rsquo;d run the vision work the same way, because the audit and
+              the workshop are what gave three teams a shared set of jobs to
+              argue from. That direction held: it survived every leadership
+              transition and became shared language across time zones. What
+              I&rsquo;d change is where I stopped. I framed the choice and handed
+              it to the room. If I started again from the assumption that a
+              direction decays the moment nobody owns it, I think I&rsquo;d have
+              made naming that owner part of the output rather than the
+              follow-up.
             </p>
           </Prose>
-
-          <Aside>
-            Indeed’s analytics roadmap and the Galaxy product are proprietary.
-            What’s here is limited to my own working artifacts — the workshop
-            boards, the direction slides, and a roadmap still marked
-            work-in-progress — and stops short of the shipped product, its
-            internal metrics, and the competitive teardown. Happy to walk through
-            more live.
-          </Aside>
         </Stage>
+        <StudyNav currentSlug="indeed-vision" />
       </CaseStudyBody>
     </CaseStudyRoot>
+    </div>
   );
 }

@@ -199,6 +199,15 @@ module.exports = {
       borderRadius: {
         none: "0",
         full: "999px",
+        /* Buttons, and buttons only (2026-09-19, MK's call). A third radius,
+           admitted deliberately: the nav's CONTACT button had carried a bare
+           `rounded-[4px]` since the Swiss migration, and when the contact
+           form's Send button arrived as a spec-correct pill the two did not
+           agree. She chose 4px for both. Tokenised rather than repeated as an
+           arbitrary value, so the next button inherits it instead of guessing.
+           Tags, chips, and the cursor follower stay fully round; containers
+           stay square. See design.md §5. */
+        button: "4px",
         // DEPRECATED — the retired rounded-card / rounded-panel
         card: "10px",
         panel: "16px",
@@ -217,19 +226,27 @@ module.exports = {
       maxWidth: {
         canvas: "1440px", // --maxw
         measure: "62ch", // intro measure — the home page's short lead-in
-        // Long-form reading measure for case studies.
+        // Long-form reading measure for case studies. Now fills the content
+        // column rather than capping inside it, at MK's direction.
         //
-        // NOTE: `ch` is the width of the "0" glyph, which is much wider than an
-        // average letter, so this does NOT mean 61 characters. Measured in
-        // Chrome at 18px Inter: 1ch = 11.29px, and 61ch ≈ 690px ≈ 80 real
-        // characters per line. Before this was set, Prose carried no measure at
-        // all and filled the 803px track at 93 characters.
+        // The arithmetic, because it is not obvious: .study-canvas caps a study
+        // at 1224px, article.canvas takes var(--pad) off each side (64px at
+        // desktop) leaving 1096px, and CaseStudyBody's grid spends 240px on the
+        // rail and a 64px gap. The content column is therefore ~792px, NOT the
+        // 1000px its minmax() allows. That cap is never reached at this canvas.
         //
-        // 80 is the target: past the classic 45–75 guideline, chosen
-        // deliberately because the canvas is wide and a tighter column read as
-        // cramped against it. If you change this, MEASURE the rendered line
-        // rather than trusting the unit.
-        reading: "61ch",
+        // So the old 61ch cap was already filling ~87% of its column: it read
+        // as narrow because the PAGE is narrow (rail + padding), not because
+        // the measure was tight. Going to 100% buys back only ~104px.
+        //
+        // NOTE: `ch` is the width of the "0" glyph, much wider than an average
+        // letter, so a ch value does NOT equal that many characters. Measured
+        // in Chrome at 18px Inter: 1ch = 11.29px. Reference points if you dial
+        // this back: 61ch ≈ 690px ≈ 80 real characters, 100% ≈ 792px ≈ 92.
+        // Both sit past the classic 45–75 guideline, deliberately, because a
+        // tighter column read as cramped against this canvas. If you change it,
+        // MEASURE the rendered line rather than trusting the unit.
+        reading: "100%",
       },
     },
   },

@@ -64,10 +64,14 @@ function CardInner({ study }: { study: Study }) {
 
       {/* caption sits BELOW the image */}
       <span className="block">
-        {/* text-balance evens the two lines so no lone word is stranded on the
-            last line (a widow) — same treatment as the case-study headings. */}
+        {/* text-pretty, NOT text-balance — same treatment as the case-study h1
+            and lede, and for the same reason. Balance evens every line to the
+            SAME length, so on a two-line title neither line ever reaches the
+            card's full width and the whole block reads as a narrow ribbon in a
+            wide card. Pretty still prevents a stranded last word, which is what
+            balance was here for, without capping the line. */}
         <h3
-          className={`mt-md mb-xs font-display text-h3 text-balance transition-colors duration-150 ${
+          className={`mt-md mb-xs font-display text-h3 text-pretty transition-colors duration-150 ${
             isPlaceholder ? "text-muted" : "text-ink group-hover:text-rich"
           }`}
         >

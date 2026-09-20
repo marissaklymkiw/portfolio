@@ -108,9 +108,13 @@ export const spacing = {
   "3xl": "64px",
 } as const;
 
-/** Binary: fully round, or sharp. There is no sm/md/lg scale. */
+/**
+ * Three named jobs, not a scale: round, button, sharp. There is no sm/md/lg
+ * ramp, and a fourth value is a bug (design.md §5, the Three Radii Rule).
+ */
 export const radius = {
   none: "0",
+  button: "4px",
   full: "999px",
 } as const;
 

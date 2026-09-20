@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 /**
  * HomeIntro — the description that rides over the name.
  *
@@ -20,24 +18,41 @@ export default function HomeIntro() {
             band). Kept fluid so it still scales with the viewport. */}
         <div className="col-span-12 md:col-start-4 md:col-span-9 flex flex-col gap-[1em] max-w-measure text-[clamp(1.15rem,1.5vw,1.5rem)] leading-[1.42] tracking-[-0.005em] text-ink">
           <p>
-            I think in <em className="italic">systems</em> &mdash; the models,
+            I think in <em className="italic">systems</em>: the models,
             patterns, and governance that decide what every screen downstream can
             and can&rsquo;t do.
           </p>
           <p>
             Right now that means design systems and AI-native workflows at{" "}
-            <Link
-              href="/work"
+            {/* Points at UCLA itself, not /work. It reads as the employer name,
+                so sending it to an internal page was a small bait and switch.
+                target/rel match the Footer's external-link convention; /work is
+                still one click away from "View all work" below. */}
+            <a
+              href="https://ucla.edu"
+              target="_blank"
+              rel="noreferrer"
               className="text-rich underline decoration-1 underline-offset-[3px] hover:text-rich-hover"
             >
               UCLA
-            </Link>
+            </a>
             : the scaffolding product teams build on, and the interaction
             patterns that keep a human in charge of the model. Complex,
             high-stakes, exactly the kind of problem I&rsquo;m built for.
           </p>
+          {/* The layers are a deliberate call back to Jamie Mill's "Elements of
+              Product Design" stack. Keep them in this order, bottom of the
+              stack to top: the order is the argument, not a list.
+
+              A sentence spelling out the dependency between layers used to sit
+              here and was cut. Mill's claim is only that a lower-layer change
+              *can* dislodge what sits above, and that a mismatch between layers
+              is where UX debt comes from; stating it as a rule overclaims. The
+              signature line below already makes the point without asserting a
+              mechanism. Do not reinstate it. */}
           <p>
-            I work every layer, research to architecture to interaction.{" "}
+            I work every layer of the stack: user research, problem space,
+            solution space, conceptual model, structure, aesthetic.{" "}
             <b className="font-bold">
               The structure has to be right. So does the screen that sits on top
               of it.

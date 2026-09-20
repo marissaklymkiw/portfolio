@@ -140,7 +140,11 @@ export function CaseStudyHeader({
   hero,
 }: {
   badge?: { mark: string; label: string };
-  title: string;
+  /* ReactNode, not string, so a study can protect a break point: a numeric
+     range like "2–3" splits after the en dash by default, stranding a bare
+     "2–" at the end of a line. Wrap that fragment in `whitespace-nowrap` and
+     it moves to the next line whole. */
+  title: ReactNode;
   /* optional here: a study can instead render <CaseStudyMeta> inside the body's
      right column (see CaseStudyBody `lead`) so the rail lines up with the facts.
      Omit meta and the header is just badge + title (+ hero). */
@@ -163,10 +167,16 @@ export function CaseStudyHeader({
 
       {/* the title is a HEADING, so it's Hanken — unlike the home wordmark,
           which is Inter because it's a display object, not a heading. */}
-      {/* max-w governs how the headline breaks. 20ch forced this title into
-          three cramped lines; 30ch lets it fall in two. text-balance then evens
-          the lines out rather than leaving a runt on the last one. */}
-      <h1 className="mt-md font-display text-title text-ink text-balance max-w-[30ch]">
+      {/* Fills the container. It was capped at an arbitrary 30ch with
+          text-balance, which is two separate brakes on the same line length:
+          the cap held it short of the canvas, and balance then evened every
+          line so none of them ran the full width either. text-pretty keeps the
+          orphan protection without capping.
+
+          To control a specific break, wrap the part that must stay together in
+          `whitespace-nowrap` (see the DRP title) rather than reintroducing a
+          max-width — a cap moves every break to fix one. */}
+      <h1 className="mt-md font-display text-title text-ink text-pretty max-w-reading">
         {title}
       </h1>
 
@@ -254,7 +264,14 @@ export function CaseStudyHero({
 export function CaseStudyLede({ children }: { children: ReactNode }) {
   return (
     <section className="mt-3xl">
-      <p className="text-lede text-ink text-balance max-w-[56ch] [&_strong]:font-bold">
+      {/* Fills the content column, like Prose. Two things used to hold it in:
+          an arbitrary max-w-[56ch] (tighter than the reading measure, and the
+          kind of magic number DESIGN.md says not to reach for), and
+          text-balance, which evens every line to the SAME length so no line
+          ever runs the full width. Balance is right for a three-word display
+          phrase; on a paragraph-length lede it just reads as a narrow ribbon.
+          text-pretty keeps the orphan protection without capping the width. */}
+      <p className="text-lede text-ink text-pretty max-w-reading [&_strong]:font-bold">
         {children}
       </p>
     </section>
@@ -1004,6 +1021,30 @@ export function NumberedList({
         </li>
       ))}
     </ol>
+  );
+}
+
+/**
+ * A plain bulleted list — a handful of short phrases that belong together as
+ * one thought, often a sentence the author broke across lines.
+ *
+ * Deliberately NOT NumberedList, which sets every item as a Hanken h3 with a
+ * body beneath it: right for "three challenges, explained", far too heavy for
+ * three fragments. Deliberately NOT LabeledList either, which wants a
+ * label/body split these items do not have. Forcing either one means inventing
+ * labels the author did not write.
+ *
+ * Quiet by design: ink text at the reading size, muted markers, and the reading
+ * measure, so it reads as part of the paragraph it follows rather than as a
+ * feature.
+ */
+export function BulletList({ items }: { items: ReactNode[] }) {
+  return (
+    <ul className="my-lg flex list-disc flex-col gap-sm pl-lg max-w-reading text-prose text-ink marker:text-muted">
+      {items.map((it, i) => (
+        <li key={i}>{it}</li>
+      ))}
+    </ul>
   );
 }
 

@@ -21,7 +21,13 @@ export default function WorkPage() {
       {/* page header — grotesk title on the ink rule, intro at reading size */}
       <header className="border-t border-ink pt-md">
         <h1 className="font-display text-section text-ink">Work</h1>
-        <p className="mt-lg max-w-measure text-intro text-ink">
+        {/* No measure cap. It carried max-w-measure (62ch), which is the HOME
+            intro's measure and is sized for three stacked paragraphs, where a
+            short line length is what makes them readable. This is one deck
+            line under a page title: capped, it broke a single sentence into a
+            narrow two-line block against a 1440px canvas. The 45–75 character
+            guidance governs sustained reading, not a one-line standfirst. */}
+        <p className="mt-lg text-intro text-ink text-pretty">
           Product design, vision, experiences, and product enablement work
           highlights. More lands here over time.
         </p>

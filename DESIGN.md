@@ -178,7 +178,7 @@ Confirmed anti-references: the retired warm-paper and indigo system this replace
 - Monochrome, with a single interaction-only red
 - Display-led: type is the interface, not dressing on it
 - Zero elevation. Rules, hairlines, and space do all separating
-- Binary radius: fully round, or sharp. Nothing between
+- Three radii: round (999px), button (4px), sharp (0). Nothing between
 - Lowercase display, uppercase only on small mono labels
 - Measured contrast, not estimated. Most pairs sit near 18:1
 - Single light theme. No dark mode, ever
@@ -298,23 +298,31 @@ Because there are no shadows and no rounded cards, the rule carries the entire s
 
 **The 3:1 Boundary Rule.** WCAG 1.4.11 requires 3:1 for a boundary needed to identify an interactive component, such as an input's border, a button's outline, or a tag's edge. It requires nothing of a purely decorative separator. So structural-versus-separator is a compliance distinction, not a stylistic one: **structural rules and interactive boundaries owe 3:1; separators owe nothing.** A hairline dividing two paragraphs at 1.26:1 is correct. The same hairline as the sole outline of a button is a defect.
 
-**Open item:** the secondary button and the input still use Hairline Grey as their only boundary at 1.26:1. By this rule they should move to a 3:1-or-better border. Flagged, not yet changed.
+**Open item, half settled (2026-09-19).** The INPUT is done: the contact form's fields take Warm Grey-Violet (`#6f6b77`, 5.19:1) as their border, not the Hairline Grey they were specified with, because an input's box IS the boundary that identifies it as an interactive component and 1.26:1 does not clear 1.4.11. Measured in-browser at all four fields. **The secondary button is still open** and still sits on Hairline Grey as its only boundary. It should take the same treatment when something on the site next uses one.
 
 ## Shapes
 
-The form language is binary. Pills, tags, and the badge focus ring are fully round at `999px`. Image boxes, cards, and containers are square at `0`. There is no `sm` / `md` / `lg` radius scale, and introducing one would break the system's logic rather than extend it.
+The form language is three fixed values, and only three. Pills, tags, chips, and the badge focus ring are fully round at `999px`. **Buttons are `4px`** (`rounded-button`). Image boxes, cards, containers, and inputs are square at `0`. There is still no `sm` / `md` / `lg` scale: these are three named jobs, not a ramp, and a fourth value is a bug.
 
 Borders are hairlines at `1px`, or `1.5px` on pills and tags where the edge identifies an interactive component. The recurring silhouette is the horizontal rule: a full-width or column-width line that declares a boundary without enclosing anything. Nothing in this system is boxed in on four sides unless it is an image.
 
 ### Named Rules
 
-**The Binary Radius Rule.** Fully round, or sharp. A value between the two is not a refinement, it is a third system.
+**The Three Radii Rule** (amended 2026-09-19, was the Binary Radius Rule). Round at `999px`, button at `4px`, or sharp at `0`. Nothing else.
+
+This rule used to read "fully round, or sharp; a value between the two is not a refinement, it is a third system." It was amended rather than quietly broken. The nav's CONTACT button had carried a bare `rounded-[4px]` since the Swiss migration, in violation of the rule as written, and nobody noticed until `/contact` shipped a Send button built to spec as a pill and the two buttons visibly disagreed. Presented with the conflict, MK chose `4px` for both.
+
+So the old rule had already lost, in the header, on every page. What changed here is that the third value is now named, tokenized as `rounded-button`, and written down, instead of living as an arbitrary utility in one component. **A rule the codebase does not follow is not a rule, it is a wish.**
+
+Still true, and the part worth keeping: radius is a set of named jobs, not a scale to interpolate along. Do not add a `2px` or an `8px` because something looks almost right.
+
+**Not yet migrated:** `components/ui/Buttons.tsx` (the retired indigo/violet button, used only by `Placeholder.tsx`) still renders `rounded-full`. It belongs to the deprecated layer and moves to `rounded-button` when that layer is removed, or sooner if a Swiss page ever uses it.
 
 ## Components
 
 ### Buttons
 
-- **Shape:** Fully round (`999px`), padding `13px 26px`.
+- **Shape:** `4px` radius (`rounded-button`), padding `13px 26px`. NOT a pill: buttons are the one thing at `4px`, and tags and chips keep `999px`. See the Three Radii Rule under Shapes for why.
 - **Primary:** Rich Black fill, white label. Hover deepens the fill to true black.
 - **Secondary:** Transparent, `1.5px` Hairline Grey border, Cool Near-Black label. Hover darkens the border to Border Grey. See the open item under Elevation & Depth.
 - **Disabled:** Label to Warm Grey-Violet (5.19:1), border to Border Grey, `cursor: not-allowed`, no hover transition. Disabled reads through the muted label, the border, and the cursor, never through unreadable text and never a blanket opacity fade. WCAG exempts inactive controls from 1.4.3, but legally exempt is not legible.
@@ -335,9 +343,15 @@ Borders are hairlines at `1px`, or `1.5px` on pills and tags where the edge iden
 
 ### Inputs / Fields
 
-- **Style:** White background, `1px` Hairline Grey border, radius `0`. Inputs are containers, so they are square.
-- **Focus:** `2px solid` Rich Black outline at `2px` offset.
-- **Error:** Border and message in Error Crimson, plus a text message. Never color alone.
+- **Style:** White background, `1px` Warm Grey-Violet (`#6f6b77`, 5.19:1) border, radius `0`. Inputs are containers, so they are square. NOT Hairline Grey: at 1.26:1 that fails WCAG 1.4.11, which asks 3:1 of a boundary identifying an interactive component, and an input has no other boundary.
+- **Focus:** `2px solid` Rich Black outline at `2px` offset, inherited from the global `:focus-visible`. Fields need no focus styling of their own.
+- **Error:** Border and message in Error Crimson (7.34:1), plus a text message prefixed with `↳`. Never color alone (WCAG 1.4.1). The message renders directly under the field, ABOVE any standing hint: what is wrong comes before what the rule is.
+- **Validation timing:** a field validates on blur, then re-checks on every keystroke once it has been marked wrong. Never during first entry, which would call an email address invalid while it is three characters in.
+- **Counters:** a capped field shows a live `n/limit` in mono, Warm Grey-Violet, turning Error Crimson past the cap. The counter is `aria-hidden`; the same limit is stated once in an announced hint, because a counter firing on every keystroke is noise in a screen reader.
+- **No placeholders. Ever.** Placeholder text disappears the moment someone starts typing, which is the moment they may want to re-read it; it is routinely read as a value already filled in; and it cannot carry real guidance without either failing contrast or looking like content. Every field's guidance goes in a **persistent hint below the input**, in the mono label style at Warm Grey-Violet, wired through `aria-describedby` so it is announced and not merely visible. This applies to search, filters, and any field added later, not only the contact form.
+- **Optional fields say so in the label**, in Warm Grey-Violet: `Message (optional)`. Required-ness is needed BEFORE the decision to fill a field, so it belongs in the label rather than in a hint underneath. Required fields carry no marker: when most of a short form is required, naming the exception is quieter than starring the rule.
+
+Live at `/contact`, which is the only form on the site. See `components/ui/ContactForm.tsx`, with the rules themselves in `lib/contact.ts` so the route handler can enforce the identical set.
 
 ### Navigation
 
@@ -362,7 +376,13 @@ A Signal Red follower that trails the pointer, easing on `cubic-bezier(0.22, 1, 
 
 ### Migration state
 
-**Not everything below the token layer has moved to this system yet.** As of this writing, 27 files still reference retired tokens, and the deprecated block in `app/globals.css` exists specifically to keep them rendering. The un-migrated set includes shared components: `Buttons.tsx` (ships `bg-indigo` with a `yellow` variant), `Label.tsx` (ships `text-violet`), `Footer.tsx`, `SectionHeader.tsx`, `Timeline.tsx`, `StickyNote.tsx`, `MarkerHighlight.tsx`, `Metrics.tsx`, and the `/about`, `/ethos`, `/library`, and `/writing` routes.
+**Not everything below the token layer has moved to this system yet**, and the deprecated block in `app/globals.css` exists specifically to keep the remainder rendering.
+
+**Migrated (2026-09-19):** `/about`, along with `Timeline.tsx` and `NamePronunciation.tsx`, which only that route used. `Footer.tsx` and the nav moved earlier; `/contact` was built on this system from the start.
+
+**Still un-migrated:** the `/ethos`, `/library`, `/writing`, and `/resume` routes, plus the shared components `Buttons.tsx` (ships `bg-indigo` with a `yellow` variant), `Label.tsx` (ships `text-violet`), `SectionHeader.tsx` (violet numerals, indigo titles), `StickyNote.tsx`, `MarkerHighlight.tsx`, and `Metrics.tsx`. `MoonSticker.tsx` is now unreferenced: `/about` was its only consumer, and it is a decorative element with no place in the Swiss system. It is kept on disk rather than deleted, as MK's call to make.
+
+The deprecated block cannot be removed until that list is empty.
 
 The component specs above are **normative**: they describe what to build and what to migrate toward. They do not all describe what currently renders. When you touch one of those files, migrate it rather than matching the retired system it currently uses. Delete the deprecated block once the set is empty.
 

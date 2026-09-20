@@ -11,7 +11,15 @@ import { studies } from "@/lib/work/studies";
  * render from the same source and never drift. This component owns only the
  * home-page framing: the section rule + heading, the grid, and the
  * "View all work" link out to /work.
+ *
+ * The home grid is a TEASER, not the full index: it shows the first two studies
+ * and sends the rest to /work. Two is a deliberate count, not an arbitrary cap:
+ * the grid is two columns from 620px up, so two fills exactly one row and
+ * leaves no orphan card hanging in a half-empty second row. Change which two by
+ * reordering @/lib/work/studies; /work still renders every study.
  */
+const HOME_CARDS = 2;
+
 export default function SelectedWork() {
   return (
     <section id="work" aria-labelledby="selected-work" className="canvas pt-lg pb-3xl">
@@ -28,7 +36,7 @@ export default function SelectedWork() {
       </h2>
 
       <ul className="grid grid-cols-1 min-[620px]:grid-cols-2 gap-x-xs gap-y-[clamp(44px,5.5vw,72px)] list-none p-0 m-0">
-        {studies.map((study, i) => (
+        {studies.slice(0, HOME_CARDS).map((study, i) => (
           <li key={study.slug ?? `placeholder-${i}`}>
             <WorkCard study={study} />
           </li>

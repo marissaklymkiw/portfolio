@@ -27,7 +27,19 @@ const TAGS = [
 
 export default function MarkerBlock() {
   return (
-    <section id="about" className="canvas border-t border-ink pt-2xl pb-3xl">
+    /* The rule sits on an INNER div, not on the .canvas section.
+
+       A border on .canvas paints at its padding box, so it runs the full canvas
+       width INCLUDING both --pad gutters (up to 128px wider at desktop).
+       SelectedWork above puts its rule on the <h2> inside the canvas, where it
+       stops at the content edge, so the two never lined up. Moving the border
+       inside matches it.
+
+       The footer keeps its rule on .canvas on purpose: it is the one full-bleed
+       rule on the page, closing the document rather than dividing a band. If
+       another band ever needs a rule, put it inside like this one. */
+    <section id="about" className="canvas pb-3xl">
+      <div className="border-t border-ink pt-2xl">
       <div className="grid grid-cols-12 gap-lg items-end">
         {/* the stat */}
         <div className="col-span-12 md:col-span-5 flex flex-col items-start">
@@ -51,7 +63,7 @@ export default function MarkerBlock() {
           <p>
             A decade of it building design systems; the last two bringing AI into
             how product teams actually work. I design the{" "}
-            <b className="font-bold">patterns other teams depend on</b> &mdash;
+            <b className="font-bold">patterns other teams depend on</b>,
             with no authority over them, which is the whole discipline.
           </p>
         </div>
@@ -71,6 +83,7 @@ export default function MarkerBlock() {
             </li>
           ))}
         </ul>
+      </div>
       </div>
     </section>
   );

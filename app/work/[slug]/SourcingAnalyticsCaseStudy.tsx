@@ -1,132 +1,177 @@
 import Link from "next/link";
 import {
-  Beat,
+  BulletList,
   CaseStudyBody,
-  CompetitorLandscape,
   CaseStudyHeader,
   CaseStudyLede,
   CaseStudyMeta,
   CaseStudyRoot,
-  CaseStudyTools,
   Figure,
-  FigureSlot,
   Prose,
-  Pullquote,
   Quote,
   Stage,
-  StatBand,
-  Todo,
   VideoFigure,
-  WindowFigure,
 } from "@/components/ui/CaseStudy";
+import FigureTabs from "@/components/ui/FigureTabs";
+import StudyNav from "@/components/ui/StudyNav";
 
 /**
- * Sourcing Analytics — the detail-view case study.
+ * Sourcing Analytics: restaged against MK's 2026 case-study doc
+ * ("2026_MK_Portfolio_Case-Studies", Indeed · Sourcing Analytics).
  *
- * Ported from ~/Downloads/MK_Case_Sourcing_Analytics.html, which was authored
- * against the OLD MK token system (DESIGN_NOTES.md — paper page, indigo footer,
- * yellow marker). This restages the SAME COPY on the Swiss primitives, exactly
- * as IndeedVisionCaseStudy did with its own source file. Nothing here is styled
- * locally; every block is a CaseStudy.tsx primitive.
+ * This replaced an earlier draft that ran a different arc: a recruiter with
+ * twelve open roles, a teardown stage, a "what I built" walkthrough, and a
+ * separate quotes stage. The doc reframes the study around the TA MANAGER
+ * rather than the recruiter, and around the editorial decision rather than the
+ * build, so the spine here is the doc's: problem, role, decision
+ * infrastructure, restraint, outcomes, reflection.
  *
- * OVERLAP WITH indeed-vision, ON PURPOSE. That study is the vision→direction arc
- * and treats the shipped sourcing dashboard as its §06 payoff. THIS study is the
- * deep-dive on that same dashboard — the suite, the editorial decisions, the
- * data-viz and accessibility craft. The one real artifact they share, the
- * shipped Smart Sourcing summary page, is reused here as evidence (it lives in
- * /work/indeed-vision/); the acquisition-channels DETAIL view — the frame in the
- * "Sourcing Analytics Detailed Report.fig" — has no export yet, so it is a
- * <FigureSlot>, honestly marked, not a borrowed screenshot.
+ * TOOL COUNT RESOLVED: the old draft carried a "20+ tools" stat alongside prose
+ * describing "eleven direct competitors plus seven indirect ones". Those are the
+ * same teardown, and 11 + 7 is 18, which is what the doc says. The rounded-up
+ * 20+ is gone; 18 is stated once, with the direct/indirect split beside it.
  *
- * RESOLVED against the sibling study (MK's own, approved): the "~87 slides" and
- * "20+ tools" the source flagged CONFIRM are now stated plainly — the teardown
- * was 87 slides across 11 direct and 7 indirect competitors. The items that are
- * genuinely still MK's to settle (the exact ship date and a real adoption
- * metric) stay as <Todo> — the one non-monochrome token, so they cannot survive
- * to publish unnoticed. Collaborator names are anonymized to role: quotes cite a
- * title, and the teardown reads as co-authored rather than naming the partner.
+ * OVERLAP WITH indeed-vision, ON PURPOSE. That study is the vision-to-direction
+ * arc and treats this dashboard as its payoff. This study is the deep-dive on
+ * the dashboard itself. The shipped Overview screenshot lives in
+ * /work/indeed-vision/ and is reused here as the same shipped artifact.
  *
  * Server component: nothing here needs the client.
  */
 const STAGES = [
   { id: "problem", num: "01", name: "The problem" },
-  { id: "study", num: "02", name: "How I studied it" },
-  { id: "built", num: "03", name: "What I built" },
-  { id: "landed", num: "04", name: "Where it landed" },
-  { id: "words", num: "05", name: "In their words" },
+  { id: "role", num: "02", name: "My role" },
+  {
+    id: "decision",
+    num: "03",
+    name: "Design as decision infrastructure",
+    short: "Decisions",
+  },
+  {
+    id: "restraint",
+    num: "04",
+    name: "Building clarity through restraint",
+    short: "Restraint",
+  },
+  { id: "outcomes", num: "05", name: "Outcomes" },
   { id: "reflection", num: "06", name: "Reflection" },
 ];
 
 export default function SourcingAnalyticsCaseStudy() {
   return (
+    /* All three studies carry the SAME four classes: the shared 1224px measure,
+       squared content media, no ink rule above each section, and no stage
+       numbers. If you change one study here, change all three, or the set stops
+       reading as one system. See globals.css for what each class does. */
+    <div className="no-media-radius no-section-rule no-stage-numbers study-canvas">
     <CaseStudyRoot>
+      {/* No hero in the header: it moves down under the metadata, below. */}
       <CaseStudyHeader
-        badge={{ mark: "Indeed", label: "Analytics & Insights" }}
-        title="Recruiters were doing the work. They couldn't see if it was working."
-        hero={
-          /* Opening hero — an AI-generated clip of the recruiter analyzing her
-             sourcing data, resolving onto the Indeed / Smart Sourcing brand. */
-          <VideoFigure src="/work/sourcing-analytics/recruiter-hero.mp4" />
-        }
+        badge={{ mark: "Indeed", label: "Sourcing Analytics" }}
+        title="The team was doing the work. Managers couldn’t see what was working."
       />
 
-      {/* Metadata, tools, and lede lead the right column so the rail (Go back +
-          index) starts at the metadata row rather than below the title block. */}
       <CaseStudyBody
         stages={STAGES}
         lead={
           <>
             <CaseStudyMeta
-              className=""
+              className="border-t border-b border-line pt-lg pb-lg"
               meta={[
-                { label: "Role", value: "Senior UX Designer" },
-                { label: "Timeframe", value: "2023–2024" },
+                { label: "My role", value: "Senior UX designer" },
                 {
-                  label: "Team",
+                  /* EACH LINE MUST FIT ON ONE LINE. At md the meta is four
+                     equal columns of roughly 180px, which at 0.95rem holds
+                     about 22 characters. DRP's lines fit because they are
+                     16 to 17 ("80% self-service", "40% fewer tickets"); these
+                     were 23 and broke mid-phrase, orphaning "lift" on a line of
+                     its own. Trimmed to 18 to 21.
+
+                     What the trims cost: "lift" (the % and the Results label
+                     already carry the direction) and the possessive in
+                     "Galaxy's". The full, unclipped versions are in Outcomes,
+                     which is where a reader who wants the exact claim goes.
+                     If a metric ever needs more words than this, widen the
+                     Results column rather than letting it wrap. */
+                  label: "Results",
                   value: (
                     <>
-                      Solo on the suite
+                      60&ndash;100% engagement
                       <br />
-                      Co-authored teardown
+                      3:1 positive feedback
                       <br />
-                      PM + Galaxy on delivery
+                      Shipped in Galaxy MVP
                     </>
                   ),
                 },
+                { label: "Scope", value: "Analytics for enterprise recruiting" },
                 {
-                  label: "Responsibilities",
+                  label: "Tools & methods",
                   value: (
                     <>
-                      Information design
+                      Competitive analysis
+                      <br />
+                      Dashboard IA
                       <br />
                       Data visualization
                       <br />
-                      Accessibility
+                      MVP design
                       <br />
-                      Competitive analysis
+                      Product strategy
                     </>
                   ),
                 },
               ]}
             />
 
-            <CaseStudyTools
-              label="Tools & methods"
-              chips={[
-                "Figma",
-                "Competitive analysis",
-                "Data visualization",
-                "Return-on-effort framing",
-                "Accessibility",
-              ]}
+            {/* The hero, moved into the container and set directly under the
+                metadata block rather than full-width in the header, matching
+                DRP. */}
+            <VideoFigure
+              src="/work/sourcing-analytics/recruiter-hero.mp4"
+              /* The doc's caption for this slot was "The plain-language read
+                 managers see first, before any chart", which describes the
+                 Overview SCREEN, not this clip. It promised a product artifact
+                 that does not appear until stage 04, under a video of a person.
+                 This one captions what is actually on screen and sets up the
+                 question the lede then answers. */
+              caption="A manager reading her team’s sourcing performance, looking for the one thing the activity data never told her: whether any of it was working."
             />
 
             <CaseStudyLede>
-              I designed the sourcing-analytics suite that turned scattered effort
-              into one honest read:{" "}
-              <strong>is my sourcing paying off, and what should I do next</strong>
-              .
+              I led the design of sourcing analytics that turned scattered effort
+              into one usable read:{" "}
+              <strong>
+                is sourcing effort paying off, and what should the team do next?
+              </strong>
             </CaseStudyLede>
+
+            {/* Unnumbered opening. No heading, eyebrow, or rule: the numbered
+                spine starts at "The problem". */}
+            <div className="mt-3xl flex flex-col gap-xl">
+              <Prose>
+                <p>
+                  Sourcing is the proactive part of recruiting: instead of
+                  waiting for candidates to apply, recruiters go find them. It
+                  can be through messaging people directly, searching resume
+                  databases, or running paid outreach campaigns. It is active
+                  work with a cost attached, in time and ad spend.
+                </p>
+                <p>
+                  Talent acquisition managers were investing real time and money
+                  into sourcing, but they still had to piece together whether
+                  that effort was working. Recruiters could see raw activity
+                  across messages, applies, screens, and pipeline movement, but
+                  the signal was scattered across tools and tabs.
+                </p>
+                <p>
+                  The work shipped into Project Galaxy&rsquo;s MVP as three
+                  connected views, Overview, Acquisition, and Pipeline, and
+                  positioned sourcing analytics as part of Indeed&rsquo;s paid
+                  professional offering.
+                </p>
+              </Prose>
+            </div>
           </>
         }
       >
@@ -134,318 +179,353 @@ export default function SourcingAnalyticsCaseStudy() {
         <Stage
           id="problem"
           num="01"
-          name="Meet the recruiter with twelve open roles."
-          title="Meet the recruiter with twelve open roles."
+          name="The problem"
+          eyebrow="A manager rebuilding the story by hand"
         >
           <Prose>
             <p>
-              She is running a dozen requisitions at once. All week she sources:
-              she messages candidates, screens the replies, nudges the ones who
-              go quiet, and runs sponsored jobs alongside it. It is a lot of
-              effort, spread across a lot of tools and tabs.
+              A TA manager is accountable for her team&rsquo;s sourcing
+              performance. As open roles multiply, so does the effort around
+              them: outreach, sponsored jobs, follow-ups, candidate screens, and
+              pipeline management across every recruiter.
             </p>
             <p>
-              Then her manager asks the simple question:{" "}
-              <strong>is it working?</strong>
+              The team is busy, and the spend is real. But activity alone does
+              not answer the question leadership cares about:{" "}
+              <strong>is this effort producing qualified candidates?</strong>
             </p>
             <p>
-              She can pull raw counts (messages sent, applies received), but
-              nothing tells her the thing she actually needs to know. Is sourcing
-              outperforming advertising, or the other way around? Where are her
-              best candidates coming from? Which roles are stuck, and why? She
-              reconstructs a partial answer by hand, and hopes it holds up.
+              She can pull raw counts, messages sent, applies received,
+              candidates contacted, but the signal is scattered across tools and
+              tabs. Which channels are working? Which roles are stuck? Where
+              should the team adjust? Is sourcing outperforming advertising?
+              Without one clear read, she has to rebuild the story by hand.
             </p>
           </Prose>
 
-          {/* The problem visual carries the fragmentation the copy describes:
-              one recruiter ringed by the six tools a week of sourcing is spread
-              across. The opening hero video carries "person at her desk," so this
-              leads with the mess, not another portrait. */}
+          {/* Sits here, not in the opening: it illustrates the paragraph
+              directly above it. Six tools ringing one manager IS "the signal is
+              scattered across tools and tabs", and the spreadsheet label
+              ("counted by hand") is the same phrase the prose lands on. */}
           <Figure
-            src="/work/sourcing-analytics/ss-overwhelm.png"
-            alt="A weary recruiter ringed by six tools: LinkedIn, Indeed, a spreadsheet, Zoom, phone, notes."
+            /* zoomable={false}: an illustration, not an artifact. Everything in
+               it is legible at the size it renders, so opening it larger would
+               promise detail that is not there. Same call as the Betty figure
+               on the vision study. Keeping it out of the gallery also means the
+               lightbox arrows step only through the real product screens. */
+            zoomable={false}
+            src="/work/sourcing-analytics/ta-mgr-overwhelm-experience.png"
+            alt="A talent acquisition manager at the center of a ring of six tools she has to reconcile by hand: LinkedIn for outbound sourcing across recruiters, Indeed for sponsored jobs and ad spend, a pipeline tracker for every open role, Zoom for candidate screens and interviews, a phone for follow-ups and candidate responses, and a spreadsheet where applies and messages are counted by hand."
             width={2560}
             height={1960}
-            caption="A week of sourcing, spread across tools and tabs, with no single read on whether any of it is working."
+            caption="What managers had before: activity spread across tools and tabs, with no single read on whether any of it was working."
           />
 
-          <Pullquote>
-            She had the effort going in. She had no read on the return.
-          </Pullquote>
+          <Quote cite="TA manager, sourcing analytics research">
+            &ldquo;We&rsquo;ve never used any metrics but I would like to because
+            we aren&rsquo;t doing anything in an efficient way. If leadership
+            were to ask I wouldn&rsquo;t be able to provide them with
+            anything.&rdquo;
+          </Quote>
+
+          <Prose>
+            <p>
+              The design challenge was not just to build another dashboard. It
+              was to edit a dense analytics space down to the few decisions that
+              mattered most.
+            </p>
+          </Prose>
         </Stage>
 
-        {/* 02 · How I studied it */}
+        {/* 02 · My role */}
         <Stage
-          id="study"
+          id="role"
           num="02"
-          name="How I studied it"
-          title="A teardown of 20+ tools set the bar Indeed's reporting hadn't cleared."
+          name="My role"
+          eyebrow="Deciding what to leave out"
         >
           <Prose>
-            <p>Two things pointed me at the answer.</p>
             <p>
-              First, I ran a{" "}
-              <strong>
-                competitive analysis of the sourcing and analytics landscape
-              </strong>{" "}
-              (an 87-slide teardown of eleven direct competitors, among them
-              LinkedIn Recruiter, SeekOut, Gem, and HireEZ, plus seven indirect
-              ones). Against each, I asked the same set of questions: what problem
-              it solved, how it organized its data, how it served different roles,
-              and whether its insight was contextual to the recruiter&rsquo;s
-              moment or static regardless of it. That last question was the one I
-              cared about most.
+              I shaped the product from early framing through MVP design,
+              defining the dashboard structure, clarifying the core user
+              questions and jobs to be done, and mapping the relationship between
+              summary and diagnostic views.
             </p>
             <p>
-              A pattern separated the leaders from the rest. The strongest tools
-              didn&rsquo;t stop at <em>what happened</em>: they tied each read to
-              a next move, layered detail beneath a plain summary so it could be
-              scanned or explored, and adapted to where the recruiter was in the
-              cycle instead of shipping one report for everyone.{" "}
-              <strong>Indeed offered no sourcing insight at all</strong>, nothing
-              that told a recruiter whether the effort was working. That gap was
-              the opening.
-            </p>
-            <p>
-              Second, coming out of the 2024 analytics vision offsite, the team
-              had used a <strong>return-on-effort framing</strong> to decide what
-              mattered, and sourcing analytics rose to the top. That gave me the
-              spine for the design: don&rsquo;t just report activity, but measure
-              whether the effort was returning results, lead with the answer, and
-              pair every read with a next step.
+              Every team could point to a metric worth showing. My contribution
+              was deciding which ones actually helped a manager act, not just
+              which were available.
             </p>
           </Prose>
-
-          <CompetitorLandscape
-            items={[
-              {
-                logo: "/work/sourcing-analytics/logos/linkedin.png",
-                name: "LinkedIn Recruiter",
-                note: "The market default for reach and outreach. But its reports count activity, not whether the effort paid off.",
-              },
-              {
-                logo: "/work/sourcing-analytics/logos/seekout.png",
-                name: "SeekOut",
-                note: "Deep talent-pool and market data. But the read on what's working is yours to assemble.",
-              },
-              {
-                logo: "/work/sourcing-analytics/logos/gem.png",
-                name: "Gem",
-                note: "Strong pipeline and outreach analytics. But never the sourcing-versus-advertising call.",
-              },
-              {
-                logo: "/work/sourcing-analytics/logos/hireez.png",
-                name: "hireEZ",
-                note: "Broad reach and real dashboards. But analytics sit beside the work, not inside the decision.",
-              },
-            ]}
-            punchline="None of them answered the question a recruiter actually asks: is my sourcing paying off, and what should I do next?"
-          />
         </Stage>
 
-        {/* 03 · What I built */}
+        {/* 03 · Design as decision infrastructure */}
         <Stage
-          id="built"
+          id="decision"
           num="03"
-          name="What I built"
-          title="The hard part wasn't the charts. It was deciding what a recruiter needed to know before seeing anything."
+          name="Design as decision infrastructure"
+          eyebrow="One question, three jobs"
         >
           <Prose>
             <p>
-              A dashboard can show everything. This one couldn&rsquo;t, or it
-              would just be the tabs again, reassembled. So the real design work
-              was editorial: decide the one question the recruiter actually asks,
-              answer it first, and let the detail earn its place underneath. The
-              suite is built around{" "}
-              <strong>&ldquo;How is your recruiting performance?&rdquo;</strong>,
-              and everything on the screen is downstream of that question.
+              The strongest competitive products did more than report activity.
+              They helped users understand what happened, why it happened, and
+              what to do next.
             </p>
           </Prose>
 
-          <div className="mt-xl">
-            <Beat>It leads with the answer, not the data</Beat>
-            <div className="mt-md">
-              <Prose>
-                <p>
-                  The Overview opens with a plain-language performance summary and
-                  a simple gauge, then flags what needs attention: candidates
-                  stuck in the pipeline past five days, contacts about to expire.
-                  Recommendations sit right there (adjust your jobs, send more
-                  outreach, draft messages with AI), so the read comes with a next
-                  step.
-                </p>
-              </Prose>
-            </div>
-          </div>
-
-          {/* The shipped Overview shown as evidence, next to the copy that
-              describes it — the payoff of "leads with the answer." Top-anchored
-              window so the plain-language read stays visible without the full
-              1988px page eating the scroll. Reused from the sibling study because
-              it is the same shipped artifact. */}
-          <WindowFigure
-            src="/work/indeed-vision/sourcing-summary-shipped.png"
-            alt="Sourcing performance summary: a plain-language read, stat tiles, funnel, and decline reasons."
-            width={1440}
-            height={1988}
-            caption="The Overview as it shipped, shown from the top: a plain-language answer first, then the funnel, decline reasons, and per-recruiter performance below. Open it to see the full page."
-          />
-
-          <div className="mt-xl">
-            <Beat>It makes sourcing legible against advertising</Beat>
-            <div className="mt-md">
-              <Prose>
-                <p>
-                  The Acquisition channels view compares where candidates actually
-                  come from, sourcing versus advertising, with a full
-                  candidate-acquisition funnel for each, channel breakdowns by
-                  job, and positive-response rates. A recruiter can finally see
-                  which effort is buying results. This is the detail view behind
-                  the summary above.
-                </p>
-              </Prose>
-            </div>
-          </div>
-
-          <FigureSlot
-            label="Export → Figma: Acquisition channels (detail)"
-            hint="The detail view from “Sourcing Analytics Detailed Report.fig”: sourcing vs. advertising, a candidate-acquisition funnel per channel, and positive-response rates. Pair it with the summary hero — before, raw counts across tabs; after, one read on whether sourcing beat advertising."
-          />
-
-          <div className="mt-xl">
-            <Beat>It shows pipeline health at a glance</Beat>
-            <div className="mt-md">
-              <Prose>
-                <p>
-                  A candidates-in-pipeline breakdown by stage, plus a
-                  time-in-pipeline view, surface where people are getting stuck,
-                  so the recruiter knows where to intervene.
-                </p>
-                <p>
-                  Throughout, the craft was in restraint and accessibility: dense
-                  information designed to be scanned, status never carried by
-                  color alone, a chart chosen to answer a question rather than to
-                  decorate. This is the data-visualization work I care most
-                  about: complex data made genuinely usable.
-                </p>
-              </Prose>
-            </div>
-          </div>
-
-          <Todo>
-            <p>
-              <b>The tradeoff to name here:</b> the strongest version of this
-              section shows one thing you cut. What did you leave <b>off</b> the
-              Overview so the recruiter saw the answer first — an earlier layout, a
-              metric you demoted, a view you collapsed? Add one real example, in
-              your words.
-            </p>
-          </Todo>
-        </Stage>
-
-        {/* 04 · Where it landed */}
-        <Stage
-          id="landed"
-          num="04"
-          name="Where it landed"
-          title="It shipped into Galaxy's MVP, behind Indeed's paywall."
-        >
+          {/* MK's text, verbatim. The CompetitorLandscape that used to sit here
+              (four logos plus an "across 18 tools" punchline) is REMOVED: her
+              spec for this section runs prose, list, prose, image, and the
+              teardown injected a block of copy that was not in it. The 18-tool
+              figure still appears once, in Reflection. */}
           <Prose>
             <p>
-              The suite fed <strong>Project Galaxy&rsquo;s MVP</strong> and lives
-              today behind the paywall in Indeed&rsquo;s paid product. The
-              competitive analysis fed Galaxy too, so the teardown shaped more
-              than my own screens.
+              That became the spine of the design. I framed the analytics around
+              one question: <strong>is sourcing paying off?</strong> And then
+              gave each view a clear job:
             </p>
           </Prose>
 
-          <StatBand
-            stats={[
-              { value: "20+", label: "tools benchmarked in the teardown" },
-              {
-                value: "3",
-                label: "connected views: Overview, Acquisition, Pipeline",
-              },
-              { value: "Shipped", label: "into Project Galaxy’s MVP" },
+          <BulletList
+            items={[
+              <>
+                <strong>Overview:</strong> the plain-language performance read
+              </>,
+              <>
+                <strong>Acquisition:</strong> channel comparison across sourcing
+                and advertising
+              </>,
+              <>
+                <strong>Pipeline:</strong> deeper diagnosis of candidate movement
+                and quality
+              </>,
             ]}
-            note="This is a shipped, paywalled enterprise feature, so the credibility signal is “designed and shipped in a paid product,” not a public metric."
           />
 
-          <Todo>
+          <Prose>
+            {/* The two questions carry weight, not italics. They still need a
+                typographic break of some kind: without one the sentence reads
+                as a run-on, since both halves are themselves questions ("from
+                what metrics can we show to what decision does this screen need
+                to support"). */}
             <p>
-              <b>High-leverage, if you can get it:</b> one metric from a Galaxy PM
-              — adoption, activation, or a before/after on how fast a recruiter
-              can answer &ldquo;is it working&rdquo; — plus the exact ship date.
-              Source it; do not estimate it. It goes here as the single impact
-              figure.
+              I moved the team from <strong>what metrics can we show?</strong>{" "}
+              to <strong>what decision does this screen need to support?</strong>
             </p>
-          </Todo>
+          </Prose>
+
+          {/* Tabs, because the list directly above gives each view its own job,
+              and tabs let a reader compare them the way the product does:
+              switch, don't scroll. Same primitive as the DRP study.
+
+              TWO tabs, and neither is Acquisition or Pipeline. Both of those
+              are named in the list above but NOT shown: an Acquisition tab
+              using the job performance report was added and then removed at
+              MK's direction, and Pipeline has no export at all. The tabs show
+              the shipped summary and the report behind it; the other two views
+              are described in the prose and left unillustrated rather than
+              filled with a screenshot that does not depict them. */}
+          <FigureTabs
+            label="The views, and the job each one does"
+            tabs={[
+              {
+                label: "Overview",
+                src: "/work/sourcing-analytics/ss-overview.png",
+                alt: "Smart Sourcing overview. A top insights panel reads “Team's positive response rate lagged the market”, comparing 21.7% against a 24.5% market average, with a “View messaging tips” action beside it. Stat tiles for contacts used, contacts expiring, positive response rate, and top-performing recruiter sit to the right. Below: a sourcing funnel broken down by recruiter, decline reasons as a ring chart, and a positive-response-rate scatter plotting each recruiter against contacts used.",
+                /* 1600x2792, downscaled from a 2880x5026 export. These numbers
+                   are not just metadata: the lightbox's zoomed state renders at
+                   1:1 natural pixels (Lightbox.tsx sets width/height inline),
+                   so a 2880-wide source zoomed to 2880 CSS px and was unusable.
+                   1600 is still ~2x the ~792px column this renders in, so it
+                   stays sharp on a retina display, and it cut the file by a
+                   third. Keep new screenshots at roughly this scale. */
+                width: 1600,
+                height: 2792,
+                caption:
+                  "Overview: the read and the next move in the same glance. The insight names what happened and why, and the action sits beside it rather than in a report somewhere else. Charts sit underneath, not in front. Open it to see the full page.",
+              },
+              {
+                /* Labelled for what the product calls this screen ("Detailed
+                   report"), not "Pipeline". The list above defines Pipeline as
+                   deeper diagnosis of candidate MOVEMENT and QUALITY; this is
+                   recruiter performance over time, which is a different cut.
+                   Rename it if that mapping is wrong. */
+                label: "Detailed report",
+                src: "/work/sourcing-analytics/ss-detail.png",
+                alt: "Smart Sourcing detailed report. A Summary and Detailed report tab pair sits under “Analytics report: Candidate sourcing”, with a date range, a filter row, and a metrics-over-time line chart comparing two periods, its tooltip reading 308 contacts against 228 in the prior window. Below it, a table of 17 recruiters listing subscription type, response rate, responses, positive response rate, positive responses, and apply starts.",
+                width: 1600,
+                height: 1962,
+                caption:
+                  "The detailed report: the same question at full depth, per recruiter and over time. This is where the diagnosis moved so the Overview could stay on performance, urgency, and action.",
+              },
+            ]}
+          />
         </Stage>
 
-        {/* 05 · In their words — real quotes, anonymized to role like indeed-vision */}
-        <Stage id="words" num="05" name="In their words">
-          <Quote cite="Product Manager, Sourcing Analytics (Galaxy)">
-            &ldquo;We were able to successfully collaborate to determine a scope
-            that balanced a small number of user questions with engineering
-            feasibility, timeline and broader UX alignment. Upon initial
-            circulation the approach was immediately picked up on in Job
+        {/* 04 · Building clarity through restraint */}
+        <Stage
+          id="restraint"
+          num="04"
+          name="Building clarity through restraint"
+          eyebrow="Interpretation before evidence"
+        >
+          {/* MK's text, verbatim. This replaced a LabeledList whose three
+              labels ("Lead with the read", "Compare by default", "Recommend in
+              place") were invented to fit the primitive. Her three items are
+              one sentence broken across lines, so they are a plain list and the
+              explanation follows as prose. */}
+          <Prose>
+            <p>
+              The hardest part was keeping the dashboard from becoming another
+              dense analytics tab. Three decisions kept it from happening:
+            </p>
+          </Prose>
+
+          <BulletList
+            items={[
+              "Interpretation before evidence,",
+              "Comparison as the default frame, and",
+              "Recommendations placed at the point of decision, not buried in a report",
+            ]}
+          />
+
+          <Prose>
+            <p>
+              I led with interpretation before evidence: a plain-language
+              performance read first, then charts and supporting details
+              underneath.
+            </p>
+            <p>
+              I made channel comparison central. Sourcing could not be evaluated
+              in isolation; managers needed to understand whether it was
+              returning value relative to the other effort they were already
+              funding.
+            </p>
+            <p>
+              I placed recommendations close to the performance signal, so the
+              next move appeared at the same moment as the problem. Deeper
+              diagnosis moved out of the first read and into supporting views,
+              keeping the Overview focused on performance, urgency, and action.
+            </p>
+          </Prose>
+
+        </Stage>
+
+        {/* 05 · Outcomes */}
+        <Stage
+          id="outcomes"
+          num="05"
+          name="Outcomes"
+          eyebrow="What made TA managers come back"
+        >
+          {/* MK's text, verbatim. The stat band that used to sit under this is
+              gone: the three views and both figures are now stated in the
+              paragraph itself, so a band repeating them was the "same metric
+              twice" problem rather than a summary of it. */}
+          <Prose>
+            <p>
+              <strong>
+                Up to 2x weekly engagement and a product direction that moved
+                beyond the MVP.
+              </strong>
+            </p>
+            <p>
+              By deciding what not to show, I kept the first read to the few
+              things that mattered, which is what made managers trust and return
+              to the dashboard instead of treating it like another report to
+              decode. It shipped into Project Galaxy&rsquo;s MVP as three
+              connected views: Overview, Acquisition, and Pipeline.{" "}
+              <strong>
+                Weekly engagement increased 60&ndash;100%, and feedback ran 3:1
+                positive to negative.
+              </strong>
+            </p>
+          </Prose>
+
+          <Quote cite="TA manager, sourcing analytics research">
+            &ldquo;It&rsquo;s so important because we need to know the time and
+            effort we&rsquo;ve put into hiring these individuals.&rdquo;
+          </Quote>
+
+          <Prose>
+            <p>
+              That need, proving sourcing&rsquo;s effort to leadership, is part
+              of what moved sourcing analytics from a free offering into
+              Indeed&rsquo;s Professional subscription strategy.
+            </p>
+            <p>
+              The direction also traveled beyond the MVP, turning the work from a
+              feature-level dashboard into a broader product signal.
+            </p>
+          </Prose>
+
+          <Quote cite="Senior Product Manager, Sourcing Analytics (Galaxy)">
+            &ldquo;Thanks to Marissa&rsquo;s design thinking, we were able to
+            determine a scope that balanced a small number of user questions with
+            engineering feasibility, timeline and broader UX alignment. Upon
+            initial circulation, the approach was immediately picked up on in Job
             leadership as an exciting approach that could be adapted into the job
             details page.&rdquo;
           </Quote>
 
-          <Quote cite="Senior Designer, teardown co-author">
-            &ldquo;Marissa&rsquo;s strengths, especially her ability to think
-            critically through the users&rsquo; problems, and create quality work
-            that bridges knowledge gaps for users.&rdquo;
-          </Quote>
-        </Stage>
-
-        {/* 06 · Reflection — DRAFT VOICE, drawn from the narrative for MK to make
-            her own. Not wrapped in <Todo> so the page can publish, but this is the
-            block to rewrite first. */}
-        <Stage id="reflection" num="06" name="Reflection">
-          <Pullquote>
-            The hard part was editing a dashboard down to the one question that
-            matters — then trusting the answer to lead.
-          </Pullquote>
-
           <Prose>
             <p>
-              What this taught me is that a dashboard&rsquo;s value isn&rsquo;t in
-              what it can show, it&rsquo;s in what it decides not to. The tabs
-              already showed everything; the design only became useful once it
-              committed to one question and made everything else earn its place
-              underneath. Leading with a plain-language answer, and pairing every
-              read with a next step, is the move I&rsquo;d carry into any
-              analytics surface.
-            </p>
-            <p>
-              What stays with me most is watching the upstream work actually
-              ship. The{" "}
-              <Link
-                href="/work/indeed-vision"
-                className="text-rich underline decoration-1 underline-offset-[3px] hover:text-rich-hover"
-              >
-                vision and direction-setting
-              </Link>{" "}
-              could easily have stayed a deck. Seeing the strategy, the
-              refinement, and the focus survive all the way into a usable
-              product, one recruiters open inside a paid tool, is the payoff I
-              care about most. The line from a two-year direction to a screen
-              someone actually relies on is the whole reason to do the upstream
-              work.
-            </p>
-            <p>
-              Where I&rsquo;d push further next time is the recommendations. Today
-              they point you at an action; the version I want simulates the
-              outcome of pulling a lever before you pull it. And I&rsquo;d
-              instrument the outcome sooner. The number that closes the loop on
-              whether recruiters answer &ldquo;is it working&rdquo; faster is the
-              one this study is still chasing.
+              Indeed&rsquo;s mission is to help people get jobs. Sourcing is the
+              part of recruiting where effort is easiest to spend in the wrong
+              place, and a manager who can see which channels return qualified
+              candidates can move her team&rsquo;s hours toward the ones that do.
+              Not more activity. Better aimed activity.
             </p>
           </Prose>
         </Stage>
+
+        {/* 06 · Reflection */}
+        <Stage
+          id="reflection"
+          num="06"
+          name="Reflection"
+          eyebrow="Editing it was the fast part. Defending it wasn’t."
+        >
+          {/* MK's text, verbatim, four paragraphs. The only markup liberty is
+              the link on "analytics offsite", which changes no words. */}
+          <Prose>
+            <p>
+              This worked because I committed design to a point of view. An
+              analytics dashboard&rsquo;s value lies not in what it shows, but
+              in the decisions it supports.
+            </p>
+            <p>
+              Getting to this idea was quicker than it seems. Two factors came
+              together. First, I looked at 18 sourcing and analytics tools. The
+              best ones used simple language, solid evidence, and clear next
+              steps. The weaker tools either tracked activity or provided static
+              reports. Second, the{" "}
+              <Link href="/work/indeed-vision">analytics offsite</Link> had
+              already agreed that return on effort was the key to deciding what
+              mattered. We based our direction on data, not intuition.
+            </p>
+            <p>
+              The challenge came afterward. Each team had metrics they wanted to
+              show, and every request made sense on its own. Nobody was wrong.
+              But if the Overview became a place for everyone&rsquo;s evidence,
+              we&rsquo;d end up with another dense report, which we aimed to
+              avoid. So, we had to keep asking: what decision does this screen
+              support? Adding a metric takes one meeting. Keeping it out takes
+              many.
+            </p>
+            <p>
+              Next time, I would measure whether managers could answer,
+              &ldquo;Is sourcing working?&rdquo; faster, with fewer tabs and
+              less manual digging. The research showed what managers needed.
+              What I never proved was that the first read changed how quickly
+              they could answer.
+            </p>
+          </Prose>
+        </Stage>
+        <StudyNav currentSlug="sourcing-analytics" />
       </CaseStudyBody>
     </CaseStudyRoot>
+    </div>
   );
 }

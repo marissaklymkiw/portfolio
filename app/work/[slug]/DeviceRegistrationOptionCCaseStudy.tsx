@@ -1,4 +1,6 @@
 import {
+  Beat,
+  BulletList,
   CaseStudyBody,
   CaseStudyHeader,
   CaseStudyHero,
@@ -6,14 +8,13 @@ import {
   CaseStudyRoot,
   Figure,
   Prose,
-  Pullquote,
+  Quote,
   Stage,
-  StatBand,
 } from "@/components/ui/CaseStudy";
+import StudyNav from "@/components/ui/StudyNav";
 import BeforeAfterSlider from "@/components/ui/BeforeAfterSlider";
 import ExperienceCarousel from "@/components/ui/ExperienceCarousel";
 import FigureTabs from "@/components/ui/FigureTabs";
-import ArrowForward from "@/components/ui/ArrowForward";
 
 /**
  * Device Registration — OPTION C.
@@ -33,17 +34,21 @@ import ArrowForward from "@/components/ui/ArrowForward";
 const STAGES = [
   { id: "problem", num: "01", name: "The problem" },
   { id: "role", num: "02", name: "My role" },
-  {
-    id: "delivery",
-    num: "03",
-    name: "Design as delivery infrastructure",
-    short: "Delivery",
-  },
+  /* Restructuring comes BEFORE delivery infrastructure. The argument only works
+     in this order: the role model has to be won before the reference built from
+     it means anything, and it puts the concrete artifact (the inheritance
+     matrix) roughly 2,000px earlier for a reader who does not finish. */
   {
     id: "alignment",
+    num: "03",
+    name: "Restructuring the product around roles, five weeks into a slipping build",
+    short: "Restructuring",
+  },
+  {
+    id: "delivery",
     num: "04",
-    name: "Building alignment through structure",
-    short: "Alignment",
+    name: "Design as delivery infrastructure",
+    short: "Delivery",
   },
   { id: "outcomes", num: "05", name: "Outcomes" },
   { id: "reflection", num: "06", name: "Reflection" },
@@ -51,15 +56,25 @@ const STAGES = [
 
 export default function DeviceRegistrationOptionCCaseStudy() {
   return (
-    // Container narrowed ~15% for this option: the .canvas is 1440px, capped
-    // here to 1224px so the whole column (rail + content) reads tighter, closer
-    // to an editorial measure.
-    <div className="no-media-radius mx-auto max-w-[1224px]">
+    /* All three studies carry the SAME four classes: the shared 1224px measure,
+       squared content media, no ink rule above each section, and no stage
+       numbers. If you change one study here, change all three, or the set stops
+       reading as one system. See globals.css for what each class does. */
+    <div className="no-media-radius no-section-rule no-stage-numbers study-canvas">
     <CaseStudyRoot>
       {/* No hero in the header — it's moved down under the metadata, below. */}
       <CaseStudyHeader
         badge={{ mark: "UCLA", label: "Platform Design" }}
-        title="From 2–3 business days to under 24 hours: one path for every campus device that can’t log in by itself"
+        /* "2–3" is held together so it cannot split after the en dash, which
+           was leaving a bare "2–" at the end of a line. The whole range now
+           moves to the next line as one token. */
+        title={
+          <>
+            Transforming wait times from{" "}
+            <span className="whitespace-nowrap">2&ndash;3</span> business days
+            to less than 24 hours: registering campus devices
+          </>
+        }
       />
 
       <CaseStudyBody
@@ -67,17 +82,18 @@ export default function DeviceRegistrationOptionCCaseStudy() {
         lead={
           <>
             <CaseStudyMeta
-              className="mt-2xl border-t border-b border-line pt-lg pb-lg"
+              className="border-t border-b border-line pt-lg pb-lg"
               meta={[
                 { label: "My role", value: "Product design lead" },
                 {
                   /* The figures repeat here ON PURPOSE. This block is the glance
                      surface: a recruiter deciding in under two minutes reads the
                      badge, the h1, and these columns, and may never scroll to
-                     Outcomes. Removing them to avoid restating the stat band
-                     costs the scan more than the repetition costs the read. The
-                     sourcing lives on the stat band's note, which is where a
-                     reader who wants provenance goes looking. */
+                     Outcomes. Removing them to avoid restating the Outcomes
+                     list costs the scan more than the repetition costs the
+                     read. The sourcing lives in the qualifying line under that
+                     list, which is where a reader who wants provenance goes
+                     looking. */
                   label: "Results",
                   value: (
                     <>
@@ -117,8 +133,8 @@ export default function DeviceRegistrationOptionCCaseStudy() {
             <CaseStudyHero
               src="/work/device-registration/drp-super-admin-home.png"
               alt="Super Admin screen with options: device registration, management, configurations, approvals."
-              width={3987}
-              height={2439}
+              width={2200}
+              height={1346}
               priority
             />
 
@@ -152,8 +168,8 @@ export default function DeviceRegistrationOptionCCaseStudy() {
                 afterAlt="The rebuilt home: a greeting, four task-named cards, and a pending-approvals list."
                 beforeLabel="Before"
                 afterLabel="After"
-                width={2160}
-                height={1240}
+                width={1600}
+                height={918}
                 callouts={[
                   { side: "before", x: 42, y: 20, text: "Opens with the architecture" },
                   { side: "before", x: 30, y: 62, text: "Cards named for the system" },
@@ -208,8 +224,8 @@ export default function DeviceRegistrationOptionCCaseStudy() {
           <Figure
             src="/work/device-registration/lab-researcher.jpg"
             alt="A researcher at a microscope, its readings on a nearby monitor, on a device that cannot log in."
-            width={3200}
-            height={1786}
+            width={1600}
+            height={893}
             zoomable={false}
           />
         </Stage>
@@ -246,10 +262,116 @@ export default function DeviceRegistrationOptionCCaseStudy() {
           </Prose>
         </Stage>
 
-        {/* 03 · Design as delivery infrastructure */}
+        {/* 03 · Restructuring the product around roles */}
+        <Stage
+          id="alignment"
+          num="03"
+          name="Restructuring the product around roles, five weeks into a slipping build"
+          eyebrow="One map across four teams"
+        >
+          <Prose>
+            <p>
+              Four teams sat at the table: Network, Business IT Products,
+              Information Security, and Digital Foundry. Each had different
+              needs, permissions, and operational habits. Without a shared
+              structure, the product would fragment into exceptions negotiated
+              team by team.
+            </p>
+            <p>
+              The role-based model became the shared map: one product language
+              for users, approvers, department supervisors, and admins
+              configuring the portal. Teams made decisions from the same
+              structure for ownership, permissions, and handoffs instead of
+              re-litigating each edge case.
+            </p>
+          </Prose>
+
+          {/* HIERARCHY, fixed. This used to run <Phase> "What it took to change
+              course" over three <Beat>s. Phase is a small mono marker and Beat
+              is a Hanken h3, so the group heading was visually QUIETER than the
+              three things it introduced: a label parenting three headings.
+
+              Now there is exactly one sub-heading in this stage. "What it took
+              to change course" is the Beat, and the three arguments lead their
+              own paragraphs in bold, the same shape the other two studies use
+              for a claim plus its explanation. Descending weight the whole way
+              down: stage h2 → Beat → bold claim → prose. */}
+          <Beat>What it took to change course</Beat>
+
+          <div className="mt-md">
+            <Prose>
+              <p>
+                I proposed this model five weeks into a pilot that had already
+                slipped, with 62% of the backlog untouched, one developer in
+                flight, and a hard July deadline. The objection was reasonable:
+                reorganizing the product around roles this late looked like more
+                work, and more work looked like a later launch.
+              </p>
+              <p>Three things that moved my model forward:</p>
+              <p>
+                <strong className="mb-sm block">Diagnosis, not critique</strong>
+                The shift came in a flow review with the business systems analyst and the engineer.
+                On the table were screens already built in code, to the
+                team&rsquo;s own product conventions, with no design standards
+                applied. I brought three flows of my own and a structured read of
+                the logic behind theirs. I named gaps, inconsistencies, and
+                assumptions nobody had written down. The BSA confirmed the read.
+                Once the subject-matter expert agreed the role model described
+                the system more accurately than their screens did, it stopped
+                being a question of preference.
+              </p>
+              <p>
+                <strong className="mb-sm block">
+                  The model removed work instead of adding it
+                </strong>
+                The alternative to a shared structure was never no change. It was
+                negotiating permissions and edge cases screen by screen, team by
+                team, for the rest of the build. Reframed that way, roles were
+                the cheaper path, and twelve edge cases got resolved upstream
+                before engineering reached them.
+              </p>
+              <p>
+                <strong className="mb-sm block">Proof, not a proposal</strong>
+                Using AI strategically, I built the role model in a coded design prototype rather than in
+                Figma, so engineering could inspect it and run it. This kept
+                design ahead of the build instead of trailing it, which is what
+                settled the timeline concern: the reference arrived before the
+                decisions did. Nobody had to choose between shipping on time and
+                shipping with design.
+              </p>
+            </Prose>
+          </div>
+
+          {/* mt-2xl (48px), double the gap-lg that separates paragraphs inside
+              a Prose block. This paragraph closes the section and steps back
+              from the three arguments, so it needs to read as its own beat; as
+              a bare sibling it carried NO top margin at all and ran on from the
+              block above with less air than the arguments have between
+              themselves. */}
+          <div className="mt-2xl">
+            <Prose>
+              <p>
+                That alignment is then tested, not assumed. I validate concepts
+                with the campus networking teams before engineering commits to a
+                build, so the shared model holds up against how each team
+                actually works before it becomes code.
+              </p>
+            </Prose>
+          </div>
+
+          <Figure
+            src="/work/device-registration/layer-02-flows.png"
+            alt="Role-inheritance matrix: four tiers as rows; each inherits the shared Register and Manage path (light blue) and adds its own scope (dark blue), from Basic User up to Super Admin."
+            width={1440}
+            height={720}
+            caption="The shared role model. Each tier inherits everything the tier below can do (light blue) and adds only its own scope (dark blue). One map for ownership, permissions, and handoffs."
+          />
+        </Stage>
+
+        {/* 04 · Design as delivery infrastructure */}
         <Stage
           id="delivery"
-          num="03"
+          num="04"
           name="Design as delivery infrastructure"
           eyebrow="A shared reference, not screen polish"
         >
@@ -293,51 +415,20 @@ export default function DeviceRegistrationOptionCCaseStudy() {
             ]}
           />
 
-          <Pullquote>
-            “The design prototype reference that Marissa provided let us build
-            from a shared pattern instead of making screen-by-screen decisions
-            during implementation.”
-            <br />
-            <strong>Technical Lead, Workplace IT Products</strong>
-          </Pullquote>
+          {/* <Quote>, not <Pullquote>, matching the sourcing study. Pullquote is
+              for the AUTHOR's own line lifted out of her argument, so it has no
+              attribution slot and the source had to be hand-set as bold text
+              after a <br>. That renders a testimonial as a design flourish
+              rather than sourced evidence, and it loses the semantics: Quote
+              ships a real <blockquote> with a <figcaption>, so the attribution
+              is attached to the quotation rather than merely sitting near it. */}
+          <Quote cite="Technical Lead, Workplace IT Products">
+            &ldquo;The design prototype reference that Marissa provided let us
+            build from a shared pattern instead of making screen-by-screen
+            decisions during implementation.&rdquo;
+          </Quote>
         </Stage>
 
-        {/* 04 · Building alignment through structure */}
-        <Stage
-          id="alignment"
-          num="04"
-          name="Building alignment through structure"
-          eyebrow="One map across four teams"
-        >
-          <Prose>
-            <p>
-              The project crossed central and distributed IT teams, each with
-              different needs, permissions, and operational habits. Without a
-              shared structure, the product risked fragmenting into exceptions
-              negotiated team by team.
-            </p>
-            <p>
-              So the role-based model became the shared map: one product language
-              for users, approvers, admins, and engineering. Teams made decisions
-              from the same structure for ownership, permissions, and handoffs
-              instead of re-litigating each edge case.
-            </p>
-            <p>
-              That alignment is tested, not assumed. I validate concepts with the
-              campus networking teams before engineering commits to a build, so
-              the shared model holds up against how each team actually works
-              before it becomes code.
-            </p>
-          </Prose>
-
-          <Figure
-            src="/work/device-registration/layer-02-flows.png"
-            alt="Role-inheritance matrix: four tiers as rows; each inherits the shared Register and Manage path (light blue) and adds its own scope (dark blue), from Basic User up to Super Admin."
-            width={1440}
-            height={720}
-            caption="The shared role model. Each tier inherits everything the tier below can do (light blue) and adds only its own scope (dark blue). One map for ownership, permissions, and handoffs."
-          />
-        </Stage>
 
         {/* 06 · Outcomes */}
         <Stage
@@ -346,39 +437,43 @@ export default function DeviceRegistrationOptionCCaseStudy() {
           name="Outcomes"
           eyebrow="From ticket queue to role-based system"
         >
-          <StatBand
-            bordered={false}
-            stats={[
-              {
-                value: "80%",
-                label:
-                  "self-service completion for users who start registration",
-              },
-              {
-                value: "40%",
-                label:
-                  "fewer device-network tickets for participating teams",
-              },
-              {
-                value: "<24 hrs",
-                label:
-                  "median approval turnaround, down from 2–3 business days",
-              },
+          {/* A list, not the stat band, at MK's direction. The band split each
+              figure from its own sentence ("80%" oversized, the rest of the
+              clause small beside it); as a list each line stays one readable
+              statement. The number leads, so it still carries the scan. */}
+          <BulletList
+            items={[
+              <>
+                <strong>80%</strong> self-service completion for users who start
+                registration
+              </>,
+              <>
+                <strong>40%</strong> fewer device-network tickets for
+                participating teams
+              </>,
+              <>
+                <strong>&lt;24hrs</strong> median approval turnaround, down from
+                2&ndash;3 business days
+              </>,
             ]}
-            note="Directional figures from the pilot, roughly 50 staff users across the participating teams. The 200 to 500 tickets a month described earlier was the wider device-network queue before this work, not the pilot's own baseline, so the two are not a like-for-like ratio."
           />
 
+          {/* A qualifying line used to sit here, carried over from the stat
+              band's `note`: pilot size, and why the 200-to-500 ticket queue is
+              not a like-for-like baseline for the 40%. Removed at MK's
+              direction. The three figures above now stand unqualified, which
+              matches the sourcing study. */}
           <Prose>
-            {/* The numbers are stated once, in the band above, where the note
-                can qualify them. This paragraph says why they moved instead of
-                restating them: the previous version repeated all three and then
-                quietly dropped the 40%, which reads as a retreat. */}
+            {/* The numbers are stated once, in the list above, where the line
+                beneath can qualify them. This paragraph says why they moved
+                instead of restating them: an earlier version repeated all three
+                and then quietly dropped the 40%, which reads as a retreat. */}
             <p>
               By designing a self-service, role-based registration system to
               replace the support-ticket queue and manual IT networking work, I
               took standard approvals off the queue entirely. The teams in the
               pilot registered their own devices instead of waiting on IT to do
-              it for them, which is where the reductions above come from.
+              it for them, which is where those reductions come from.
             </p>
             <p>
               By designing one inherited pattern instead of one-off screens, I
@@ -394,44 +489,44 @@ export default function DeviceRegistrationOptionCCaseStudy() {
             slides={[
               {
                 src: "/work/device-registration/carousel/01-basic-user-home.png",
-                width: 2732,
-                height: 1708,
+                width: 1700,
+                height: 1063,
                 alt: "Basic User home: a greeting, a Register a device button, and a list of seven owned devices.",
               },
               {
                 src: "/work/device-registration/carousel/02-group-admin-home.png",
-                width: 2732,
-                height: 1708,
+                width: 1700,
+                height: 1063,
                 alt: "Group Admin home: three task cards and a pending-approvals queue for the department.",
               },
               {
                 src: "/work/device-registration/carousel/03-super-admin-home.png",
-                width: 2732,
-                height: 1708,
+                width: 1700,
+                height: 1063,
                 alt: "Super Admin home: four task cards including configuration, and a portal-wide approvals list.",
               },
               {
                 src: "/work/device-registration/carousel/04-register-device.png",
-                width: 2732,
-                height: 1708,
+                width: 1700,
+                height: 1063,
                 alt: "The registration form: who it is for, then MAC address, device name, connection type, role.",
               },
               {
                 src: "/work/device-registration/carousel/05-manage-devices.png",
-                width: 2732,
-                height: 1708,
+                width: 1700,
+                height: 1063,
                 alt: "Manage devices: a searchable table of devices with owner, MAC address, expiry, and status.",
               },
               {
                 src: "/work/device-registration/carousel/06-manage-devices-edit-drawer.png",
-                width: 2732,
-                height: 1708,
+                width: 1700,
+                height: 1063,
                 alt: "The device table with the Edit drawer open, showing editable and read-only fields.",
               },
               {
                 src: "/work/device-registration/carousel/07-audit-log.png",
-                width: 2732,
-                height: 1708,
+                width: 1700,
+                height: 1063,
                 alt: "Audit logs: a searchable table of timestamped Register, Approve, Reject, and Update events.",
               },
             ]}
@@ -467,64 +562,9 @@ export default function DeviceRegistrationOptionCCaseStudy() {
             </p>
           </Prose>
         </Stage>
+        <StudyNav currentSlug="device-registration" />
       </CaseStudyBody>
     </CaseStudyRoot>
-
-      {/* Option C's own footer: three oversized links, centered,
-          with a small copyright below. Rendered here (the shared site footer is
-          hidden on this page via globals.css) and kept in the Swiss system:
-          Hanken display, rich-black on white, no serif and no accent colour. */}
-      {/* id="contact" is what the header's CONTACT button targets. The shared
-          site footer used to own that id and was hidden here with CSS, so the
-          anchor resolved to an invisible element and the button did nothing. The
-          shared footer now stands down on this route (lib/work/self-footer.ts),
-          leaving the id free for the footer that is actually on screen.
-          scroll-mt clears the sticky header so the jump lands correctly. */}
-      <footer
-        id="contact"
-        className="mt-3xl scroll-mt-[calc(var(--hh)+24px)] border-t border-ink px-[var(--pad)] pt-lg pb-3xl"
-      >
-        <div className="flex justify-center">
-          <a
-            href="#main"
-            className="inline-flex items-center gap-1.5 py-md -my-md font-mono text-label uppercase tracking-label text-muted hover:text-ink transition-colors"
-          >
-            Back to top <ArrowForward className="-rotate-90" />
-          </a>
-        </div>
-        <nav
-          aria-label="Elsewhere"
-          className="mt-xl flex flex-wrap items-baseline justify-center gap-x-[7vw] gap-y-md text-center"
-        >
-          {/* Medium was here on href="#", which is a dead click that also implies
-              published writing the site cannot show. PRODUCT.md is explicit that
-              placeholders stay visibly unfinished rather than quietly becoming
-              claims, so it is removed rather than pointed somewhere plausible.
-              Put it back when there is a real URL.
-              py-sm/-my-sm grows the tap target (these render at ~32px tall on a
-              phone, where the clamp bottoms out) without changing the layout. */}
-          {[
-            { label: "Email", href: "mailto:marissa.klymkiw@gmail.com", ext: false },
-            {
-              label: "LinkedIn",
-              href: "https://www.linkedin.com/in/marissak/",
-              ext: true,
-            },
-          ].map((l) => (
-            <a
-              key={l.label}
-              href={l.href}
-              {...(l.ext ? { target: "_blank", rel: "noreferrer" } : {})}
-              className="font-display leading-none tracking-[-0.02em] text-[clamp(2rem,5.5vw,4.375rem)] py-sm -my-sm text-ink hover:text-rich transition-colors"
-            >
-              {l.label}
-            </a>
-          ))}
-        </nav>
-        <p className="mt-2xl text-center text-small text-muted">
-          © 2026 Marissa Klymkiw
-        </p>
-      </footer>
     </div>
   );
 }

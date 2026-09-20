@@ -57,14 +57,18 @@ frequent revision.
 ## Capabilities and Constraints
 
 Shipped surfaces: home, about, ethos, work index and case studies, library,
-writing, resume.
+writing, resume, contact.
 
 - Next.js 15 (App Router), React 19, Tailwind CSS v4, TypeScript.
 - Notion API (`@notionhq/client`) backs the library; book covers are self-hosted.
+- Resend (`resend`) sends the contact form, through the site's one route
+  handler at `/api/contact`. It needs `RESEND_API_KEY`, `CONTACT_TO`, and
+  `CONTACT_FROM` in the environment; without them the route answers 503 and the
+  form tells the sender to email directly rather than dropping the message.
 - Case studies are authored as React components under `app/work/[slug]/`, not
   MDX, despite what older docs describe.
 - Deploys to Vercel. Env vars: `NOTION_API_KEY`, `NOTION_LIBRARY_DB_ID`,
-  `NEXT_PUBLIC_SITE_URL`.
+  `NEXT_PUBLIC_SITE_URL`, `RESEND_API_KEY`, `CONTACT_TO`, `CONTACT_FROM`.
 - `next build` must pass with zero errors before every deploy.
 - Desktop-primary, fully responsive down to 375px.
 - US, English only.

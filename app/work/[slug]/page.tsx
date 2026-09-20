@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import DeviceRegistrationOptionCCaseStudy from "./DeviceRegistrationOptionCCaseStudy";
 import IndeedVisionCaseStudy from "./IndeedVisionCaseStudy";
 import SourcingAnalyticsCaseStudy from "./SourcingAnalyticsCaseStudy";
-import UscGuestAccessCaseStudy from "./UscGuestAccessCaseStudy";
+/* UscGuestAccessCaseStudy is intentionally not imported: USC Guest Access is
+   held back from the first launch, so the slug is unrouted and /work/usc-guest-
+   access 404s rather than shipping work that is not part of the launch set. The
+   component file remains beside this one, ready to re-import. */
 
 /* /work/[slug] — case-study route.
    Add a study by mapping a slug to its component below. Every study composes the
@@ -18,7 +21,7 @@ const STUDIES: Record<
      a record of the options considered. */
   "device-registration": {
     title:
-      "From 2\u20133 business days to under 24 hours: one path for every campus device that can\u2019t log in by itself | Marissa Klymkiw",
+      "Transforming wait times from 2\u20133 business days to less than 24 hours: registering campus devices | Marissa Klymkiw",
     description:
       "UCLA device registration: a leadership-led arc covering the problem, my role, delivery infrastructure, alignment, outcomes, and reflection.",
     Component: DeviceRegistrationOptionCCaseStudy,
@@ -32,17 +35,10 @@ const STUDIES: Record<
   },
   "sourcing-analytics": {
     title:
-      "Recruiters were doing the work. They couldn’t see if it was working. | Marissa Klymkiw",
+      "The team was doing the work. Managers couldn’t see what was working. | Marissa Klymkiw",
     description:
       "Indeed sourcing analytics: designing the suite that turned scattered recruiting effort into one honest read — is sourcing paying off, and what to do next. Problem → study → build → impact.",
     Component: SourcingAnalyticsCaseStudy,
-  },
-  "usc-guest-access": {
-    title:
-      "Redesigning guest access so students stop sharing their passwords | Marissa Klymkiw",
-    description:
-      "USC Guest Access: students were sharing real logins to let parents help. I designed a secure, FERPA-aware way to invite and manage guests with granular control. Problem → research → design → testing.",
-    Component: UscGuestAccessCaseStudy,
   },
 };
 

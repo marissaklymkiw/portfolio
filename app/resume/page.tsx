@@ -8,7 +8,7 @@ export default function ResumePage() {
     <Placeholder
       eyebrow="Resume"
       title="The short version."
-      body="A downloadable resume will live here. In the meantime, the Library is the system this site is built from — exposed on purpose."
+      body="A downloadable resume will live here. In the meantime, the Library is the system this site is built from, exposed on purpose."
     />
   );
 }

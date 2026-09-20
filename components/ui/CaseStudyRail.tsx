@@ -11,9 +11,10 @@ import ArrowBack from "@/components/ui/ArrowBack";
  * component. It exists only because scroll position can't be observed on the
  * server.
  *
- * Scrollspy uses IntersectionObserver with a tight rootMargin band across the
- * middle of the viewport, so the active stage is whichever one is actually being
- * READ rather than whichever merely touches the edge of the screen.
+ * Scrollspy uses IntersectionObserver with a rootMargin band near the TOP of the
+ * viewport, so the active stage is whichever one is actually being READ rather
+ * than whichever merely touches the edge of the screen. See BAND_TOP for why the
+ * band is not in the middle: short stages never reach a mid-screen band.
  *
  * Accessibility: it's a real <nav> of anchors, so it works with JS disabled —
  * the scrollspy highlight is the only thing that degrades, and the links still
@@ -33,12 +34,22 @@ export type RailStage = {
   short?: string;
 };
 
+/* The read band, as a fraction of viewport height from the top. Shared by the
+   IntersectionObserver rootMargin and the gap-fallback below so the two agree. */
+const BAND_TOP = 0.12;
+
 export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
   /* Starts empty, not at stages[0]. Seeding the first stage marked "The problem"
      as current while the reader was still in the un-indexed hero — a status that
      was wrong before a single scroll event. Nothing is current until the reader
      is actually inside a stage. */
   const [active, setActive] = useState("");
+
+  /* Set while a rail click is animating the page. The observer fires many times
+     during that scroll and would overwrite the stage the reader actually asked
+     for with whatever passes through the band on the way. Clicking "My role"
+     and landing on "Decisions" was exactly this. */
+  const lockRef = useRef(false);
 
   useEffect(() => {
     const sections = stages
@@ -61,6 +72,10 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
           else visible.delete(e.target.id);
         });
 
+        // keep tracking what is on screen, but do not touch `active` while a
+        // click is still flying to its target.
+        if (lockRef.current) return;
+
         if (visible.size) {
           // more than one stage can sit in the band on a short section; the one
           // being read is the earliest in document order.
@@ -72,8 +87,11 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
         /* Nothing in the read band: either above the first stage (no stage is
            current) or in the gap between two. Fall back to the last stage whose
            top has already passed the band, so a long figure between stages keeps
-           the stage it belongs to rather than clearing the index. */
-        const bandTop = window.innerHeight * 0.45;
+           the stage it belongs to rather than clearing the index.
+
+           BAND_TOP must match the rootMargin below, or the two paths disagree
+           and the rail flickers between them. */
+        const bandTop = window.innerHeight * BAND_TOP;
         let current = "";
         for (const s of stages) {
           const el = document.getElementById(s.id);
@@ -81,7 +99,20 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
         }
         setActive(current);
       },
-      { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
+      /* The band sits near the TOP of the viewport, not the middle.
+
+         It used to be a thin strip at 45–50%, which assumed every stage was
+         taller than half a viewport. Short stages are not: "My role" on the
+         sourcing study is a heading and two paragraphs, so after a click it
+         lands at scroll-margin-top and its whole height finishes ABOVE a
+         mid-screen band. The observer then found the NEXT stage sitting in the
+         band and reported that instead, which is why clicking "My role"
+         highlighted "Decisions".
+
+         Reading from 12% to 20% down means a stage becomes current as its
+         heading settles near the top, where the reader is actually looking, and
+         a stage only has to be ~8% of a viewport tall to register. */
+      { rootMargin: "-12% 0px -80% 0px", threshold: 0 },
     );
     sections.forEach((s) => obs.observe(s));
     return () => obs.disconnect();
@@ -107,7 +138,19 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
     if (!el) return;
 
     setActive(id);
+    lockRef.current = true;
     history.replaceState(null, "", `#${id}`);
+
+    /* Release on the frame AFTER the scroll settles. Clearing it synchronously
+       is too early: the observer callback is queued, not immediate, so the
+       stale entries from mid-flight would land just after the unlock and undo
+       the click. */
+    const release = () =>
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          lockRef.current = false;
+        }),
+      );
 
     // offset the target by the section's own scroll-margin-top so it lands below
     // the sticky header, exactly where a native anchor jump would put it.
@@ -119,6 +162,7 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
     ).matches;
     if (reduce) {
       window.scrollTo(0, target);
+      release();
       return;
     }
 
@@ -145,6 +189,7 @@ export default function CaseStudyRail({ stages }: { stages: RailStage[] }) {
       } else {
         rafRef.current = null;
         root.style.scrollBehavior = prevBehavior;
+        release();
       }
     };
     rafRef.current = requestAnimationFrame(step);

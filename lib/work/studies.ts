@@ -29,7 +29,11 @@ export type Study = {
 export const studies: Study[] = [
   {
     slug: "device-registration",
-    title: "One front door for every device that can’t log in for itself",
+    /* Must match the study's own h1, same as the other cards: the card and the
+       page headline are the same promise seen twice, so a reader who clicks
+       lands on the sentence they clicked. */
+    title:
+      "Transforming wait times from 2–3 business days to less than 24 hours: registering campus devices",
     model: "B2B",
     category: "Platform Design",
     status: "In progress",
@@ -53,7 +57,10 @@ export const studies: Study[] = [
   },
   {
     slug: "sourcing-analytics",
-    title: "Recruiters were doing the work. They couldn’t see if it was working.",
+    /* Must match the study's own h1. The card and the page headline are the
+       same promise seen twice, so a reader who clicks lands on the sentence
+       they clicked. */
+    title: "The team was doing the work. Managers couldn’t see what was working.",
     model: "B2B",
     category: "Product Design",
     status: "Shipped · 2024",
@@ -65,18 +72,10 @@ export const studies: Study[] = [
     thumbAlt:
       "A recruiter at her desk, hand to her chin and brow slightly furrowed, studying a spreadsheet on her monitor with a laptop and open notebook in front of her.",
   },
-  {
-    slug: "usc-guest-access",
-    title: "Redesigning guest access so students stop sharing their passwords",
-    model: "B2C",
-    category: "Enterprise UX",
-    status: "Shipped · 2021",
-    live: true,
-    // The guests themselves — USC parents at orientation. Carries the human
-    // problem the way the lab (DRP) and recruiter (Sourcing) photos do, rather
-    // than a UI screenshot. Swap if a dedicated banner/composite gets exported.
-    thumb: "/work/usc-guest-access/university-parent-orientation.jpg",
-    thumbAlt:
-      "Parents at a university orientation session — a Latino father in a cardinal 'PARENT' t-shirt with a 'Tony' name tag smiles at the front, among a diverse group of parents taking notes — the guests students needed a safe way to grant access to.",
-  },
+  /* USC Guest Access is held back from the first launch. Its component and its
+     images are still on disk and its card entry is recoverable from git, so
+     republishing is a matter of restoring this entry and its route in
+     app/work/[slug]/page.tsx. It is omitted rather than left as a slug-less
+     placeholder because the study is finished, and a placeholder card would
+     present finished work as unfinished. */
 ];

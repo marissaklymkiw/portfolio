@@ -10,12 +10,9 @@ export type TimelineEntry = {
   /** optical size multiplier so logos read as the same visual weight despite
       different glyph compositions (e.g. an icon+wordmark vs. tight letterforms) */
   logoScale?: number;
-  /** the current role — gets the filled indigo node */
+  /** the current role — gets the larger, solid rail node */
   current?: boolean;
 };
-
-/* ink at low opacity — the mobile stacked-list hairlines */
-const hairline = "border-[color-mix(in_srgb,var(--color-ink)_14%,transparent)]";
 
 /* Duration in years from a period like "2015–2019" or "2024–Current", so the
    desktop columns (and their rail segments) scale to how long each role was. */
@@ -31,11 +28,18 @@ function weightYears(period: string): number {
 
 /**
  * Timeline — a narrative timeline (story, not a logo parade). Horizontal rail
- * with dots on desktop; stacks to a ruled vertical list below 880px. Inherits
- * the design system: JetBrains Mono periods (violet), Archivo org names
- * (indigo), Inter focus (bark), a hairline rail with violet nodes and a filled
- * indigo node for the current role. Paper surface, optically-balanced brand
- * logos per band, no dark fills.
+ * with dots on desktop; stacks to a ruled vertical list below 880px.
+ *
+ * Migrated to the Swiss system 2026-09-19 with /about, the only page that uses
+ * it. Space Mono periods and Hanken org names, both monochrome: the violet
+ * periods went to `muted`, the indigo org names to `ink`, the bark focus lines
+ * to `muted`. The rail nodes were the one place this component used colour to
+ * encode meaning, which the One Accent Rule forbids (design.md §1): status now
+ * reads through SIZE and FILL, a larger solid `rich` node for the current role
+ * against smaller `muted` ones, not through indigo-versus-violet.
+ *
+ * Logos render in full colour. The monochrome rule governs the system, not the
+ * content, and a brand mark is content (design.md §6).
  */
 /* Baseline added to every column's year-weight so the spacing still hints at
    duration (SoCalGas widest) without cramming the shorter roles into columns
@@ -55,15 +59,38 @@ export default function Timeline({ entries }: { entries: TimelineEntry[] }) {
         return (
           <li
             key={e.org}
-            className={`flex flex-col gap-[var(--space-2xs)] border-t ${hairline} pt-[var(--space-md)] min-[880px]:border-t-0 min-[880px]:pt-0 min-[880px]:gap-0`}
+            /* MOBILE: a real vertical timeline. The left border IS the rail,
+               drawn per-item so it runs continuously down the list, with an
+               absolutely-positioned node sitting on it. pb-xl separates the
+               bands; the last one drops it so the rail ends on the final line
+               instead of trailing into white.
+
+               DESKTOP (>=880px): all of that is unset and the horizontal rail
+               below takes over. */
+            className="relative border-l border-line pb-xl pl-lg last:pb-0 min-[880px]:static min-[880px]:flex min-[880px]:flex-col min-[880px]:border-l-0 min-[880px]:pb-0 min-[880px]:pl-0"
           >
-            {/* logo slot — reserved on desktop so the rail stays level even
-                where a logo hasn't been supplied yet */}
-            <div
-              className={`${
-                e.logo ? "flex" : "hidden min-[880px]:flex"
-              } items-center min-[880px]:h-20 min-[880px]:mb-[var(--space-2xs)] min-[880px]:justify-center min-[880px]:px-[var(--space-sm)]`}
-            >
+            {/* The mobile node. Same encoding as the desktop one: the current
+                role is larger and solid `rich`, the rest are smaller `muted`.
+                Negative left offsets are half the node's width, so each sits
+                centred ON the 1px rail rather than beside it. */}
+            <span
+              aria-hidden="true"
+              className={`absolute top-[7px] block rounded-full min-[880px]:hidden ${
+                e.current
+                  ? "left-[-6.5px] h-3 w-3 bg-rich"
+                  : "left-[-4.5px] h-2 w-2 bg-muted"
+              }`}
+            />
+
+            {/* Logo: DESKTOP ONLY as of 2026-09-19. On a phone it was the
+                loudest thing in each band, a 46px full-colour mark immediately
+                above the same org name set as a heading, so every entry stated
+                itself twice and the eye went to the logo both times. On desktop
+                it still earns its place: it sits above the rail as the visual
+                anchor of a horizontal band, where the name below it reads as a
+                caption rather than a repeat. To bring logos back on mobile,
+                change `hidden` to `flex`. */}
+            <div className="hidden min-[880px]:flex items-center min-[880px]:h-20 min-[880px]:mb-sm min-[880px]:justify-center min-[880px]:px-sm">
               {e.logo && (
                 <img
                   src={e.logo}
@@ -74,27 +101,35 @@ export default function Timeline({ entries }: { entries: TimelineEntry[] }) {
               )}
             </div>
 
-            {/* years — above the line */}
-            <div className="font-mono text-xs font-medium uppercase tracking-[.1em] text-violet min-[880px]:px-[var(--space-sm)] min-[880px]:text-center">
+            {/* years */}
+            <div className="font-mono text-label uppercase tracking-label text-muted min-[880px]:px-sm min-[880px]:text-center">
               {e.period}
             </div>
 
-            {/* rail — desktop only; the hairline spans the full width so the
-                whole line stays centered in the container, with one node
-                centered under each company. Current role gets the indigo node. */}
-            <div className="hidden min-[880px]:flex relative items-center h-6 my-[var(--space-sm)]">
+            {/* desktop rail — the hairline spans the full width so the whole
+                line stays centered in the container, with one node centered
+                under each company. */}
+            <div className="hidden min-[880px]:flex relative items-center h-6 my-sm">
               <span className="absolute top-1/2 left-0 right-0 -translate-y-1/2 h-px bg-line" />
+              {/* Status through size and fill, never hue. The current role is
+                  the larger solid `rich` node; the rest are smaller `muted`
+                  ones. Both read at a glance in monochrome, which the old
+                  indigo-versus-violet pair did not. */}
               <span
                 className={`relative z-[1] mx-auto block rounded-full ${
-                  e.current ? "h-3.5 w-3.5 bg-indigo" : "h-2.5 w-2.5 bg-violet"
+                  e.current ? "h-3.5 w-3.5 bg-rich" : "h-2.5 w-2.5 bg-muted"
                 }`}
               />
             </div>
 
-            <div className="font-display font-bold text-base leading-[1.2] tracking-[-.02em] text-indigo min-[880px]:px-[var(--space-sm)] min-[880px]:text-center">
+            {/* Tight to the period above it (mt-xs), loose from the focus line
+                below (the focus carries mt-sm). Grouping the year with the org
+                and holding the description off is what turns four evenly-spaced
+                lines into two readable units. */}
+            <div className="mt-xs font-display text-h3 text-ink min-[880px]:mt-0 min-[880px]:px-sm min-[880px]:text-center">
               {e.org}
             </div>
-            <div className="text-sm text-bark leading-[1.5] max-w-[34ch] min-[880px]:px-[var(--space-sm)] min-[880px]:mx-auto min-[880px]:text-center">
+            <div className="mt-sm text-small text-muted max-w-[34ch] min-[880px]:mt-0 min-[880px]:px-sm min-[880px]:mx-auto min-[880px]:text-center">
               {e.focus}
             </div>
           </li>

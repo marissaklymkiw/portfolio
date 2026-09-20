@@ -1,7 +1,3 @@
-"use client";
-
-import { usePathname } from "next/navigation";
-import { SELF_FOOTER_ROUTES } from "@/lib/work/self-footer";
 import ArrowForward from "./ArrowForward";
 
 /**
@@ -11,72 +7,108 @@ import ArrowForward from "./ArrowForward";
  * yellow links. The Swiss direction has no inversion moment — black and white
  * carry everything, and the rule does the separating. See design.md §8.
  *
- * Everything about Marissa lives in the LEFT column — the email, the elsewhere
- * links, the place — and the RIGHT column carries only chrome: back-to-top on
- * top, the copyright on the bottom. Both columns anchor top AND bottom
- * (justify-between) and stretch to a shared height, so the two tops align on one
- * line and the two bottoms on another. The year lives in the copyright, so the
- * place label drops its year to avoid stating 2026 twice.
+ * CENTRED STACK, adopted 2026-09-19: back-to-top, then the two contact links at
+ * display size, then the place, then the copyright. This replaced a two-column
+ * layout (contact left, chrome right) AND the near-identical bespoke footer the
+ * DRP case study used to render for itself. One footer now serves every route.
+ *
+ * That consolidation is why this is a SERVER component again. It used to be
+ * "use client" solely so it could read the pathname and stand down on routes
+ * with their own footer. With no such routes left, the hook, that module
+ * (lib/work/self-footer.ts, now deleted), and the client boundary all go.
+ *
+ * `id="contact"` is what the header's CONTACT button targets, so exactly one
+ * element in the document may carry it — which is the other reason a per-route
+ * footer was a liability. scroll-mt clears the sticky header so the jump lands
+ * below it rather than under it.
  */
-const linkBase = "font-mono text-label uppercase tracking-label transition-colors";
+const labelBase =
+  "font-mono text-label uppercase tracking-label transition-colors";
+
+/* Resume sits alongside Email and LinkedIn deliberately. It is in the top nav
+   too, but a reader finishing a 9,000px case study is at the bottom of the page
+   and the highest-intent moment on the site; making them scroll back up to find
+   it is the gap an earlier review flagged. */
+const LINKS = [
+  { label: "Email", href: "mailto:marissa.klymkiw@gmail.com", ext: false },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/marissak/",
+    ext: true,
+  },
+  { label: "Resume", href: "/resume", ext: false },
+];
 
 export default function Footer() {
-  /* Client only so it can read the route: the root layout renders this on every
-     page, and a page that renders its own footer needs this one gone rather than
-     hidden. See lib/work/self-footer.ts for why hiding it was a bug. */
-  const pathname = usePathname();
-  if (pathname && SELF_FOOTER_ROUTES.has(pathname)) return null;
-
   return (
-    <footer id="contact" className="canvas border-t border-ink pt-lg pb-2xl">
-      <div className="flex flex-wrap justify-between gap-lg">
-        {/* left — contact + about, on the canvas gutter */}
-        <div className="flex flex-col justify-between gap-md">
-          <div className="flex flex-col gap-sm">
-            <a
-              href="mailto:marissa.klymkiw@gmail.com"
-              className="font-display text-h2 text-ink hover:text-rich transition-colors"
-            >
-              marissa.klymkiw@gmail.com
-            </a>
-            <nav aria-label="Elsewhere" className="flex flex-wrap gap-lg">
-              <a
-                href="https://www.linkedin.com/in/marissak/"
-                target="_blank"
-                rel="noreferrer"
-                className={`${linkBase} text-ink hover:text-rich`}
-              >
-                LinkedIn
-              </a>
-              <a href="/resume" className={`${linkBase} text-ink hover:text-rich`}>
-                Resume
-              </a>
-            </nav>
-          </div>
-          <span className={`${linkBase} text-muted`}>Made in Los Angeles</span>
-        </div>
+    <footer
+      id="contact"
+      className="canvas scroll-mt-[calc(var(--hh)+24px)] border-t border-ink pt-lg pb-3xl"
+    >
+      {/* targets #main (the global <main>), which exists on every page, unlike
+          #wordmark (home-only and position:sticky, which browsers treat as
+          already in view and refuse to scroll to). Arrow is the shared
+          ArrowForward rotated -90° to point up.
 
-        {/* right — chrome only: back-to-top (top), copyright (bottom) */}
-        <div className="flex flex-col items-end justify-between gap-md text-right">
-          {/* targets #main (the global <main>) — that id exists on every page,
-              unlike #wordmark (home-only + position:sticky, which browsers treat
-              as already in view and won't scroll to). Arrow is the shared
-              ArrowForward rotated -90° to point up. */}
-          {/* py-md with -my-md grows the tap target from 14px to ~46px without
-              moving anything: the padding expands the hit box, the negative
-              margin cancels its effect on the column rhythm. Both values are on
-              the spacing scale. */}
-          <a
-            href="#main"
-            className={`${linkBase} inline-flex items-center gap-1.5 py-md -my-md text-muted hover:text-ink`}
-          >
-            Back to top <ArrowForward className="-rotate-90" />
-          </a>
-          <span className={`${linkBase} text-muted`}>
-            &copy; 2026 Marissa Klymkiw
-          </span>
-        </div>
+          py-md with -my-md grows the tap target from 14px to ~46px without
+          moving anything: the padding expands the hit box, the negative margin
+          cancels its effect on the stack rhythm. Both are on the spacing
+          scale. */}
+      <div className="flex justify-center">
+        {/* States match the top nav links exactly: ink at rest, `signal` on
+            hover (the documented interaction accent, and the only non-mono
+            colour interactive text is allowed to take), and the global
+            :focus-visible ring. It read text-muted with a hover TO ink, which
+            was the nav's behaviour inverted: resting quieter than body text and
+            brightening to normal on hover, rather than resting at full strength
+            and marking the interaction.
+
+            No active state, because unlike the nav links this is an in-page
+            anchor rather than a route. Nothing to be "current" for, so no
+            aria-current and no `text-rich font-bold`. */}
+        <a
+          href="#main"
+          className={`${labelBase} inline-flex items-center gap-1.5 py-md -my-md text-ink hover:text-signal`}
+        >
+          Back to top <ArrowForward className="-rotate-90" />
+        </a>
       </div>
+
+      {/* The two links at display size, which is the whole point of the band:
+          the end of a page is the highest-intent moment on it, so the way out
+          is the largest thing on screen.
+
+          text-title, NOT an arbitrary clamp. The bespoke version this replaces
+          carried `text-[clamp(2rem,5.5vw,4.375rem)]`, one of the forbidden
+          arbitrary values DESIGN.md warns about; text-title is within a
+          hair of it and is a real token. Likewise gap-x-3xl rather than the
+          `gap-x-[7vw]` it used. */}
+      <nav
+        aria-label="Elsewhere"
+        className="mt-xl flex flex-wrap items-baseline justify-center gap-x-3xl gap-y-md text-center"
+      >
+        {LINKS.map((l) => (
+          <a
+            key={l.label}
+            href={l.href}
+            {...(l.ext ? { target: "_blank", rel: "noreferrer" } : {})}
+            className="font-display text-title leading-none tracking-[-0.02em] py-sm -my-sm text-ink hover:text-rich transition-colors"
+          >
+            {l.label}
+          </a>
+        ))}
+      </nav>
+
+      {/* The place echoes "Back to top" in the same mono label, so the band is
+          bracketed top and bottom by small caps with the display links between.
+          The year lives in the copyright, so this line never states it. */}
+      <p className={`${labelBase} mt-2xl text-center text-muted`}>
+        Made in Los Angeles
+      </p>
+
+      <p className="mt-sm text-center text-small text-muted">
+        &copy; 2026 Marissa Klymkiw
+      </p>
     </footer>
   );
 }

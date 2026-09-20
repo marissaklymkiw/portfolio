@@ -118,6 +118,12 @@
 
   /* ---- Layout ---- */
   --canvas: 1440px;
+  /* The case-study measure: ~15% narrower than the site canvas, so the whole
+     study column (rail + content) reads closer to an editorial width. Every
+     case study answers to this one value. It was an arbitrary
+     `max-w-[1224px]` repeated in a component until all three studies needed
+     it; a shared measure belongs in a token, not in three utilities. */
+  --canvas-study: 1224px;
   --pad: clamp(20px, 4.5vw, 64px);
   --hh: 52px; /* sticky header height — drives where the hero name pins */
   --gutter: 24px;
@@ -209,42 +215,58 @@
     padding-right: var(--pad);
   }
 
-  /* Option C (DRP) squares its content imagery instead of the
-     system's 16px radius. Scoped to the .no-media-radius wrapper so every other
-     study keeps its rounded corners. Only rounded-2xl (content images + their
-     clipping wrappers) is squared; rounded-full pills/handles are untouched. */
+  /* The case-study container. Every study wraps in this, so the three of them
+     share one measure. Padding is left to the inner .canvas blocks, which
+     already own the gutter. */
+  .study-canvas {
+    max-width: var(--canvas-study);
+    margin-inline: auto;
+  }
+
+  /* Squares content imagery instead of the retired 16px radius. This is the
+     SYSTEM rule, not a per-study exception: DESIGN.md says image boxes, cards,
+     and containers are square, and radius is 999px or 0 and nothing else. Only
+     rounded-2xl (content images + their clipping wrappers) is squared;
+     rounded-full pills and drag handles are untouched. */
   .no-media-radius img,
   .no-media-radius [class~="rounded-2xl"] {
     border-radius: 0 !important;
   }
 
-  /* Option C also drops the ink rule above each section; whitespace carries the
-     breaks (the stages and the experience carousel each render a border-t
-     border-ink on their <section>). Scoped to the same wrapper so other studies
-     keep their dividers. The metadata block's own top/bottom rules live on a
-     <dl>, not a <section>, so they stay. */
-  .no-media-radius section {
+  /* Drops the ink rule above each section, so whitespace and the headings carry
+     the breaks instead. Now on ALL THREE case studies at MK's direction: she
+     reviewed DRP without them and wanted the set to match.
+
+     This is a real departure from DESIGN.md, which names the 1px section rule
+     as the system's primary structural instrument, on the reasoning that there
+     are no shadows and no rounded cards to group with instead. The grouping
+     work is now done by the stage headings, their mono eyebrows, and the 3xl
+     gap between stages. If a study ever starts reading as one undifferentiated
+     scroll, this is the first thing to put back.
+
+     Scoped to <section> on purpose: the metadata block's own top and bottom
+     rules live on a <dl>, so they are untouched, which is what MK asked for.
+
+     These were once bundled into .no-media-radius, which meant "square the
+     images" and "drop the structure" travelled under one name and could not be
+     chosen separately. */
+  .no-section-rule section {
     border-top: 0 !important;
   }
 
-  /* Option C also drops the section numbers, both the "01" inline in each
-     heading and the number column in the left rail. Scoped so other studies
-     keep theirs. Hiding the number removes it from the accessibility tree too,
-     so the heading and its rail link still share the same name (WCAG 2.5.3). */
-  .no-media-radius h2 > .tabular-nums,
-  .no-media-radius ul a > .tabular-nums {
+  /* Drops the stage numbers in BOTH places at once, the "01" inline in each
+     heading and the number column in the left rail. They must be hidden
+     together: display:none also takes the number out of the accessibility
+     tree, so hiding one and not the other would leave the heading and its rail
+     link with different accessible names (WCAG 2.5.3). */
+  .no-stage-numbers h2 > .tabular-nums,
+  .no-stage-numbers ul a > .tabular-nums {
     display: none;
   }
-  .no-media-radius ul a:has(> .tabular-nums) {
+  .no-stage-numbers ul a:has(> .tabular-nums) {
     grid-template-columns: 1fr;
     column-gap: 0;
   }
-
-  /* Option C renders its own big-links footer. The shared one is no longer
-     rendered at all on that route (see lib/work/self-footer.ts), so there is
-     nothing to hide here. Hiding it used to leave <footer id="contact"> in the
-     DOM, which made the header's CONTACT button scroll to an invisible element
-     and did nothing. */
 
   /* -------------------------------------------------------------------
      The scroll-cover.
