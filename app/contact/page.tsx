@@ -44,18 +44,29 @@ const direct = [
     href: "https://www.linkedin.com/in/marissak/",
     ext: true,
   },
-  /* The value is the FILENAME, not a tagline. Every other row here answers
-     "where does this go" with the destination itself: the address, the profile
-     URL. "The short version" was a leftover from the /resume placeholder page
-     (deleted 2026-09-20 when the real PDF went up), so this row was the only
-     one describing the link instead of naming it, and it read as a caption
-     that had wandered into a list of addresses.
+  /* THIS ROW IS ALLOWED TO SOUND HUMAN. It took three tries to land, so the
+     reasoning is worth keeping.
+
+     Email and LinkedIn answer with an identifier you would copy, and the first
+     two attempts here assumed this row owed the same kind of answer: a
+     filename ("Marissa-Klymkiw_Resume_2026.pdf"), then a spec ("PDF, two
+     pages"). Both were literal and both read like a machine had filled the
+     field in. The one before those, "The short version", was a leftover
+     caption from the deleted /resume placeholder page.
+
+     Nobody copies a resume the way they copy an address, so parallelism was
+     the wrong target. This row is an invitation, phrased in the same first
+     person as the "Or reach me directly" heading above it. MK's call, chosen
+     from alternatives 2026-09-20.
+
+     Do not "fix" this back into a filename, a file size, a page count, or a
+     URL. It is not an oversight.
 
      ext: true because /resume 307s to a PDF. Same reasoning as Nav and Footer:
      it is a file, not a route, so it opens in a new tab. */
   {
     label: "Resume",
-    value: "Marissa-Klymkiw_Resume_2026.pdf",
+    value: "Take a copy with you",
     href: "/resume",
     ext: true,
   },
