@@ -44,11 +44,20 @@ const direct = [
     href: "https://www.linkedin.com/in/marissak/",
     ext: true,
   },
+  /* The value is the FILENAME, not a tagline. Every other row here answers
+     "where does this go" with the destination itself: the address, the profile
+     URL. "The short version" was a leftover from the /resume placeholder page
+     (deleted 2026-09-20 when the real PDF went up), so this row was the only
+     one describing the link instead of naming it, and it read as a caption
+     that had wandered into a list of addresses.
+
+     ext: true because /resume 307s to a PDF. Same reasoning as Nav and Footer:
+     it is a file, not a route, so it opens in a new tab. */
   {
     label: "Resume",
-    value: "The short version",
+    value: "Marissa-Klymkiw_Resume_2026.pdf",
     href: "/resume",
-    ext: false,
+    ext: true,
   },
 ];
 

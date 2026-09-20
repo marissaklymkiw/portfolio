@@ -27,14 +27,14 @@ npm run build    # production build
 ```
 app/
   layout.tsx        root layout: fonts, metadata, skip link, shared Nav + Footer
-  page.tsx          home / landing (HomeHero + HowIWorkLayers)
+  page.tsx          home / landing (HomeHero + HomeIntro + SelectedWork)
   about/            origin + timeline page
   library/          books / reading list
   globals.css       tokens (@theme) + the preserved signature CSS
-  work/             scaffold for future /work/[slug] case studies (no pages yet)
+  work/             /work index and the [slug] case studies
 components/
-  svg/              inline SVGs as recolorable components (Logo, CircleMark)
-  ui/               design-system components (Nav, MarkerHighlight, StickyNote, …)
+  svg/              inline SVGs as recolorable components (Logo)
+  ui/               design-system components (Nav, CaseStudy, Footer, …)
 lib/
   library.ts        reading-list data for the /library route
   work/types.ts     case-study type for the future /work route

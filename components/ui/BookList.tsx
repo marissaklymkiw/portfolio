@@ -11,7 +11,9 @@ import type { Book } from "@/lib/library";
  * titles with cover art. `variant="compact"` is the quieter treatment for
  * everything below it (text only).
  * Responsive: two columns on desktop, stacking to one (meta above title) under
- * 880px — matching HowIWorkLayers so the page reads as one system.
+ * 880px. That breakpoint was inherited from HowIWorkLayers, which was deleted
+ * 2026-09-20; the value stays because it is the one this layout was tuned to,
+ * not because anything still matches it.
  */
 
 const hairline =

@@ -20,12 +20,12 @@ export const metadata: Metadata = {
  * following you down the page. Moving the intro into HomeHero, or dropping the
  * wrap, silently kills the effect. See globals.css `.stage` / `.cover`.
  *
- * HowIWorkLayers is deliberately not rendered here: it belongs to the retired
- * facilitation layer (marker script, sticky notes, the "one loud room"), which
- * the Swiss direction retires outright — the restraint IS the personality now.
- * The component still exists on disk, but nothing renders it any more: /ethos
- * was its last consumer and was deleted 2026-09-20. Kept rather than removed,
- * the same call DESIGN.md records for MoonSticker. MK's to make.
+ * The retired facilitation layer (marker script, sticky notes, the "one loud
+ * room") is NOT part of this page and no longer exists: the Swiss direction
+ * retired the idea outright, and the restraint is the personality now.
+ * HowIWork, HowIWorkLayers, StickyNote and CircleMark were deleted 2026-09-20
+ * once /ethos went and left them with no consumer. Recoverable from git if the
+ * idea is ever revived, but it should not be revived here.
  */
 export default function Home() {
   return (

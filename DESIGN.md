@@ -380,7 +380,9 @@ A Signal Red follower that trails the pointer, easing on `cubic-bezier(0.22, 1, 
 
 **Migrated (2026-09-19):** `/about`, along with `Timeline.tsx` and `NamePronunciation.tsx`, which only that route used. `Footer.tsx` and the nav moved earlier; `/contact` was built on this system from the start.
 
-**Still un-migrated:** the `/library`, `/writing`, and `/resume` routes, plus the shared components `Buttons.tsx` (ships `bg-indigo` with a `yellow` variant), `Label.tsx` (ships `text-violet`), `SectionHeader.tsx` (violet numerals, indigo titles), `StickyNote.tsx`, `MarkerHighlight.tsx`, and `Metrics.tsx`. `MoonSticker.tsx` is now unreferenced: `/about` was its only consumer, and it is a decorative element with no place in the Swiss system. It is kept on disk rather than deleted, as MK's call to make.
+**Still un-migrated:** the `/library` and `/writing` routes, plus the shared components `Buttons.tsx` (ships `bg-indigo` with a `yellow` variant), `Label.tsx` (ships `text-violet`), `SectionHeader.tsx` (violet numerals, indigo titles), `MarkerHighlight.tsx`, and `Metrics.tsx`. (`/resume` is no longer a route: it redirects to the PDF.)
+
+**Deleted 2026-09-20**, at MK's direction, once `/ethos` went and left them with no consumer: `HowIWork.tsx`, `HowIWorkLayers.tsx`, `StickyNote.tsx`, and `CircleMark.tsx` — the retired facilitation layer (marker script, sticky notes, the "one loud room"). The Swiss direction retired that idea outright; the restraint is the personality now. `Metrics.tsx` was kept at MK's direction despite also being unreferenced. `MoonSticker.tsx` is likewise still on disk and still unreferenced, as MK's call to make.
 
 The deprecated block cannot be removed until that list is empty.
 
