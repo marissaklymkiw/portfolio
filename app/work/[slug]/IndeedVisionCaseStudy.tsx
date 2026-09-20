@@ -134,8 +134,8 @@ export default function IndeedVisionCaseStudy() {
             <CaseStudyLede>
               I aligned three analytics teams around a shared product direction,
               then helped carry the highest-priority opportunity into the
-              sourcing analytics work that became part of Project
-              Galaxy&rsquo;s MVP.
+              sourcing analytics work that shipped in the first release of
+              Indeed&rsquo;s paid Professional subscription.
             </CaseStudyLede>
           </>
         }
@@ -237,7 +237,7 @@ export default function IndeedVisionCaseStudy() {
           <Pullquote>The data was everywhere. The direction was nowhere.</Pullquote>
         </Stage>
 
-        {/* 02 · The real fight */}
+        {/* 03 · The real fight */}
         <Stage
           id="why"
           num="03"
@@ -321,7 +321,7 @@ export default function IndeedVisionCaseStudy() {
           </div>
         </Stage>
 
-        {/* 03 · The workshop */}
+        {/* 04 · The workshop */}
         <Stage
           id="workshop"
           num="04"
@@ -391,7 +391,7 @@ export default function IndeedVisionCaseStudy() {
           </Quote>
         </Stage>
 
-        {/* 04 · Shared direction */}
+        {/* 05 · Shared direction */}
         <Stage
           id="direction"
           num="05"
@@ -436,7 +436,7 @@ export default function IndeedVisionCaseStudy() {
           />
         </Stage>
 
-        {/* 05 · Narrowing focus */}
+        {/* 06 · Narrowing focus */}
         <Stage
           id="offsite"
           num="06"

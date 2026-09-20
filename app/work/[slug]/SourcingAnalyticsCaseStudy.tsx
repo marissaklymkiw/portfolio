@@ -88,9 +88,20 @@ export default function SourcingAnalyticsCaseStudy() {
                      its own. Trimmed to 18 to 21.
 
                      What the trims cost: "lift" (the % and the Results label
-                     already carry the direction) and the possessive in
-                     "Galaxy's". The full, unclipped versions are in Outcomes,
-                     which is where a reader who wants the exact claim goes.
+                     already carry the direction). The full, unclipped versions
+                     are in Outcomes, which is where a reader who wants the
+                     exact claim goes.
+
+                     "Shipped in paid MVP" was "Shipped in Galaxy MVP" until
+                     2026-09-20. Project Galaxy was Indeed's internal codename
+                     and meant nothing to a reader arriving cold, so every
+                     reader-facing mention now names the product instead. Do
+                     not reintroduce the codename.
+                     It is "paid", not "Professional", for the reason above:
+                     "Shipped in Professional MVP" is 27 characters and breaks
+                     mid-phrase. "paid" is the load-bearing word anyway, since
+                     the point is that this went into the revenue product. The
+                     full claim is in the Overview and again in Outcomes.
                      If a metric ever needs more words than this, widen the
                      Results column rather than letting it wrap. */
                   label: "Results",
@@ -100,7 +111,7 @@ export default function SourcingAnalyticsCaseStudy() {
                       <br />
                       3:1 positive feedback
                       <br />
-                      Shipped in Galaxy MVP
+                      Shipped in paid MVP
                     </>
                   ),
                 },
@@ -165,10 +176,9 @@ export default function SourcingAnalyticsCaseStudy() {
                   the signal was scattered across tools and tabs.
                 </p>
                 <p>
-                  The work shipped into Project Galaxy&rsquo;s MVP as three
-                  connected views, Overview, Acquisition, and Pipeline, and
-                  positioned sourcing analytics as part of Indeed&rsquo;s paid
-                  professional offering.
+                  The work shipped in the first release of Indeed&rsquo;s paid
+                  Professional subscription as three connected views, Overview,
+                  Acquisition, and Pipeline.
                 </p>
               </Prose>
             </div>
@@ -434,8 +444,9 @@ export default function SourcingAnalyticsCaseStudy() {
               By deciding what not to show, I kept the first read to the few
               things that mattered, which is what made managers trust and return
               to the dashboard instead of treating it like another report to
-              decode. It shipped into Project Galaxy&rsquo;s MVP as three
-              connected views: Overview, Acquisition, and Pipeline.{" "}
+              decode. It shipped in the first release of Indeed&rsquo;s paid
+              Professional subscription as three connected views: Overview,
+              Acquisition, and Pipeline.{" "}
               <strong>
                 Weekly engagement increased 60&ndash;100%, and feedback ran 3:1
                 positive to negative.
@@ -460,7 +471,7 @@ export default function SourcingAnalyticsCaseStudy() {
             </p>
           </Prose>
 
-          <Quote cite="Senior Product Manager, Sourcing Analytics (Galaxy)">
+          <Quote cite="Senior Product Manager, Sourcing Analytics">
             &ldquo;Thanks to Marissa&rsquo;s design thinking, we were able to
             determine a scope that balanced a small number of user questions with
             engineering feasibility, timeline and broader UX alignment. Upon
