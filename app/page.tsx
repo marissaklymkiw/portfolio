@@ -23,7 +23,9 @@ export const metadata: Metadata = {
  * HowIWorkLayers is deliberately not rendered here: it belongs to the retired
  * facilitation layer (marker script, sticky notes, the "one loud room"), which
  * the Swiss direction retires outright — the restraint IS the personality now.
- * The component still exists and still compiles for /ethos; it is not deleted.
+ * The component still exists on disk, but nothing renders it any more: /ethos
+ * was its last consumer and was deleted 2026-09-20. Kept rather than removed,
+ * the same call DESIGN.md records for MoonSticker. MK's to make.
  */
 export default function Home() {
   return (

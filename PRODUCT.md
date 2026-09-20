@@ -56,8 +56,12 @@ frequent revision.
 
 ## Capabilities and Constraints
 
-Shipped surfaces: home, about, ethos, work index and case studies, library,
-writing, resume, contact.
+Shipped surfaces: home, about, work index and case studies, library, writing,
+resume, contact.
+
+`/ethos` was deleted 2026-09-20 at MK's direction. Its values material now lives
+in the "How I work" band on /about; the route was hidden from the nav, still on
+pre-Swiss tokens, and duplicated that band once About carried it.
 
 - Next.js 15 (App Router), React 19, Tailwind CSS v4, TypeScript.
 - Notion API (`@notionhq/client`) backs the library; book covers are self-hosted.

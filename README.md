@@ -29,7 +29,6 @@ app/
   layout.tsx        root layout: fonts, metadata, skip link, shared Nav + Footer
   page.tsx          home / landing (HomeHero + HowIWorkLayers)
   about/            origin + timeline page
-  ethos/            how-I-work: the facilitation cluster + metric pattern
   library/          books / reading list
   globals.css       tokens (@theme) + the preserved signature CSS
   work/             scaffold for future /work/[slug] case studies (no pages yet)

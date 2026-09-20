@@ -136,8 +136,8 @@
 
    Retired by the Swiss direction (design.md §1 "Retired — do not reintroduce").
    These exist solely so the not-yet-migrated routes keep rendering: /about,
-   /ethos, /resume, /library, /writing, /work/[slug]. Delete this whole block
-   once those are migrated.
+   /resume, /library, /writing, /work/[slug]. Delete this whole block once those
+   are migrated. (/ethos was on this list until it was deleted 2026-09-20.)
 
    Note --color-paper is NOT aliased back to the warm #f6f3ee: true white is the
    spec, and warm paper is retired. Un-migrated pages therefore render on white.

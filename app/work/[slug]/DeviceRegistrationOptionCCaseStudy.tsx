@@ -246,18 +246,23 @@ export default function DeviceRegistrationOptionCCaseStudy() {
               department tasks, IT review, and network management, not only for
               one screen.
             </p>
+            {/* The claim here used to be the "role-based model and
+                human-in-the-loop approval framework". The HITL half was removed
+                at MK's direction. The role-based model is the artifact the rest
+                of the study actually traces — §03 calls it "the shared map",
+                §04 builds patterns from it — whereas the approval framework was
+                named once and never picked back up. Do not reinstate it. The
+                approval *outcomes* in §05 are untouched: those describe how the
+                product behaves, not a framework I claim to have authored. */}
             <p>
-              I created the{" "}
-              <strong>
-                role-based model and human-in-the-loop approval framework
-              </strong>{" "}
-              for device registrations, and it shaped how the configuration
-              experience came together. I also aligned UCLA’s network, security,
-              and IT teams on compliance standards. Since I joined after the
-              first build was underway, I used the framework to prevent decisions
-              from being made screen by screen. I continue to work with
-              consultants to validate concepts with campus networking teams
-              before engineering commits to the next build.
+              I created the <strong>role-based model</strong> for device
+              registrations, and it shaped how the configuration experience came
+              together. I also aligned UCLA’s network, security, and IT teams on
+              compliance standards. Since I joined after the first build was
+              underway, I used the model to prevent decisions from being made
+              screen by screen. I continue to work with consultants to validate
+              concepts with campus networking teams before engineering commits
+              to the next build.
             </p>
           </Prose>
         </Stage>
@@ -430,7 +435,7 @@ export default function DeviceRegistrationOptionCCaseStudy() {
         </Stage>
 
 
-        {/* 06 · Outcomes */}
+        {/* 05 · Outcomes */}
         <Stage
           id="outcomes"
           num="05"
@@ -533,7 +538,7 @@ export default function DeviceRegistrationOptionCCaseStudy() {
           />
         </Stage>
 
-        {/* 07 · Reflection */}
+        {/* 06 · Reflection */}
         <Stage
           id="reflection"
           num="06"

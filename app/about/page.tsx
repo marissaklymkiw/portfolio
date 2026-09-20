@@ -68,9 +68,51 @@ const focus = [
 
 const industries = ["Higher education", "HR technology", "Energy and utilities"];
 
+/* VALUES — MK'S OWN WORDS, supplied 2026-09-20. This replaced four claims
+   Claude had derived from elsewhere in the repo ("AI carries the pace, not the
+   judgment", "Access is structural", "Clarity is what earns trust", "The work I
+   am proudest of is invisible"). Those were accurate but assembled; these are
+   hers. Do not "improve" them back toward aphorism. The claims are deliberately
+   full first-person sentences rather than slogans, which is the same call the
+   lede comment above records: an imperative reads as an instruction to the
+   reader, a sentence reads as a fact about her.
+
+   ONE EDIT was made to the supplied copy. The first body arrived with an em
+   dash ("already in place — that part stays with me"); PRODUCT.md and MK's own
+   standing rule both forbid em dashes, so it is a period. Nothing else changed.
+
+   The fourth value returned in MK's own words minutes after the other three:
+   "The work I'm proudest of doesn't have my name on it." It is verbatim.
+
+   KNOWN OVERLAP, flagged to MK and left as she wrote it: its first sentence
+   restates the prose above ("~20 product teams... not one of those teams
+   reports to me"). The value earns its place on the two sentences that follow,
+   which are the only concrete account anywhere on the site of what the job
+   looks like week to week. If the repetition ever needs resolving, cut the
+   overlap from the PROSE and let this row carry it, not the other way round:
+   this version has the texture, the prose version only has the claim. */
+const values: { claim: string; body: string }[] = [
+  {
+    claim: "I use AI every day, and I set the terms before it starts.",
+    body: "This site was built with it. It carries the pace because the context, constraints, and standards are already in place. That part stays with me.",
+  },
+  {
+    claim: "I build accessibility into the components before anyone ships on them.",
+    body: "Around 20 teams inherit that work instead of solving it again at the end. Retrofitting is where it gets expensive and where it quietly gets skipped, so I don’t leave it there.",
+  },
+  {
+    claim: "I name things by what they do.",
+    body: "High-stakes products lose people the moment the interface hides how a decision was made. I write for what actually happens, and I cut anything that doesn’t help someone understand what’s in front of them.",
+  },
+  {
+    claim: "The work I’m proudest of doesn’t have my name on it.",
+    body: "I lead the systems roughly 20 teams build on without authority over any of them. One week that’s a token change, the next it’s auditing how components are actually being used in products. What lasts is the alignment that still holds after I’ve moved on.",
+  },
+];
+
 const meta: { label: string; value: string }[] = [
   { label: "Based", value: "Los Angeles area" },
-  { label: "Still obsessed with", value: "The Beatles, books, a Hobonichi" },
+  { label: "Still obsessed with", value: "The Beatles, books, my Hobonichi" },
   /* Goes stale. Worth a glance whenever this page is touched.
      Title verified 2026-09-19: "The Disappearers", one s in "Dis". Marlon
      James's sixth novel, Riverhead 2026, longlisted for the Booker that year. */
@@ -93,7 +135,12 @@ const timeline: TimelineEntry[] = [
   {
     period: "2019–2022",
     org: "USC",
-    focus: "Built the design system Experience USC and Guest Access used.",
+    /* Named the two products (Experience USC, Guest Access) until 2026-09-20.
+       Neither name means anything to a stranger, and Guest Access is held
+       back from launch 1, so there is no page to click through to. Says who
+       used them instead, at MK's direction. */
+    focus:
+      "Built the design system behind the consumer-grade applications students and their families use.",
     logo: "/logos/usc.svg",
     logoScale: 0.82,
   },
@@ -158,9 +205,9 @@ export default function AboutPage() {
           It&apos;s been the same instinct since I was hand-coding fan sites.
         </p>
 
-        {/* Three paragraphs, in order: who and where it started, what it is
-            now, and where the same obsession points when it is not pointed at
-            work. Reading size (`prose`, 1.125rem) capped at the 62ch measure,
+        {/* Four paragraphs, in order: who and where it started, what it is
+            now, who is at the end of it, and where the same obsession points
+            when it is not pointed at work. Reading size (`prose`, 1.125rem) capped at the 62ch measure,
             because this is the one page someone reads straight through. The cap
             sits inside a column wider than it, so the measure governs rather
             than the column. */}
@@ -172,18 +219,67 @@ export default function AboutPage() {
             reusable pieces copied page to page. I didn&apos;t know those were
             design-system ideas. I just knew it had to be right.
           </p>
+          {/* INFLUENCE lives in the VALUES BAND below, not here. This
+              paragraph briefly carried it outright ("Not one of those teams
+              reports to me... influence without authority is the job itself"),
+              then MK's fourth value arrived saying the same thing, and two
+              statements of "~20 teams, no authority over them" landed within a
+              few hundred pixels of each other in one column. Resolved 2026-09-20
+              in the value's favour, at her direction: that row has the claim
+              AND what the job looks like week to week, this paragraph only had
+              the claim.
+              What survives here is "Adoption is earned, never issued", which is
+              the mechanism rather than the credential, and it sets up the value
+              without pre-empting it. Do not restate the reporting line here.
+
+              "Accessibility, reusable components, and the structure that lets
+              other teams build without re-solving the same problems." Cut
+              2026-09-20 as a duplicate of the "What I work on" list below, then
+              RESTORED the same day at MK's direction. Leave it. The list below
+              is five bare noun phrases; this sentence is the only place on the
+              page that says what the patterns actually do for the teams that
+              inherit them, which is the substance the list only labels. */}
           <p>
-            Now it&apos;s the patterns ~20 product teams rely on, with no
-            authority over any of them. Accessibility, reusable components, and
-            the structure that lets other teams build without re-solving the
-            same problems. The scale changed. The wiring didn&apos;t.
+            Now it&apos;s the patterns ~20 product teams rely on. Adoption is
+            earned, never issued. Accessibility, reusable components, and the
+            structure that lets other teams build without re-solving the same
+            problems. The scale changed. The wiring didn&apos;t.
           </p>
+          {/* THE USER. Added 2026-09-20: MK noticed the page had no end user in
+              it at all. The paragraph above stops at "product teams", which is
+              exactly where the chain broke — every claim on the page was about
+              systems, patterns, and the people who build on them, and nobody
+              who has to USE the result. For a page aimed at hiring managers
+              for consumer-facing roles that was the gap.
+
+              All three examples are lifted from real studies in this repo, not
+              invented: the researcher and the microscope are the DRP hero
+              image, the locked-out parent is USC Guest Access (records,
+              financial aid, billing), and the manager counting by hand across
+              six tools is the Sourcing Analytics opening. Keep them specific.
+              Generalising them back to "users" is what the page already did. */}
+          <p>
+            Teams aren&rsquo;t the end of that chain. A researcher who
+            can&rsquo;t get a microscope on the network, a parent locked out of
+            a tuition bill, a manager counting her hiring pipeline by hand across
+            six tools: none of them chose the software they were handed. Software
+            people are required to use owes them more care than software they
+            pick, not less. That is what the structure is for.
+          </p>
+
+          {/* Two of the three hobbies were cut 2026-09-20: the Beatles
+              collection and the Hobonichi. The meta strip directly below this
+              column already reads "The Beatles, books, my Hobonichi", so the
+              paragraph was listing the same three things a screen away from
+              where they are listed. The book line is the one that survives
+              because it is the only one doing an ARGUMENT rather than a fact:
+              it proves the "same obsession everywhere" claim instead of
+              asserting it. Do not re-add the other two here; if they need more
+              than the strip gives them, they belong in the strip. */}
           <p>
             The same obsession points at other things. A book collection with a
-            stricter taxonomy than most design systems I&apos;ve audited. A
-            Beatles collection that started early and never stopped. A
-            Hobonichi, because structure is something I do for fun. If you want
-            the work version,{" "}
+            stricter taxonomy than most design systems I&apos;ve audited. If you
+            want the work version,{" "}
             <Link
               href="/work"
               className="text-ink underline decoration-1 underline-offset-[3px] transition-colors hover:text-signal"
@@ -192,6 +288,47 @@ export default function AboutPage() {
             </Link>
             .
           </p>
+
+        {/* HOW I WORK — the values band. INSIDE the prose column, at MK's
+            direction (2026-09-20), after three tries at placing it: below the
+            timeline, above it, then as a standalone band under this grid row.
+            The standalone version was the bug she caught. As a sibling of the
+            grid it had to clear the PORTRAIT, which is far taller than the prose,
+            so it opened ~300px of dead space on the left before the heading.
+            Inside the column it flows straight out of the last paragraph and the
+            photo simply sits beside it.
+            Keep it in this column. Moving it back out reopens that hole.
+            This is the one part of the page that asks to be read, not scanned.
+
+            Same hairline rows as the two lists below, but py-lg rather than py-sm
+            because each row is two lines of content rather than one. Each body is
+            The MEASURE CAP IS ON THE <ul>, not on each body. The rules are the
+            reason: a cap on the paragraphs alone stops the text at ~62ch while
+            every hairline keeps running to the canvas edge, trailing ~650px past
+            the last word into nothing. The meta strip above gets away with
+            full-width rules because its three columns fill that width; this band
+            fills half of it. Rules stop at the content edge (design.md, and the
+            same call MarkerBlock documents on the home page).
+
+            The claim is bold ink and the body is regular ink. No muted variant:
+            weight alone carries the hierarchy, which is how the case studies do
+            a claim plus its explanation (see the DRP study, §03). */}
+        <section aria-labelledby="values-heading" className="mt-lg">
+          <h2 id="values-heading" className="font-display text-h2 text-ink">
+            How I work
+          </h2>
+          <ul className="mt-lg max-w-measure list-none p-0 m-0">
+            {values.map((v) => (
+              <li
+                key={v.claim}
+                className="border-t border-line py-lg first:border-t-0 first:pt-0"
+              >
+                <p className="m-0 text-body font-bold text-ink">{v.claim}</p>
+                <p className="mt-xs m-0 text-body text-ink">{v.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
         </div>
 
         {/* Square corners and a hairline, like every other image box in the

@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
  * since Hanken now sets headings too. See design.md §2.
  */
 /* Ethos, Writing, and Library are hidden from the nav for now: the ROUTES still
-   exist and still build (/ethos, /writing, /library, /library/[slug]); they are
+   exist and still build (/writing, /library, /library/[slug]); they are
    simply not linked. Re-add the entries here to bring them back; nothing else
    is needed. */
 const LINKS = [

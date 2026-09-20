@@ -18,7 +18,7 @@ export default function HomeIntro() {
             band). Kept fluid so it still scales with the viewport. */}
         <div className="col-span-12 md:col-start-4 md:col-span-9 flex flex-col gap-[1em] max-w-measure text-[clamp(1.15rem,1.5vw,1.5rem)] leading-[1.42] tracking-[-0.005em] text-ink">
           <p>
-            I think in <em className="italic">systems</em>: the models,
+            I think in <b className="font-bold">systems</b>: the models,
             patterns, and governance that decide what every screen downstream can
             and can&rsquo;t do.
           </p>

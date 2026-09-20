@@ -380,7 +380,7 @@ A Signal Red follower that trails the pointer, easing on `cubic-bezier(0.22, 1, 
 
 **Migrated (2026-09-19):** `/about`, along with `Timeline.tsx` and `NamePronunciation.tsx`, which only that route used. `Footer.tsx` and the nav moved earlier; `/contact` was built on this system from the start.
 
-**Still un-migrated:** the `/ethos`, `/library`, `/writing`, and `/resume` routes, plus the shared components `Buttons.tsx` (ships `bg-indigo` with a `yellow` variant), `Label.tsx` (ships `text-violet`), `SectionHeader.tsx` (violet numerals, indigo titles), `StickyNote.tsx`, `MarkerHighlight.tsx`, and `Metrics.tsx`. `MoonSticker.tsx` is now unreferenced: `/about` was its only consumer, and it is a decorative element with no place in the Swiss system. It is kept on disk rather than deleted, as MK's call to make.
+**Still un-migrated:** the `/library`, `/writing`, and `/resume` routes, plus the shared components `Buttons.tsx` (ships `bg-indigo` with a `yellow` variant), `Label.tsx` (ships `text-violet`), `SectionHeader.tsx` (violet numerals, indigo titles), `StickyNote.tsx`, `MarkerHighlight.tsx`, and `Metrics.tsx`. `MoonSticker.tsx` is now unreferenced: `/about` was its only consumer, and it is a decorative element with no place in the Swiss system. It is kept on disk rather than deleted, as MK's call to make.
 
 The deprecated block cannot be removed until that list is empty.
 
