@@ -52,6 +52,29 @@ test.describe("public pages", () => {
     }
   });
 
+  test("no page scrolls sideways", async ({ page }, testInfo) => {
+    /* Caught in the wild on an iPhone: the masthead discipline line carried
+       white-space:nowrap and flex-shrink:0, so it could neither wrap nor give
+       up a pixel and pushed the whole document wider than the screen.
+
+       Horizontal overflow is close to invisible on a desktop browser and
+       obvious the moment someone opens the site on a phone, which is where
+       PRODUCT.md says visitors frequently arrive. A 1px tolerance absorbs
+       sub-pixel rounding without letting a real overflow through. */
+    for (const path of [...PUBLIC_PAGES, "/work/indeed-vision"]) {
+      await page.goto(path);
+      const overflow = await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+      );
+      expect(
+        overflow,
+        `${path} overflows by ${overflow}px on ${testInfo.project.name}`,
+      ).toBeLessThanOrEqual(1);
+    }
+  });
+
   test("every image has alt text", async ({ page }) => {
     for (const path of ["/", "/work", "/about"]) {
       await page.goto(path);

@@ -368,13 +368,29 @@
     background: var(--color-ink);
   }
   .mast-disc {
-    flex: 0 0 auto;
+    /* `0 1 auto`, not `0 0 auto`: the second value is flex-shrink, and at 0 the
+       line could not give up a single pixel, so on a narrow screen it pushed
+       the whole document wider and the page scrolled sideways. */
+    flex: 0 1 auto;
+    min-width: 0;
     font-family: var(--font-mono);
     font-size: var(--text-small); /* the shared mono-label size — was a bespoke off-scale clamp */
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--color-ink);
-    white-space: nowrap;
+    /* WRAPS BY DEFAULT. "STAFF PRODUCT DESIGN. CURRENTLY AT UCLA." is about 40
+       uppercase mono characters, which at 0.95rem with 0.05em tracking wants
+       roughly 396px. An iPhone leaves about 350px after the page pad, so
+       nowrap here guaranteed a horizontal scrollbar on the home page.
+       Two lines on a phone is the correct answer; the nowrap below only
+       applies once there is genuinely room for one. */
+    white-space: normal;
+  }
+
+  @media (min-width: 720px) {
+    .mast-disc {
+      white-space: nowrap;
+    }
   }
 
   /* treatment A — masthead: the interlock staircase */
