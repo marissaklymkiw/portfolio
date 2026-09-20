@@ -106,6 +106,15 @@ export default function WorkGate() {
             aria-describedby, so a screen reader gets it as the field's
             description wherever it sits in the DOM.
 
+            "not the one on this site" is load-bearing, added 2026-09-20 when
+            the resume PDF went live in the nav and footer. This used to read
+            "The password is on my resume", which was true of the resume MK
+            sends directly and NOT of the public one. Left alone it would have
+            sent a reader to download a resume from her own nav, hunt for a
+            password that is not in it, and conclude the gate was broken. The
+            clause exists to stop that search before it starts, so do not trim
+            it back for brevity.
+
             No placeholder, per DESIGN.md: guidance is a persistent hint, never
             text inside the field, where it vanishes the moment someone types
             and reads as a value already filled in.
@@ -124,7 +133,8 @@ export default function WorkGate() {
           <span className="mr-xs font-mono text-label uppercase tracking-label text-ink">
             Hint:
           </span>
-          The password is on my resume. If you do not have it,{" "}
+          The password is on the resume I share directly, not the one on this
+          site. If you do not have it,{" "}
           <Link
             href="/contact"
             className="text-rich underline decoration-1 underline-offset-[3px] hover:text-rich-hover"

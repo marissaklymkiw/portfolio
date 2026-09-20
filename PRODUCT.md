@@ -80,8 +80,13 @@ pre-Swiss tokens, and duplicated that band once About carried it.
 - A card without a `slug` is a placeholder: it is not clickable and must not be
   presented as finished work.
 
-Undecided, do not invent: the resume PDF hosting location; the open graph image
-strategy.
+The resume is a static PDF in `public/`, served at its descriptive filename so
+it downloads under that name. `/resume` is the stable URL and 307s to it via
+`redirects()` in `next.config.ts`; Nav and Footer both link `/resume` and open
+it in a new tab. Updating next year means replacing the file and the one
+redirect line, not the links.
+
+Undecided, do not invent: the open graph image strategy.
 
 ## Brand Commitments
 

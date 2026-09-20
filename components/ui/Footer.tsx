@@ -36,7 +36,12 @@ const LINKS = [
     href: "https://www.linkedin.com/in/marissak/",
     ext: true,
   },
-  { label: "Resume", href: "/resume", ext: false },
+  /* ext: true not because the PDF is on another host, but because it is a
+     FILE rather than a route. /resume 307s to the PDF (next.config.ts), and
+     the flag already does the one thing that needs doing here: open it in a
+     new tab so a reader who has just finished a case study is not dropped
+     into a PDF viewer with the site behind the back button. */
+  { label: "Resume", href: "/resume", ext: true },
 ];
 
 export default function Footer() {

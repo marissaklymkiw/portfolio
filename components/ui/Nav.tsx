@@ -19,18 +19,27 @@ import { useEffect, useState } from "react";
    exist and still build (/writing, /library, /library/[slug]); they are
    simply not linked. Re-add the entries here to bring them back; nothing else
    is needed. */
-const LINKS = [
+/* `doc: true` means the href leaves the app for a file rather than a route.
+   /resume 307s to the PDF (see next.config.ts), so it opens in a new tab:
+   sending someone into a PDF viewer in the same tab drops them out of the site
+   with only the back button to return, and this is the one link in the bar
+   that is not a page. It also never takes aria-current, because you never come
+   to rest on it. */
+const LINKS: { href: string; label: string; doc?: boolean }[] = [
   { href: "/", label: "Home" },
   { href: "/work", label: "Work" },
   { href: "/about", label: "About" },
-  { href: "/resume", label: "Resume" },
+  { href: "/resume", label: "Resume", doc: true },
 ];
 
 /* Contact is NOT in LINKS: on desktop it is the ghost button on the right, and
    repeating it in the centred nav would state the same destination twice. The
    button is hidden under 860px though, so the mobile panel renders LINKS plus
    this one, and Contact stays reachable on a phone. */
-const CONTACT = { href: "/contact", label: "Contact" };
+const CONTACT: { href: string; label: string; doc?: boolean } = {
+  href: "/contact",
+  label: "Contact",
+};
 
 export default function Nav() {
   const pathname = usePathname();
@@ -39,6 +48,11 @@ export default function Nav() {
 
   const isActive = (href: string) =>
     pathname === href || pathname.startsWith(href + "/");
+
+  /* A doc link opens a file in a new tab, so it is never the current page and
+     must not be styled as one. */
+  const docProps = (doc?: boolean) =>
+    doc ? { target: "_blank" as const, rel: "noreferrer" } : {};
 
   /* collapse the wordmark once the hero name has scrolled under the bar */
   useEffect(() => {
@@ -136,9 +150,14 @@ export default function Nav() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  aria-current={isActive(l.href) ? "page" : undefined}
+                  {...docProps(l.doc)}
+                  aria-current={
+                    !l.doc && isActive(l.href) ? "page" : undefined
+                  }
                   className={`font-mono text-label uppercase tracking-[0.06em] transition-colors hover:text-signal ${
-                    isActive(l.href) ? "text-rich font-bold" : "text-ink"
+                    !l.doc && isActive(l.href)
+                      ? "text-rich font-bold"
+                      : "text-ink"
                   }`}
                 >
                   {l.label}
@@ -186,10 +205,15 @@ export default function Nav() {
               <li key={l.href}>
                 <Link
                   href={l.href}
+                  {...docProps(l.doc)}
                   onClick={() => setOpen(false)}
-                  aria-current={isActive(l.href) ? "page" : undefined}
+                  aria-current={
+                    !l.doc && isActive(l.href) ? "page" : undefined
+                  }
                   className={`block py-md font-mono text-label uppercase tracking-label transition-colors hover:text-signal ${
-                    isActive(l.href) ? "text-rich font-bold" : "text-ink"
+                    !l.doc && isActive(l.href)
+                      ? "text-rich font-bold"
+                      : "text-ink"
                   }`}
                 >
                   {l.label}
