@@ -227,6 +227,7 @@ export function CaseStudyHero({
   height,
   caption,
   priority,
+  zoomable = true,
 }: {
   src: string;
   alt: string;
@@ -234,19 +235,33 @@ export function CaseStudyHero({
   height: number;
   caption?: string;
   priority?: boolean;
+  /* false shows a plain image: it does not open the lightbox and is left out of
+     the gallery sequence. For an opening photo that is atmosphere, not evidence. */
+  zoomable?: boolean;
 }) {
   return (
-    <figure className="mt-3xl m-0">
-      {/* square corners, hairline border, full colour. Like every figure in a
-          study, it joins the gallery — there is no opt-out, because an image the
-          arrows skip would be the one thing a reader can't get back to. */}
-      <LightboxImage
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        priority={priority}
-      />
+    <figure className="mt-3xl m-0 study-narrow">
+      {/* square corners, hairline border, full colour. By default it joins the
+          gallery, so the arrows never skip an image a reader might want back. */}
+      {zoomable ? (
+        <LightboxImage
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          priority={priority}
+        />
+      ) : (
+        <Image
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          priority={priority}
+          sizes="(max-width: 1440px) 100vw, 1440px"
+          className="block w-full h-auto rounded-2xl border border-line"
+        />
+      )}
       {caption && <Caption>{caption}</Caption>}
     </figure>
   );
@@ -292,18 +307,31 @@ export function CaseStudyLede({ children }: { children: ReactNode }) {
  * magic number that has to be kept in sync with it.
  */
 export function CaseStudyBody({
-  stages,
+  stages = [],
   children,
   lead,
+  rail = true,
 }: {
-  stages: RailStage[];
+  stages?: RailStage[];
   children: ReactNode;
+  /* false drops the left rail and its grid: the column runs the full study
+     width, Prose keeps its own reading measure, and figures extend past it. The
+     "Go back" link then shows at every width instead of only on phones. */
+  rail?: boolean;
   /* optional content placed at the TOP of the right column, above the stages —
      metadata, tools, lede. Using it pulls the rail up so "Go back" and the index
      start at the metadata row rather than below the whole title block. Omit it
      and the body reads as before (rail begins at the first stage). */
   lead?: ReactNode;
 }) {
+  if (!rail) {
+    return (
+      <div className="mt-3xl">
+        {lead}
+        {children}
+      </div>
+    );
+  }
   return (
     // The measure is set by the GRID, not a max-w on the content div. The
     // content column is capped with minmax(0, 1000px) so it runs slightly
@@ -338,6 +366,23 @@ export function CaseStudyBody({
         {children}
       </div>
     </div>
+  );
+}
+
+/**
+ * The back link on its own, for studies with no rail that want it above the
+ * header (CaseStudyBody rail={false} no longer renders one). py-md/-my-md grows
+ * the tap target past 44px without moving anything.
+ */
+export function GoBack() {
+  return (
+    <Link
+      href="/work"
+      className="lab lab--ink inline-flex items-center gap-xs py-md -my-md hover:text-rich-hover"
+    >
+      <ArrowBack />
+      Go back
+    </Link>
   );
 }
 
@@ -535,6 +580,7 @@ export function Figure({
   height,
   caption,
   zoomable = true,
+  narrow = false,
 }: {
   src: string;
   alt: string;
@@ -542,9 +588,12 @@ export function Figure({
   height: number;
   caption?: string;
   zoomable?: boolean;
+  /* sits at the text column's width instead of the full study width. Only
+     meaningful inside a .study-centered study. */
+  narrow?: boolean;
 }) {
   return (
-    <figure className="my-xl m-0">
+    <figure className={`my-xl m-0 ${narrow ? "study-narrow" : ""}`}>
       {zoomable ? (
         <LightboxImage src={src} alt={alt} width={width} height={height} />
       ) : (

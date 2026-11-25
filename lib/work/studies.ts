@@ -33,13 +33,13 @@ export const studies: Study[] = [
        page headline are the same promise seen twice, so a reader who clicks
        lands on the sentence they clicked. */
     title:
-      "Transforming wait times from 2–3 business days to less than 24 hours: registering campus devices",
+      "Reducing device activation time by 66%: from 3 days to under 24 hours",
     model: "B2B",
     category: "Platform Design",
     status: "In progress",
-    thumb: "/work/device-registration/lab-researcher.jpg",
+    thumb: "/work/device-registration/drp-research-lab.jpg",
     thumbAlt:
-      "A researcher at a microscope, its readings streaming to the monitor beside her.",
+      "A researcher at a lab workstation beside a microscope, with the Device Registration Super Admin home on the monitor.",
   },
   {
     slug: "indeed-vision",

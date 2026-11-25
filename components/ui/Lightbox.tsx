@@ -58,10 +58,14 @@ export function LightboxImage({
   priority,
   sizes = "(max-width: 1440px) 100vw, 1440px",
   className = "",
+  unoptimized = false,
 }: GalleryShot & {
   priority?: boolean;
   sizes?: string;
   className?: string;
+  /* serve the file as-is, with no resizing or recompression. For small text
+     graphics that smear under the optimizer. */
+  unoptimized?: boolean;
 }) {
   return (
     <button
@@ -87,6 +91,7 @@ export function LightboxImage({
         height={height}
         priority={priority}
         sizes={sizes}
+        unoptimized={unoptimized}
         className={`block w-full h-auto rounded-2xl border border-line transition-colors group-hover:border-line-strong ${className}`}
       />
     </button>
@@ -144,22 +149,18 @@ export function WindowImage({
 
 export function GalleryDialog() {
   const ref = useRef<HTMLDialogElement>(null);
-  const scroller = useRef<HTMLDivElement>(null);
   const [shots, setShots] = useState<GalleryShot[]>([]);
   const [i, setI] = useState(0);
-  const [zoomed, setZoomed] = useState(false);
 
   const close = useCallback(() => {
     ref.current?.close();
     document.body.style.overflow = "";
-    setZoomed(false);
   }, []);
 
   /* arrows CYCLE rather than disable at the ends. With the controls always
      visible, wrapping means they always do something — no dead buttons. */
   const step = useCallback(
     (d: number) => {
-      setZoomed(false);
       setI((n) => (shots.length ? (n + d + shots.length) % shots.length : 0));
     },
     [shots.length],
@@ -180,7 +181,6 @@ export function GalleryDialog() {
         })),
       );
       setI(Math.max(0, nodes.indexOf(el)));
-      setZoomed(false);
       document.body.style.overflow = "hidden";
       ref.current?.showModal();
     };
@@ -199,21 +199,6 @@ export function GalleryDialog() {
     return () => window.removeEventListener("keydown", onKey);
   }, [step]);
 
-  const toggleZoom = useCallback(() => {
-    setZoomed((z) => {
-      const next = !z;
-      if (next) {
-        requestAnimationFrame(() => {
-          const s = scroller.current;
-          if (!s) return;
-          s.scrollLeft = (s.scrollWidth - s.clientWidth) / 2;
-          s.scrollTop = (s.scrollHeight - s.clientHeight) / 2;
-        });
-      }
-      return next;
-    });
-  }, []);
-
   const shot = shots[i];
 
   return (
@@ -228,29 +213,20 @@ export function GalleryDialog() {
     >
       {shot && (
         <>
+          {/* No zoom: the image is shown fitted to the screen and a click does
+              nothing. Clicking the empty area around it still closes. */}
           <div
-            ref={scroller}
             onClick={(e) => {
               if (e.target === e.currentTarget) close();
             }}
-            className={`flex h-full w-full ${
-              zoomed
-                ? "overflow-auto"
-                : "items-center justify-center overflow-hidden"
-            } p-2xl`}
+            className="flex h-full w-full items-center justify-center overflow-hidden p-2xl"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               key={shot.src}
               src={shot.src}
               alt=""
-              onClick={toggleZoom}
-              className={
-                zoomed
-                  ? "m-auto block max-w-none cursor-zoom-out"
-                  : "block max-h-[86vh] max-w-[80vw] w-auto h-auto cursor-zoom-in"
-              }
-              style={zoomed ? { width: shot.width, height: shot.height } : undefined}
+              className="block max-h-[86vh] max-w-[80vw] w-auto h-auto"
             />
           </div>
 
@@ -283,16 +259,30 @@ export function GalleryDialog() {
             {String(i + 1).padStart(2, "0")} / {String(shots.length).padStart(2, "0")}
           </span>
 
-          <button
-            type="button"
-            onClick={close}
-            aria-label="Close"
-            className="fixed top-lg right-lg z-10 flex h-11 w-11 items-center justify-center rounded-full bg-muted text-paper transition-colors hover:bg-ink focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-              <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-            </svg>
-          </button>
+          {/* close: an "ESC" key hint beside the X button for people who don't know
+              the dialog closes on Escape. Decorative (aria-hidden): the button
+              already has its own accessible name, and the key works either way.
+              Hidden on touch screens, which have no Escape key. */}
+          <div className="fixed top-lg right-lg z-10 flex items-center gap-md">
+            <span
+              aria-hidden="true"
+              className="hidden items-center gap-sm font-mono text-label uppercase tracking-label text-ink [@media(pointer:fine)]:flex"
+            >
+              <kbd className="rounded-full border border-ink/40 px-sm py-xs font-mono text-label uppercase tracking-label text-ink">
+                Esc
+              </kbd>
+            </span>
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Close"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-muted text-paper transition-colors hover:bg-ink focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
         </>
       )}
     </dialog>

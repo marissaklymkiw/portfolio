@@ -231,6 +231,68 @@
     margin-inline: auto;
   }
 
+  /* Centered-column study layout (no left rail). Text sits in one centered
+     column; figures keep the full study width, so images extend past the copy.
+     `.study-narrow` figures stay at the text width. !important because these
+     live in a layer that the utility classes (max-w-reading etc.) outrank. */
+  .study-centered {
+    --study-text: 680px;
+  }
+  .study-centered section > h2,
+  .study-centered section > p,
+  .study-centered .max-w-reading:not(h1),
+  .study-centered h3,
+  .study-centered .study-narrow {
+    max-width: var(--study-text) !important;
+    margin-inline: auto !important;
+  }
+  /* No outlines around any image in this study: figures, the slider, the
+     carousels and the lightbox triggers. The 1px hairline is dropped, not the
+     image. The ink quote rule uses border-ink and is untouched. */
+  .study-centered img,
+  .study-centered button[data-gallery-src],
+  .study-centered .overflow-hidden.border-line {
+    border: 0 !important;
+  }
+  /* The pull quote: bigger type, and it runs the full study width instead of the
+     680px text column, so it reads as a statement rather than a footnote. The
+     ink rule on its left stays. */
+  .study-centered figure.max-w-reading:has(> blockquote) {
+    max-width: none !important;
+    margin-inline: 0 !important;
+    margin-block: var(--spacing-2xl) !important;
+  }
+  .study-centered figure:has(> blockquote) > blockquote {
+    font-size: var(--text-lede) !important;
+    line-height: 1.25 !important;
+    text-wrap: pretty;
+  }
+
+  /* Line breaking for this study: headings balance (even lines, no lone word
+     on the last one) and body copy uses pretty (no single word stranded on the
+     last line of a paragraph). */
+  .study-centered h1,
+  .study-centered h2,
+  .study-centered h3 {
+    text-wrap: balance !important;
+  }
+  .study-centered p,
+  .study-centered li,
+  .study-centered figcaption,
+  .study-centered blockquote {
+    text-wrap: pretty;
+  }
+
+  /* Headline 6px smaller than the shared title step, tracking the token rather
+     than a literal. Scoped here so other studies keep --text-title as is. */
+  /* Tighter gap between stages: spacing-xl instead of the stage's default 3xl. */
+  .study-centered section:not(:first-child) {
+    margin-top: var(--spacing-xl) !important;
+  }
+  .study-centered h1 {
+    font-size: calc(var(--text-title) - 6px) !important;
+  }
+
   /* Squares content imagery instead of the retired 16px radius. This is the
      SYSTEM rule, not a per-study exception: DESIGN.md says image boxes, cards,
      and containers are square, and radius is 999px or 0 and nothing else. Only

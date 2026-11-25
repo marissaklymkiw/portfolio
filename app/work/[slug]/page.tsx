@@ -23,7 +23,7 @@ const STUDIES: Record<
      a record of the options considered. */
   "device-registration": {
     title:
-      "Transforming wait times from 2\u20133 business days to less than 24 hours: registering campus devices | Marissa Klymkiw",
+      "Reducing device activation time by 66%: from 3 days to under 24 hours | Marissa Klymkiw",
     description:
       "UCLA device registration: a leadership-led arc covering the problem, my role, delivery infrastructure, alignment, outcomes, and reflection.",
     Component: DeviceRegistrationOptionCCaseStudy,

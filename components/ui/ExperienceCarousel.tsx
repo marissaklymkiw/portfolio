@@ -12,6 +12,9 @@ export type CarouselSlide = {
   height: number;
   /** optional mono caption shown under the deck for the active slide */
   label?: string;
+  /** CSS object-position for a slide whose ratio differs from the card's, so the
+      crop keeps the part that matters (e.g. "50% 90%" to keep a bottom caption) */
+  focus?: string;
 };
 
 /* The card is the content column MINUS the stack and the peek, so these three
@@ -48,10 +51,27 @@ const NARROW_QUERY = "(max-width: 767px)";
 export default function ExperienceCarousel({
   title,
   slides,
+  showTitle = true,
+  wide = false,
+  flat = false,
+  zoomable = true,
 }: {
   title: string;
   slides: CarouselSlide[];
+  /* false keeps the title as the accessible name only (screen readers still get
+     it) and drops the visible heading. */
+  showTitle?: boolean;
+  /* true sets the cards to 16/9 instead of 16/10, for 16:9 sources that would
+     otherwise be cropped at the sides. */
+  wide?: boolean;
+  /* true drops the stacked spine: earlier slides no longer peek out behind the
+     active card on the left. */
+  flat?: boolean;
+  /* false makes the slides plain images: they do not open the lightbox and are
+     left out of the gallery sequence. */
+  zoomable?: boolean;
 }) {
+  const aspect = wide ? "aspect-[16/9]" : "aspect-[16/10]";
   const [active, setActive] = useState(0);
 
   /* Geometry has to be JS, not a media query: `left` is computed per card from
@@ -66,7 +86,9 @@ export default function ExperienceCarousel({
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
-  const { step: STEP, gap: GAP, peek: PEEK } = narrow ? NARROW : WIDE;
+  const base = narrow ? NARROW : WIDE;
+  const { gap: GAP, peek: PEEK } = base;
+  const STEP = flat ? 0 : base.step;
 
   const last = slides.length - 1;
   const atStart = active === 0;
@@ -88,7 +110,15 @@ export default function ExperienceCarousel({
       aria-label={title}
       className="mt-3xl border-t border-ink pt-lg"
     >
-      <h2 className="mb-lg font-display text-section text-ink">{title}</h2>
+      <h2
+          className={
+            showTitle
+              ? "mb-lg font-display text-section text-ink"
+              : "sr-only"
+          }
+        >
+          {title}
+        </h2>
 
       <div
         className="relative w-full overflow-hidden"
@@ -102,7 +132,7 @@ export default function ExperienceCarousel({
         {/* sizer — same footprint as a card; sets the deck height */}
         <div
           aria-hidden
-          className="w-[calc(100%-var(--stack)-var(--peek))] aspect-[16/10]"
+          className={`w-[calc(100%-var(--stack)-var(--peek))] ${aspect}`}
         />
 
         {slides.map((s, idx) => {
@@ -123,7 +153,7 @@ export default function ExperienceCarousel({
           return (
             <div
               key={s.src}
-              className="exp-card absolute top-0 w-[calc(100%-var(--stack)-var(--peek))] aspect-[16/10]"
+              className={`exp-card absolute top-0 w-[calc(100%-var(--stack)-var(--peek))] ${aspect}`}
               style={{ left, zIndex: z }}
               data-active={rel === 0}
               aria-hidden={rel !== 0}
@@ -134,23 +164,24 @@ export default function ExperienceCarousel({
                   step through them. Inactive cards get tabIndex -1 — their
                   wrapper is already aria-hidden, and a focus stop on a card
                   stacked behind the active one lands you nowhere visible. */}
-              <button
-                type="button"
-                data-gallery-src={s.src}
-                data-gallery-alt={s.alt}
-                data-gallery-w={s.width}
-                data-gallery-h={s.height}
-                tabIndex={rel === 0 ? 0 : -1}
-                onClick={(e) =>
-                  window.dispatchEvent(
-                    new CustomEvent("gallery:open", {
-                      detail: { el: e.currentTarget },
-                    }),
-                  )
-                }
-                aria-label={`Open larger: ${s.alt.slice(0, 80)}`}
-                className="group relative block h-full w-full cursor-zoom-in overflow-hidden rounded-2xl border border-line bg-paper p-0 transition-colors hover:border-line-strong focus-visible:outline-2 focus-visible:outline-rich focus-visible:outline-offset-2"
-              >
+              {zoomable ? (
+                <button
+                  type="button"
+                  data-gallery-src={s.src}
+                  data-gallery-alt={s.alt}
+                  data-gallery-w={s.width}
+                  data-gallery-h={s.height}
+                  tabIndex={rel === 0 ? 0 : -1}
+                  onClick={(e) =>
+                    window.dispatchEvent(
+                      new CustomEvent("gallery:open", {
+                        detail: { el: e.currentTarget },
+                      }),
+                    )
+                  }
+                  aria-label={`Open larger: ${s.alt.slice(0, 80)}`}
+                  className="group relative block h-full w-full cursor-zoom-in overflow-hidden rounded-2xl border border-line bg-paper p-0 transition-colors hover:border-line-strong focus-visible:outline-2 focus-visible:outline-rich focus-visible:outline-offset-2"
+                >
                 {/* object-COVER, not contain: contain letterboxed every slide
                     top and bottom. The captures are exactly 16:10 (1366×854),
                     matching the card's aspect, so cover fills edge to edge
@@ -178,8 +209,25 @@ export default function ExperienceCarousel({
                   priority={idx === 0}
                   sizes="(max-width: 767px) 100vw, (max-width: 900px) 92vw, 840px"
                   className="rounded-2xl object-cover"
+                  style={s.focus ? { objectPosition: s.focus } : undefined}
+                  unoptimized={s.src.endsWith(".gif")}
                 />
-              </button>
+                </button>
+              ) : (
+                <div className="relative block h-full w-full overflow-hidden rounded-2xl border border-line bg-paper">
+                <Image
+                  src={s.src}
+                  alt={s.alt}
+                  fill
+                  quality={90}
+                  priority={idx === 0}
+                  sizes="(max-width: 767px) 100vw, (max-width: 900px) 92vw, 840px"
+                  className="rounded-2xl object-cover"
+                  style={s.focus ? { objectPosition: s.focus } : undefined}
+                  unoptimized={s.src.endsWith(".gif")}
+                />
+                </div>
+              )}
             </div>
           );
         })}

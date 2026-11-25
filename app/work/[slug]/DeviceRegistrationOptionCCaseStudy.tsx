@@ -7,6 +7,7 @@ import {
   CaseStudyMeta,
   CaseStudyRoot,
   Figure,
+  GoBack,
   Prose,
   Quote,
   Stage,
@@ -14,45 +15,85 @@ import {
 import StudyNav from "@/components/ui/StudyNav";
 import BeforeAfterSlider from "@/components/ui/BeforeAfterSlider";
 import ExperienceCarousel from "@/components/ui/ExperienceCarousel";
-import FigureTabs from "@/components/ui/FigureTabs";
+import Image from "next/image";
+import { LightboxImage } from "@/components/ui/Lightbox";
 
-/**
- * Device Registration — OPTION C.
- *
- * A leadership-led long-form arc (Overview → Problem → My role → Delivery
- * infrastructure → Alignment → Outcomes → Reflection) that emphasises org-level
- * impact over granular execution. Two deliberate departures from the other DRP
- * variants, per the brief:
- *  - The HERO IMAGE is moved into the content container, directly under the
- *    metadata block (not full-width in the header).
- *  - Paragraphs run tighter than the 3–6 sentence editorial norm this arc is
- *    modelled on.
- *
- * Copy is the author's supplied Option-C draft, verbatim. Lives at
- * /work/device-registration-c for comparison with the other options.
- */
-const STAGES = [
-  { id: "problem", num: "01", name: "The problem" },
-  { id: "role", num: "02", name: "My role" },
-  /* Restructuring comes BEFORE delivery infrastructure. The argument only works
-     in this order: the role model has to be won before the reference built from
-     it means anything, and it puts the concrete artifact (the inheritance
-     matrix) roughly 2,000px earlier for a reader who does not finish. */
-  {
-    id: "alignment",
-    num: "03",
-    name: "Restructuring the product around roles, five weeks into a slipping build",
-    short: "Restructuring",
-  },
-  {
-    id: "delivery",
-    num: "04",
-    name: "Design as delivery infrastructure",
-    short: "Delivery",
-  },
-  { id: "outcomes", num: "05", name: "Outcomes" },
-  { id: "reflection", num: "06", name: "Reflection" },
-];
+type Shot = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /* optional caption set under the image: a short title and a line of text */
+  title?: string;
+  text?: string;
+};
+
+/* Images side by side (2 or 3 across on desktop, stacked on phones). `narrow`
+   holds the grid to a smaller width than the study, centered. */
+function ImageGrid({
+  shots,
+  cols,
+  narrow = false,
+  zoomable = true,
+}: {
+  shots: Shot[];
+  cols: 2 | 3;
+  narrow?: boolean;
+  /* false shows plain images: they do not open the lightbox and are left out of
+     the gallery sequence. */
+  zoomable?: boolean;
+}) {
+  return (
+    <div
+      className={`my-xl grid grid-cols-1 items-start gap-x-lg gap-y-xl ${
+        cols === 2 ? "md:grid-cols-2" : "md:grid-cols-3"
+      } ${narrow ? "mx-auto max-w-[880px]" : ""}`}
+    >
+      {shots.map(({ title, text, ...sh }) => (
+        <figure key={sh.src} className="m-0">
+          {zoomable ? (
+            <LightboxImage
+              {...sh}
+              className="!border-0"
+              sizes={
+                cols === 2
+                  ? "(max-width: 768px) 100vw, 440px"
+                  : "(max-width: 768px) 100vw, 365px"
+              }
+            />
+          ) : (
+            <Image
+              src={sh.src}
+              alt={sh.alt}
+              width={sh.width}
+              height={sh.height}
+              sizes={
+                cols === 2
+                  ? "(max-width: 768px) 100vw, 440px"
+                  : "(max-width: 768px) 100vw, 365px"
+              }
+              className="block h-auto w-full"
+            />
+          )}
+          {(title || text) && (
+            <figcaption className="mt-md">
+              {title && (
+                <span className="block font-display text-h3 text-ink">
+                  {title}
+                </span>
+              )}
+              {text && (
+                <span className="mt-sm block text-small text-muted">
+                  {text}
+                </span>
+              )}
+            </figcaption>
+          )}
+        </figure>
+      ))}
+    </div>
+  );
+}
 
 export default function DeviceRegistrationOptionCCaseStudy() {
   return (
@@ -60,103 +101,233 @@ export default function DeviceRegistrationOptionCCaseStudy() {
        squared content media, no ink rule above each section, and no stage
        numbers. If you change one study here, change all three, or the set stops
        reading as one system. See globals.css for what each class does. */
-    <div className="no-media-radius no-section-rule no-stage-numbers study-canvas">
-    <CaseStudyRoot>
-      {/* No hero in the header — it's moved down under the metadata, below. */}
-      <CaseStudyHeader
-        badge={{ mark: "UCLA", label: "Platform Design" }}
-        /* "2–3" is held together so it cannot split after the en dash, which
-           was leaving a bare "2–" at the end of a line. The whole range now
-           moves to the next line as one token. */
-        title={
-          <>
-            Transforming wait times from{" "}
-            <span className="whitespace-nowrap">2&ndash;3</span> business days
-            to less than 24 hours: registering campus devices
-          </>
-        }
-      />
+    <div className="no-media-radius no-section-rule no-stage-numbers study-canvas study-centered">
+      <CaseStudyRoot>
+        <div className="pt-xl">
+          <GoBack />
+        </div>
+        <CaseStudyHeader
+          badge={{ mark: "UCLA", label: "Platform Design" }}
+          /* "3" and "24 hours" are held together so the range cannot split
+             across lines. */
+          title={
+            <>
+              Reducing device activation time by 66%: from{" "}
+              <span className="whitespace-nowrap">3 days</span> to under 24
+              hours
+            </>
+          }
+        />
 
-      <CaseStudyBody
-        stages={STAGES}
-        lead={
-          <>
-            <CaseStudyMeta
-              className="border-t border-b border-line pt-lg pb-lg"
-              meta={[
-                { label: "My role", value: "Product design lead" },
-                {
-                  /* The figures repeat here ON PURPOSE. This block is the glance
-                     surface: a recruiter deciding in under two minutes reads the
-                     badge, the h1, and these columns, and may never scroll to
-                     Outcomes. Removing them to avoid restating the Outcomes
-                     list costs the scan more than the repetition costs the
-                     read. The sourcing lives in the qualifying line under that
-                     list, which is where a reader who wants provenance goes
-                     looking. */
-                  label: "Results",
-                  value: (
-                    <>
-                      80% self-service
-                      <br />
-                      40% fewer tickets
-                      <br />
-                      Approvals &lt;24 hrs
-                    </>
-                  ),
-                },
-                {
-                  label: "Scope",
-                  value: "Design-system pilot for applications",
-                },
-                {
-                  label: "Tools & methods",
-                  value: (
-                    <>
-                      Claude.ai
-                      <br />
-                      Claude Code
-                      <br />
-                      Storybook
-                      <br />
-                      Coded prototypes
-                      <br />
-                      Accessibility review
-                    </>
-                  ),
-                },
-              ]}
-            />
+        <CaseStudyBody
+          rail={false}
+          lead={
+            <>
+              {/* A narrow strip: hairlines above and below, one short line per
+                  column, no wrapping. Sits between the headline and the hero. */}
+              <CaseStudyMeta
+                className="border-t border-b border-line py-md"
+                meta={[
+                  { label: "Role", value: "Product design lead" },
+                  { label: "Timeline", value: "Jul 2026 to 2027" },
+                  { label: "Team", value: "3 PMs, 2 engineers, 1 analyst" },
+                  { label: "Skills", value: "Coded prototypes, accessibility" },
+                ]}
+              />
 
-            {/* The hero, moved into the container and set directly under the
-                metadata block, rather than full-width in the header. */}
-            <CaseStudyHero
-              src="/work/device-registration/drp-super-admin-home.png"
-              alt="Super Admin screen with options: device registration, management, configurations, approvals."
-              width={2200}
-              height={1346}
-              priority
-            />
-
-            {/* Overview: an unnumbered opening. No heading, eyebrow,
-                or rule — the numbered spine starts at "The problem". */}
-            <div className="mt-3xl flex flex-col gap-xl">
+              <CaseStudyHero
+                src="/work/device-registration/drp-research-lab.jpg"
+                alt="A researcher at a lab workstation beside a microscope, with the Device Registration Super Admin home on the monitor."
+                width={1376}
+                height={768}
+                priority
+                zoomable={false}
+              />
+            </>
+          }
+        >
+          <div className="mt-md">
+            {/* Situation */}
+            <Stage id="situation" num="01" name="Situation">
               <Prose>
                 <p>
-                  UCLA needed a self-service method for students, department
-                  managers, department members, and IT administrators to get
-                  non-login
-                  devices onto the campus network. Think game consoles,
-                  microscopes, printers, and shared lab equipment. The
-                  existing path depended on support tickets, which slowed people
-                  down and left the network vulnerable.
+                  UCLA needed an easier way for people to connect devices to its
+                  network without asking Customer Success or IT for help each
+                  time. I joined after engineers had started building and
+                  designed a system people could use on their own. I designed
+                  it so each person sees only what their role lets them do.
+                  Engineers can reuse the same design for every screen.
                 </p>
                 <p>
-                  I joined after engineering had already started building. My
-                  contribution was not just to improve the screens, but to reset
-                  the shape of the product: clarify the roles, define the
-                  reusable path, set the compliance bar, and give engineering
-                  a coded reference they could build from.
+                  <strong>In the first test:</strong>
+                </p>
+              </Prose>
+              <BulletList
+                items={[
+                  <>
+                    <strong>80%</strong> of users who started signing up
+                    finished on their own.
+                  </>,
+                  <>
+                    Teams received <strong>40% fewer</strong> help requests.
+                  </>,
+                  <>
+                    Average approval wait time dropped from{" "}
+                    <strong>72 hours to less than 24 hours</strong>.
+                  </>,
+                ]}
+              />
+            </Stage>
+
+            {/* Task */}
+            <Stage id="task" num="02" name="Task">
+              <Beat>The problem</Beat>
+              <div className="mt-md">
+                <Prose>
+                  <p>
+                    Connecting a device to UCLA’s network meant sending a help
+                    request and waiting up to three days. A lab manager trying
+                    to connect a microscope could miss a planned test. IT staff
+                    had to handle these requests on top of their other work.
+                  </p>
+                  <p>
+                    Teams handled 200–500 requests each month. One request could
+                    cover several devices. With a tight budget, this manual work
+                    cost UCLA unnecessary time and money.
+                  </p>
+                  <p>
+                    The first version asked users for detailed information
+                    without clearly explaining what to enter or who was
+                    responsible for each device.
+                  </p>
+                  <p>
+                    My challenge was to design a system to help people connect
+                    devices on their own while giving administrators the tools
+                    to track who owned each device and control network access.
+                  </p>
+                </Prose>
+              </div>
+
+              <ExperienceCarousel
+                title="What waiting on IT felt like"
+                showTitle={false}
+                wide
+                zoomable={false}
+                slides={[
+                  {
+                    src: "/work/device-registration/waiting-84-years.gif",
+                    width: 373,
+                    height: 263,
+                    focus: "50% 100%",
+                    alt: "An elderly woman looking down, captioned: It's been 84 years.",
+                  },
+                  {
+                    src: "/work/device-registration/drp-img-2.jpg",
+                    width: 1600,
+                    height: 900,
+                    alt: "A crying cat in front of a monitor, captioned: My device is ready. The network isn't. The ticket has been with IT for days. Why do I have to keep waiting to connect my gaming device.",
+                  },
+                  {
+                    src: "/work/device-registration/drp-img-3.jpg",
+                    width: 1600,
+                    height: 900,
+                    alt: "A microscope, a printer and a game console, each with a speech bubble that reads Waiting on it.",
+                  },
+                ]}
+              />
+            </Stage>
+
+            {/* Approach */}
+            <Stage id="approach" num="03" name="Approach">
+              <Beat>My role: Owning the system, not the screens</Beat>
+              <div className="mt-md">
+                <Prose>
+                  <p>
+                    As the lead designer, I defined the end-to-end UX vision for
+                    access, validation, and reuse. This vision connected{" "}
+                    <strong>3 PMs and 10 teams</strong>, both within my
+                    organization and across campus. The system needed to flow
+                    smoothly for students, department tasks, IT review, and
+                    network management, not just for one screen.
+                  </p>
+                </Prose>
+              </div>
+
+              <figure className="my-xl m-0 study-narrow">
+                <LightboxImage
+                  src="/work/device-registration/drp-staggered-role-cards.png"
+                  alt="Four staggered role cards, stepping up from Basic User (5 devices) to Group User (10 devices), Group Admin (25 devices) and Super Admin (unlimited). Each card lists what it adds to the role below it."
+                  width={1072}
+                  height={618}
+                  className="!border-0"
+                  unoptimized
+                />
+              </figure>
+
+              <div>
+                <Prose>
+                  <p>
+                    I created the <strong>role-based model</strong> for device
+                    registrations, and it shaped how the configuration
+                    experience came together.
+                  </p>
+                  <p>
+                    I also aligned UCLA’s network, security, and product teams on
+                    compliance standards like accessibility and usability. Since
+                    I joined after the first build was underway, I used the
+                    model to prevent decisions from being made screen by screen.
+                    I continued to work with consultants to validate concepts
+                    with campus networking teams before engineering committed to
+                    the next build.
+                  </p>
+                </Prose>
+              </div>
+
+              <ImageGrid
+                cols={2}
+                narrow
+                zoomable={false}
+                shots={[
+                  {
+                    src: "/work/device-registration/drp-uxr-1-frame2.jpg",
+                    alt: "An illustrated avatar of the designer, hand on chin, against a pink gradient.",
+                    width: 1600,
+                    height: 1600,
+                    title: "Stakeholder interviews",
+                    text: "I talked with each team to learn what they needed.",
+                  },
+                  {
+                    src: "/work/device-registration/drp-uxr-2-frame2.jpg",
+                    alt: "A network administrator at a desk, a terminal and traffic charts on his monitor, cable and a router beside him.",
+                    width: 1600,
+                    height: 1600,
+                    title: "Pre session",
+                    text: "Before we met, I looked at how people do this work today.",
+                  },
+                  {
+                    src: "/work/device-registration/drp-uxr-3-frame2.jpg",
+                    alt: "A campus IT meeting room on a video call, a dozen staff around a conference table.",
+                    width: 1600,
+                    height: 1600,
+                    title: "During session",
+                    text: "I watched and listened as people worked through the screens.",
+                  },
+                  {
+                    src: "/work/device-registration/drp-uxr-4-frame2.jpg",
+                    alt: "A technical lead seated in his office during an interview, a window behind him.",
+                    width: 1600,
+                    height: 1600,
+                    title: "Post session",
+                    text: "Afterward, I asked what worked and what confused them.",
+                  },
+                ]}
+              />
+
+              <Prose>
+                <p>
+                  I joined five weeks into a project that was already behind
+                  schedule and changed the plan because the product wasn’t
+                  working.
                 </p>
               </Prose>
 
@@ -178,398 +349,288 @@ export default function DeviceRegistrationOptionCCaseStudy() {
                 ]}
                 caption="What design walked into: a system-centered developer interface. The redesign reframed the home around the four tasks users came to complete."
               />
-            </div>
-          </>
-        }
-      >
-        {/* 01 · The problem */}
-        <Stage
-          id="problem"
-          num="01"
-          name="The problem"
-          eyebrow="A campus lab, locked off the network"
-        >
-          <Prose>
-            <p>
-              A university lab manager needs a microscope online for today’s
-              run, but it can’t log in for itself. The only path is a support
-              ticket and a wait while the experiment sits idle.
-            </p>
-            <p>
-              Multiply that across a campus and the device-network queue ran 200
-              to 500 tickets a month, alongside the staff and researcher hours
-              lost to the wait and a network full of devices nobody could trace
-              to an owner.
-            </p>
-            <p>
-              The count understates it. A single ticket could be load-bearing
-              for thousands of devices, so the length of the queue was never the
-              size of what was waiting on it.
-            </p>
-            <p>
-              The first build reflected the system’s needs more than the user’s
-              task. It asked for the MAC address, the database key, without
-              enough context, guidance, or ownership information. For a student
-              or lab manager, the hardest part of registration was also the
-              least explained.
-            </p>
-            <p>
-              The design challenge was bigger than one form: make device
-              registration simple enough for a first-time student, structured
-              enough for department workflows, and controlled enough for admins
-              managing risk at campus scale.
-            </p>
-          </Prose>
 
-          <Figure
-            src="/work/device-registration/lab-researcher.jpg"
-            alt="A researcher at a microscope, its readings on a nearby monitor, on a device that cannot log in."
-            width={1600}
-            height={893}
-            zoomable={false}
-          />
-        </Stage>
+              <Prose>
+                <p>
+                  Four teams sat at the table: Network, Business IT Products,
+                  Information Security, and Digital Foundry. Each had different
+                  needs, permissions, and operational habits. Without a shared
+                  structure, the product would fragment into exceptions
+                  negotiated team by team.
+                </p>
+                <p>
+                  The role-based model became the shared map: one product
+                  language for users, approvers, department supervisors, and
+                  admins configuring the portal. Teams made decisions from the
+                  same structure for ownership, permissions, and handoffs
+                  instead of re-litigating each edge case.
+                </p>
+              </Prose>
 
-        {/* 02 · My role */}
-        <Stage
-          id="role"
-          num="02"
-          name="My role"
-          eyebrow="Owning the system, not the screens"
-        >
-          <Prose>
-            <p>
-              As the lead designer, I defined the end-to-end UX vision for
-              access, validation, and reuse. This vision connected{" "}
-              <strong>3 PMs and 10 teams</strong>, both within my organization
-              and across campus. The work needed to flow smoothly for students,
-              department tasks, IT review, and network management, not only for
-              one screen.
-            </p>
-            {/* The claim here used to be the "role-based model and
-                human-in-the-loop approval framework". The HITL half was removed
-                at MK's direction. The role-based model is the artifact the rest
-                of the study actually traces — §03 calls it "the shared map",
-                §04 builds patterns from it — whereas the approval framework was
-                named once and never picked back up. Do not reinstate it. The
-                approval *outcomes* in §05 are untouched: those describe how the
-                product behaves, not a framework I claim to have authored. */}
-            <p>
-              I created the <strong>role-based model</strong> for device
-              registrations, and it shaped how the configuration experience came
-              together. I also aligned UCLA’s network, security, and IT teams on
-              compliance standards. Since I joined after the first build was
-              underway, I used the model to prevent decisions from being made
-              screen by screen. I continue to work with consultants to validate
-              concepts with campus networking teams before engineering commits
-              to the next build.
-            </p>
-          </Prose>
-        </Stage>
+              <Figure
+                src="/work/device-registration/layer-02-flows.png"
+                alt="Role-inheritance matrix: four tiers as rows; each inherits the shared Register and Manage path (light blue) and adds its own scope (dark blue), from Basic User up to Super Admin."
+                width={1440}
+                height={720}
+                caption="The shared role model. Each tier inherits everything the tier below can do (light blue) and adds only its own scope (dark blue). One map for ownership, permissions, and handoffs."
+              />
 
-        {/* 03 · Restructuring the product around roles */}
-        <Stage
-          id="alignment"
-          num="03"
-          name="Restructuring the product around roles, five weeks into a slipping build"
-          eyebrow="One map across four teams"
-        >
-          <Prose>
-            <p>
-              Four teams sat at the table: Network, Business IT Products,
-              Information Security, and Digital Foundry. Each had different
-              needs, permissions, and operational habits. Without a shared
-              structure, the product would fragment into exceptions negotiated
-              team by team.
-            </p>
-            <p>
-              The role-based model became the shared map: one product language
-              for users, approvers, department supervisors, and admins
-              configuring the portal. Teams made decisions from the same
-              structure for ownership, permissions, and handoffs instead of
-              re-litigating each edge case.
-            </p>
-          </Prose>
+              <Beat>What it took to change course</Beat>
+              <div className="mt-md">
+                <Prose>
+                  <p>
+                    I proposed this model five weeks into a pilot that was
+                    already behind schedule, with 62% of the backlog untouched,
+                    one developer in flight, and a hard deadline. The objection
+                    was reasonable: reorganizing the product around roles this
+                    late looked like more work, and more work looked like a
+                    later launch.
+                  </p>
+                </Prose>
+              </div>
 
-          {/* HIERARCHY, fixed. This used to run <Phase> "What it took to change
-              course" over three <Beat>s. Phase is a small mono marker and Beat
-              is a Hanken h3, so the group heading was visually QUIETER than the
-              three things it introduced: a label parenting three headings.
+              <Beat>How I got buy in for my proposal</Beat>
+              <div className="mt-md">
+                <Prose>
+                  <p>
+                    <strong className="mb-sm block">
+                      I explained the problem. I didn’t criticize.
+                    </strong>
+                    Things changed in a meeting where we looked at the screens
+                    together. The business systems analyst and the engineering
+                    lead were there. The engineer had already built the screens in code.
+                    They followed the team’s own habits, but no design rules had
+                    been used. I brought three flows I had made. I also brought
+                    a clear explanation of how their screens worked.
+                  </p>
+                  <p>
+                    I pointed out the gaps, the things that didn’t match, and
+                    the guesses nobody had written down.
+                  </p>
+                  <p>
+                    The Business Analyst said the solution was great. Then the
+                    network subject-matter expert agreed that the role model described
+                    the system better than their screens did. After that, it
+                    wasn’t about what people liked anymore. It was just true.
+                  </p>
+                </Prose>
+              </div>
 
-              Now there is exactly one sub-heading in this stage. "What it took
-              to change course" is the Beat, and the three arguments lead their
-              own paragraphs in bold, the same shape the other two studies use
-              for a claim plus its explanation. Descending weight the whole way
-              down: stage h2 → Beat → bold claim → prose. */}
-          <Beat>What it took to change course</Beat>
+              <Figure
+                src="/work/device-registration/system-admin-flow.png"
+                alt="A System Admin flow diagram: SSO login, home screen, then branches for audit logs, admin configuration tables, device roles, and device management, with sticky notes marking confirmed decisions and open questions."
+                width={3052}
+                height={1794}
+              />
 
-          <div className="mt-md">
-            <Prose>
-              <p>
-                I proposed this model five weeks into a pilot that had already
-                slipped, with 62% of the backlog untouched, one developer in
-                flight, and a hard July deadline. The objection was reasonable:
-                reorganizing the product around roles this late looked like more
-                work, and more work looked like a later launch.
-              </p>
-              <p>Three things that moved my model forward:</p>
-              <p>
-                <strong className="mb-sm block">Diagnosis, not critique</strong>
-                The shift came in a flow review with the business systems analyst and the engineer.
-                On the table were screens already built in code, to the
-                team&rsquo;s own product conventions, with no design standards
-                applied. I brought three flows of my own and a structured read of
-                the logic behind theirs. I named gaps, inconsistencies, and
-                assumptions nobody had written down. The BSA confirmed the read.
-                Once the subject-matter expert agreed the role model described
-                the system more accurately than their screens did, it stopped
-                being a question of preference.
-              </p>
-              <p>
-                <strong className="mb-sm block">
-                  The model removed work instead of adding it
-                </strong>
-                The alternative to a shared structure was never no change. It was
-                negotiating permissions and edge cases screen by screen, team by
-                team, for the rest of the build. Reframed that way, roles were
-                the cheaper path, and twelve edge cases got resolved upstream
-                before engineering reached them.
-              </p>
-              <p>
-                <strong className="mb-sm block">Proof, not a proposal</strong>
-                Using AI strategically, I built the role model in a coded design prototype rather than in
-                Figma, so engineering could inspect it and run it. This kept
-                design ahead of the build instead of trailing it, which is what
-                settled the timeline concern: the reference arrived before the
-                decisions did. Nobody had to choose between shipping on time and
-                shipping with design.
-              </p>
-            </Prose>
+              <Prose>
+                <p>
+                  <strong className="mb-sm block">
+                    The model saved work. It didn’t add any.
+                  </strong>
+                  Without roles, every team would have had to decide who can see
+                  and do what on every single screen. That means a lot of
+                  meetings and a lot of back-and-forth until the build was done.
+                  Roles let us decide it once and reuse it everywhere. That was
+                  the easier path. It also helped us fix twelve tricky cases
+                  early, before the engineers had even started on them.
+                </p>
+                <p>
+                  <strong className="mb-sm block">
+                    I showed how the model worked. I didn’t just talk about it.
+                  </strong>
+                  I used AI to build the role model as a coded prototype instead
+                  of in Figma. That way the engineers could look inside it and
+                  try it out. Design stayed ahead of the build instead of
+                  running behind it. That fixed the worry about the schedule,
+                  because the example was ready before the decisions were.
+                  Nobody had to pick between finishing on time and having good
+                  design.
+                </p>
+                <p>
+                  I also don’t just assume everyone agrees. I test my ideas with
+                  the campus networking teams before the engineers start
+                  building. That way, we know the shared model works for how
+                  each team really does its job before it turns into code.
+                </p>
+              </Prose>
+
+              <Figure
+                src="/work/device-registration/layer-01-context.png"
+                alt="The context the coded prototype was built from: project team milestones, a database tables list, and the Device Registration Portal Phase 1 analysis."
+                width={1408}
+                height={744}
+              />
+              <Figure
+                src="/work/device-registration/layer-04-code.png"
+                alt="The Storybook reference library beside the Claude Code skill file that generated the Phase 2 wireframes."
+                width={1440}
+                height={1080}
+                caption="The Storybook library engineering built from, 105 stories with zero accessibility violations, plus the skill that produced the Phase 2 wireframes from the product's real screens and roles."
+              />
+
+              <Beat>Design that helps teams ship</Beat>
+              <div className="mt-md">
+                <Prose>
+                  <p>
+                    This was a pilot. We wanted to see if UCLA’s design system
+                    could work for more than web pages with articles and text.
+                    We wanted it to help with apps where people fill out forms
+                    and get things approved. The goal was to make design helpful
+                    earlier in the project. It wasn’t about making screens look
+                    nice at the end. It was about giving teams a set of rules
+                    they could use to make the same kind of choices every time.
+                  </p>
+                  <p>
+                    I turned the flow into patterns the engineers could build
+                    from. These covered forms, approvals, admin tables, activity
+                    history, and accessibility rules. This gave the engineers
+                    one shared guide to follow. Without it, a bunch of one-off
+                    choices could have gotten stuck in the product.
+                  </p>
+                </Prose>
+              </div>
+
+              <Quote cite="Technical Lead, Workplace IT Products">
+                &ldquo;The design prototype reference that Marissa provided let
+                us build from a shared pattern instead of making
+                screen-by-screen decisions during implementation.&rdquo;
+              </Quote>
+
+              <Figure
+                src="/work/device-registration/layer-03-visuals-2.png"
+                alt="Four design-system screens on a pale blue ground: the task-based Super Admin home, the registration form, inline help for choosing a building, and validation for a malformed MAC address."
+                width={1440}
+                height={900}
+              />
+              <Figure
+                src="/work/device-registration/layer-03-visuals.png"
+                alt="A device management admin table above three specimen cards: status states with their contrast ratios, a focus state, and a contrast check."
+                width={1440}
+                height={900}
+                caption="The status states, focus treatment, and contrast each screen is assembled from. Border, icon, text and colour carry every state together, so nothing is signalled by colour alone."
+              />
+              <Figure
+                src="/work/device-registration/superadmin-home.png"
+                alt="The Super Admin home: a greeting, four task cards for registering devices, managing devices, system configuration, and audit logs, and a pending-approvals list."
+                width={2880}
+                height={1626}
+              />
+            </Stage>
+
+            {/* Results */}
+            <Stage id="results" num="04" name="Results">
+              <BulletList
+                items={[
+                  <>
+                    <strong>80%</strong> of users who started signing up
+                    finished on their own
+                  </>,
+                  <>
+                    Teams received <strong>40% fewer</strong> help requests
+                  </>,
+                  <>
+                    Average approval wait time dropped from{" "}
+                    <strong>72 hours to less than 24 hours</strong>
+                  </>,
+                ]}
+              />
+              <Prose>
+                <p>
+                  I designed a self-service system that lets people register
+                  their own devices based on their role. This replaced the old
+                  process of submitting support tickets and waiting for IT to
+                  set up network access. Standard requests no longer need to wait
+                  in the IT ticket queue. Pilot teams could register their own
+                  devices, helping reduce wait times and support tickets.
+                </p>
+                <p>
+                  I also created shared design patterns instead of designing
+                  each screen from scratch. This gave UCLA a reusable system
+                  with 14 device paths, 35 reusable components, and 12 special
+                  cases worked out before development began. It also showed how
+                  UCLA can use shared design patterns for more than just web
+                  pages.
+                </p>
+              </Prose>
+
+              <ImageGrid
+                cols={3}
+                shots={[
+                  {
+                    src: "/work/device-registration/drp-outcome-knudsen.jpg",
+                    alt: "80%, in blue type over a duotone photo of a UCLA building.",
+                    width: 1600,
+                    height: 900,
+                  },
+                  {
+                    src: "/work/device-registration/drp-outcome-haines.jpg",
+                    alt: "24 hrs, in blue type over a duotone photo of campus trees and an arched building.",
+                    width: 1600,
+                    height: 900,
+                  },
+                  {
+                    src: "/work/device-registration/drp-outcome-perloff.jpg",
+                    alt: "40%, in blue type over a duotone photo of a UCLA brick building.",
+                    width: 1600,
+                    height: 900,
+                  },
+                ]}
+              />
+
+              <ExperienceCarousel
+                title="The rest of the experience."
+                slides={[
+                  {
+                    src: "/work/device-registration/carousel/01-basic-user-home.png",
+                    width: 1700,
+                    height: 1063,
+                    alt: "Basic User home: a greeting, a Register a device button, and a list of seven owned devices.",
+                  },
+                  {
+                    src: "/work/device-registration/carousel/02-group-admin-home.png",
+                    width: 1700,
+                    height: 1063,
+                    alt: "Group Admin home: three task cards and a pending-approvals queue for the department.",
+                  },
+                  {
+                    src: "/work/device-registration/carousel/03-super-admin-home.png",
+                    width: 1700,
+                    height: 1063,
+                    alt: "Super Admin home: four task cards including configuration, and a portal-wide approvals list.",
+                  },
+                  {
+                    src: "/work/device-registration/carousel/04-register-device.png",
+                    width: 1700,
+                    height: 1063,
+                    alt: "The registration form: who it is for, then MAC address, device name, connection type, role.",
+                  },
+                  {
+                    src: "/work/device-registration/carousel/05-manage-devices.png",
+                    width: 1700,
+                    height: 1063,
+                    alt: "Manage devices: a searchable table of devices with owner, MAC address, expiry, and status.",
+                  },
+                  {
+                    src: "/work/device-registration/carousel/06-manage-devices-edit-drawer.png",
+                    width: 1700,
+                    height: 1063,
+                    alt: "The device table with the Edit drawer open, showing editable and read-only fields.",
+                  },
+                  {
+                    src: "/work/device-registration/carousel/07-audit-log.png",
+                    width: 1700,
+                    height: 1063,
+                    alt: "Audit logs: a searchable table of timestamped Register, Approve, Reject, and Update events.",
+                  },
+                ]}
+              />
+            </Stage>
           </div>
 
-          {/* mt-2xl (48px), double the gap-lg that separates paragraphs inside
-              a Prose block. This paragraph closes the section and steps back
-              from the three arguments, so it needs to read as its own beat; as
-              a bare sibling it carried NO top margin at all and ran on from the
-              block above with less air than the arguments have between
-              themselves. */}
-          <div className="mt-2xl">
-            <Prose>
-              <p>
-                That alignment is then tested, not assumed. I validate concepts
-                with the campus networking teams before engineering commits to a
-                build, so the shared model holds up against how each team
-                actually works before it becomes code.
-              </p>
-            </Prose>
-          </div>
-
-          <Figure
-            src="/work/device-registration/layer-02-flows.png"
-            alt="Role-inheritance matrix: four tiers as rows; each inherits the shared Register and Manage path (light blue) and adds its own scope (dark blue), from Basic User up to Super Admin."
-            width={1440}
-            height={720}
-            caption="The shared role model. Each tier inherits everything the tier below can do (light blue) and adds only its own scope (dark blue). One map for ownership, permissions, and handoffs."
-          />
-        </Stage>
-
-        {/* 04 · Design as delivery infrastructure */}
-        <Stage
-          id="delivery"
-          num="04"
-          name="Design as delivery infrastructure"
-          eyebrow="A shared reference, not screen polish"
-        >
-          <Prose>
-            <p>
-              This was a pilot for extending UCLA’s design system beyond
-              editorial pages into application workflows. The opportunity was to
-              make design useful earlier in delivery: not as screen polish, but
-              as the structure teams could use to make consistent product
-              decisions.
-            </p>
-            <p>
-              I translated the flow into buildable patterns for forms, approvals,
-              admin tables, audit states, and accessibility rules. That gave
-              engineering a shared reference before one-off decisions could
-              harden into the product.
-            </p>
-          </Prose>
-
-          <FigureTabs
-            label="From components to the context they shipped in"
-            tabs={[
-              {
-                label: "Components",
-                src: "/work/device-registration/layer-03-visuals.png",
-                alt: "A device management admin table above three specimen cards: status states with their contrast ratios, a focus state, and a contrast check.",
-                width: 1440,
-                height: 900,
-                caption:
-                  "Components: the status states, focus treatment, and contrast each screen is assembled from. Border, icon, text and colour carry every state together, so nothing is signalled by colour alone.",
-              },
-              {
-                label: "Context",
-                src: "/work/device-registration/layer-04-code.png",
-                alt: "The Storybook reference library beside the Claude Code skill file that generated the Phase 2 wireframes.",
-                width: 1440,
-                height: 1080,
-                caption:
-                  "Context: the Storybook library engineering built from, 105 stories with zero accessibility violations, plus the skill that produced the Phase 2 wireframes from the product's real screens and roles.",
-              },
-            ]}
-          />
-
-          {/* <Quote>, not <Pullquote>, matching the sourcing study. Pullquote is
-              for the AUTHOR's own line lifted out of her argument, so it has no
-              attribution slot and the source had to be hand-set as bold text
-              after a <br>. That renders a testimonial as a design flourish
-              rather than sourced evidence, and it loses the semantics: Quote
-              ships a real <blockquote> with a <figcaption>, so the attribution
-              is attached to the quotation rather than merely sitting near it. */}
-          <Quote cite="Technical Lead, Workplace IT Products">
-            &ldquo;The design prototype reference that Marissa provided let us
-            build from a shared pattern instead of making screen-by-screen
-            decisions during implementation.&rdquo;
-          </Quote>
-        </Stage>
-
-
-        {/* 05 · Outcomes */}
-        <Stage
-          id="outcomes"
-          num="05"
-          name="Outcomes"
-          eyebrow="From ticket queue to role-based system"
-        >
-          {/* A list, not the stat band, at MK's direction. The band split each
-              figure from its own sentence ("80%" oversized, the rest of the
-              clause small beside it); as a list each line stays one readable
-              statement. The number leads, so it still carries the scan. */}
-          <BulletList
-            items={[
-              <>
-                <strong>80%</strong> self-service completion for users who start
-                registration
-              </>,
-              <>
-                <strong>40%</strong> fewer device-network tickets for
-                participating teams
-              </>,
-              <>
-                <strong>&lt;24hrs</strong> median approval turnaround, down from
-                2&ndash;3 business days
-              </>,
-            ]}
-          />
-
-          {/* A qualifying line used to sit here, carried over from the stat
-              band's `note`: pilot size, and why the 200-to-500 ticket queue is
-              not a like-for-like baseline for the 40%. Removed at MK's
-              direction. The three figures above now stand unqualified, which
-              matches the sourcing study. */}
-          <Prose>
-            {/* The numbers are stated once, in the list above, where the line
-                beneath can qualify them. This paragraph says why they moved
-                instead of restating them: an earlier version repeated all three
-                and then quietly dropped the 40%, which reads as a retreat. */}
-            <p>
-              By designing a self-service, role-based registration system to
-              replace the support-ticket queue and manual IT networking work, I
-              took standard approvals off the queue entirely. The teams in the
-              pilot registered their own devices instead of waiting on IT to do
-              it for them, which is where those reductions come from.
-            </p>
-            <p>
-              By designing one inherited pattern instead of one-off screens, I
-              gave UCLA a reusable application system: 14 device paths, 35
-              reusable components, and 12 edge cases resolved before
-              implementation. It is a precedent for design-system work beyond
-              editorial pages.
-            </p>
-          </Prose>
-
-          <ExperienceCarousel
-            title="The rest of the experience."
-            slides={[
-              {
-                src: "/work/device-registration/carousel/01-basic-user-home.png",
-                width: 1700,
-                height: 1063,
-                alt: "Basic User home: a greeting, a Register a device button, and a list of seven owned devices.",
-              },
-              {
-                src: "/work/device-registration/carousel/02-group-admin-home.png",
-                width: 1700,
-                height: 1063,
-                alt: "Group Admin home: three task cards and a pending-approvals queue for the department.",
-              },
-              {
-                src: "/work/device-registration/carousel/03-super-admin-home.png",
-                width: 1700,
-                height: 1063,
-                alt: "Super Admin home: four task cards including configuration, and a portal-wide approvals list.",
-              },
-              {
-                src: "/work/device-registration/carousel/04-register-device.png",
-                width: 1700,
-                height: 1063,
-                alt: "The registration form: who it is for, then MAC address, device name, connection type, role.",
-              },
-              {
-                src: "/work/device-registration/carousel/05-manage-devices.png",
-                width: 1700,
-                height: 1063,
-                alt: "Manage devices: a searchable table of devices with owner, MAC address, expiry, and status.",
-              },
-              {
-                src: "/work/device-registration/carousel/06-manage-devices-edit-drawer.png",
-                width: 1700,
-                height: 1063,
-                alt: "The device table with the Edit drawer open, showing editable and read-only fields.",
-              },
-              {
-                src: "/work/device-registration/carousel/07-audit-log.png",
-                width: 1700,
-                height: 1063,
-                alt: "Audit logs: a searchable table of timestamped Register, Approve, Reject, and Update events.",
-              },
-            ]}
-          />
-        </Stage>
-
-        {/* 06 · Reflection */}
-        <Stage
-          id="reflection"
-          num="06"
-          name="Reflection"
-          eyebrow="What Phase 1 taught me"
-        >
-          <Prose>
-            <p>
-              This worked because design became a delivery condition, not a
-              polish layer. I turned a late design request into reusable product
-              structure: roles, patterns, accessibility rules, and coded
-              references, and resolved device states, validation, and approvals
-              upstream so engineering had a clearer reference than static specs
-              could give. Claude.ai and Claude Code held that pace, but only
-              because I defined the context, constraints, and standards first.
-            </p>
-            <p>
-              Next time I would formalize two things earlier: a real home for the
-              components in UCLA’s design system, and the learning loops
-              (completion, errors, support patterns, admin workload) so impact
-              tracking could start at release. From here the same role logic
-              scales into Phase 2 bulk import and management, and the bigger
-              opportunity is a stronger reference for future UCLA application
-              flows, so the next team starts from proven structure, not a blank
-              slate.
-            </p>
-          </Prose>
-        </Stage>
-        <StudyNav currentSlug="device-registration" />
-      </CaseStudyBody>
-    </CaseStudyRoot>
+          <StudyNav currentSlug="device-registration" />
+        </CaseStudyBody>
+      </CaseStudyRoot>
     </div>
   );
 }
