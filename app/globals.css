@@ -189,6 +189,14 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  /* "Back to top" targets #main. Without this it lands with main's top edge at
+     the viewport top, i.e. scrolled down by the header's height, so the pinned
+     hero (sticky at top:--hh) sits --hh lower than its resting spot and the
+     opaque .cover rides up over the "Staff Product Design" line. Offsetting by
+     the header height lands at scrollY 0 instead. */
+  main[id] {
+    scroll-margin-top: var(--hh);
+  }
   /* Anchor targets clear the sticky header */
   section[id],
   div[id] {
