@@ -59,10 +59,10 @@ export default function CursorFollower() {
     };
 
     const tick = () => {
-      // ease toward the pointer — 0.22 keeps it responsive as a cursor while
-      // retaining a touch of trail (lower = more lag)
-      x += (targetX - x) * 0.22;
-      y += (targetY - y) * 0.22;
+      // ease toward the pointer — 0.4 keeps it snappy while retaining a
+      // touch of trail (lower = more lag, 1 = no lag)
+      x += (targetX - x) * 0.4;
+      y += (targetY - y) * 0.4;
       el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
       raf = requestAnimationFrame(tick);
     };
